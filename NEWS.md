@@ -1,3 +1,3 @@
-# NetworkHub
+# NetworkHub 0.0.0.9000
 
-* Initial CRAN submission.
+* First commit for the package!
