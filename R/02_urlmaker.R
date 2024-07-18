@@ -17,6 +17,7 @@ urlmaker_stringdb <- function(set = c("", "", ""),
 urlmaker_intact <- function() {
 
 
+# link: /Users/mac/R/2024_Master_IMBEI/thesisproject_networks/allPPIdbs/IntAct/Human1.zip (ZIP!!)
 
 
 }
@@ -25,7 +26,7 @@ urlmaker_intact <- function() {
 urlmaker_biogrid <- function() {
 
 
-
+# link: https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.233/BIOGRID-ALL-4.4.233.mitab.zip
 
 
 }
