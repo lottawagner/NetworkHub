@@ -10,8 +10,7 @@ urlmaker_stringdb <- function(set = c("", "", ""),
                                mode = c("ehub", "web")) {
 
 
-
-
+# link: https://stringdb-downloads.org/download/protein.links.v12.0/9606.protein.links.v12.0.txt.gz
 }
 
 
