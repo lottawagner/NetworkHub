@@ -47,7 +47,7 @@ urlmaker_stringdb <- function(type = "PPI", # or protein info for stringdb
 
   #match the information about the species with the corresponding data file (PPI/protein info)
 
-  info_species <- info_stringdb_species(version = version)
+  info_species <- info_species_stringdb(version = version)
   species_id <- info_species$X.taxon_id[
     match(species, info_species$official_name_NCBI)
   ]
