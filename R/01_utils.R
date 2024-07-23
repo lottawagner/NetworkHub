@@ -57,7 +57,7 @@ initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
 cache_NetworkHub <- function(rname, # ressource name
                              fpath, # filepath
-                             nh_cachdir = "NetworkHub", # name of cache
+                             nh_cachedir = "NetworkHub", # name of cache
                              ...) { # additional arguments transfered to bfcadd
   cache_dir <- tools::R_user_dir(nh_cachedir, which = "cache") # tells the function to use the previously defined directory nh_cachedir
   bfc_nh <- BiocFileCache::BiocFileCache(cache_dir) # creats/uploads objects to cache
@@ -89,33 +89,36 @@ cache_NetworkHub <- function(rname, # ressource name
 #' get_NetworkHub(rname = "STRINGDB_Homo sapiens_v12.0")
 #'
 get_NetworkHub <- function(rname, # ressourcename
-                           update = TRUE, # up to date verison of the ressource
+                           update = TRUE, # up to date version of the resource
                            nh_cachedir = "NetworkHub", # name of cache
-                           ...) { # additional arguments transfered to bfcadd
+                           ...) { # additional arguments transferred to bfcadd
 
   cache_dir <- tools::R_user_dir(nh_cachedir, which = "cache") # tells the function to use the previously defined directory nh_cachedir
-  bfc_nh <- BiocFileCache::BiocFileCache(cache_dir) # creats/uploads objects to cache
+  bfc_nh <- BiocFileCache::BiocFileCache(cache_dir) # creates/uploads objects to cache
 
-  nh_query <- BiocFilecache::bfcquery(bfc_nh, rname, exact = TRUE) # search for entry 'rname' and saves in variable nh_query
+  nh_query <- BiocFileCache::bfcquery(bfc_nh, rname, exact = TRUE) # search for entry rname and saves in variable nh_query
 
   # is there already a cached version?
   res_nh <- NULL # the result should be saved in res_nh
-  if BiocFileCache::bfccount(nh_query)) { # if there is already the file
+
+  if (BiocFileCache::bfccount(nh_query)) { # if there is already the file
     rid <- nh_query$rid # takes the ressource ID (rid) from the entry
 
     nu <- FALSE # is there a new update necessary?
-    if (update() { #TRUE?
+    if (update) { #TRUE?
       nu <- BiocFileCache::bfcneedsupdate(bfc_nh, rid) # nu (newest update) is defined to the rid in the cache
     }
     if (!isFALSE(nu)) {
       BiocFileCache::bfcdownload(bfc_nh, rid, ask = FALSE, ...) #download of the newest version of the entry
     }
+
     message("Using cached version from ", nh_query$create_time) # tells you from which date this version is
     res_nh <- BiocFileCache::bfcrpath(bfc_nh, rname) # rpath of updated entry is saved in variable res_nh
   }
 if (is.null(res_nh)) {
   message("No record found in NetworkHub!") # if res_nh is NULL (no file in cache) -> tells you nothing found
-return(res_nh) # returns rpath to res_nh or NULL if no entry
+}
+  return(res_nh) # returns rpath to res_nh or NULL if no entry
 }
 
 
