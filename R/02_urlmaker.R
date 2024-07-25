@@ -1,4 +1,13 @@
+
+# What's inside ?
+# 1. For each database one/more functions that help to identify the variables in the corresponding url_maker function
+# 2. For each database one function to create an url to download/cache the data from the db
+# -> Why? because using an url where you have to define the version, species and some other variables, the user can easily access the data without the need of google search
+
+
 # STRINGDB -----
+
+# For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by chosing a name
 
 ## stringdb species -----
 
@@ -45,7 +54,7 @@ urlmaker_stringdb <- function(type = "PPI", # or protein info for stringdb
 
   # "https://stringdb-downloads.org/download/protein.links.v12.0/9606.protein.links.v12.0.txt.gz"
 
-  #match the information about the species with the corresponding data file (PPI/protein info)
+  #match the information about the species (id, name) with the corresponding data file (PPI/protein info)
 
   info_species <- info_species_stringdb(version = version)
   species_id <- info_species$X.taxon_id[
@@ -112,3 +121,6 @@ Human Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/hu
 E.Coli Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/Escherichia.zip
 
 Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
+
+
+

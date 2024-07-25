@@ -1,3 +1,7 @@
+# Whats inside?
+# 1. a function to initialize_NetworkHub cache on the corresponding machine
+# 2. a function to cache_NetworkHub files from dbs
+# 3. a function to get_NetworkHub files out of the cache
 
 # Set up NetworkHub cache -----
 
