@@ -116,11 +116,21 @@ urlmaker_biogrid <- function(type = "PPI", # or protein info for stringdb
 
 # IntAct -----
 
-Human Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/human.zip
-
-E.Coli Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/Escherichia.zip
-
-Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
-
+species_intact <- c("human",
+                    "Escherichia",
+                    "mouse"
+                    )
 
 
+urlmaker_intact <- function(type = "PPI", # could be also protein info # QUESTION: WHY?
+                            species = "human",
+                            version = "current")
+  https://ftp.ebi.ac.uk/pub/databases/intact/%s/%s/species
+
+# https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/
+
+#Human Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/human.zip
+
+#E.Coli Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/Escherichia.zip
+
+#Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
