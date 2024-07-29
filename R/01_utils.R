@@ -24,6 +24,7 @@
 #' bfcinfo(bfc_nh) # what are the column names of the cache
 
 # nh_cachedir = default directory name where the cache will be stored
+
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
   # define the cache directory, with tools::R_user_dir you can create a path to the cache, which = cache, return the path for caching purposes
