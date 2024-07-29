@@ -13,6 +13,61 @@ get_networkdata_STRINGDB <- function(species,
                                        # , "ENTREZ"
                                      )){
 
+  # matching for the species...
+  species_id <- NULL
+
+  info_species <- info_species_stringdb(version = version)
+  species_id <- info_species$X.taxon_id[
+    match(species, info_species$official_name_NCBI)
+  ]
+
+
+  # if (is.null(species_id))
+  #   stop("No match found!")
+
+  # buildup of the resource location for the version and all
+  ## elegantly done in another smaller utility function
+
+
+
+  rname <- paste0(
+    "STRINGDB_",
+    species,
+    "_v",
+    version
+  )
+
+  if (cache) {
+    # tries to fetch from the cache
+    message("Trying to fetch from cache...")
+    network_file <- get_NetworkHub(rname)
+  }
+
+  if (!cache | is.null(network_file)) {
+    # retrieves the file for the first time
+    message("Retrieving to cache...")
+    # buildup from "base" STRINGDB url
+    stringdb_url <-
+      urlmaker_stringdb(
+        type = "PPI",
+        species = species,
+        version = version
+      )
+
+
+    network_file <- cache_NetworkHub(
+      rname = rname,
+      fpath = stringdb_url
+    )
+  }
+
+  # read in the resource, whether cached or freshly downloaded
+  sdb_ppis <- vroom::vroom(network_file)
+  # sdb_ppis <- read.delim(network_file, sep = " ")
+
+  # WE COULD STOP HERE, but we won't - at the end...
+
+
 }
 
 

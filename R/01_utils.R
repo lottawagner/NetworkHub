@@ -93,7 +93,7 @@ cache_NetworkHub <- function(rname, # ressource name
 #' @examples
 #' get_NetworkHub(rname = "STRINGDB_Homo sapiens_v12.0")
 #'
-get_NetworkHub <- function(rname, # ressourcename
+fetch_NetworkHub <- function(rname, # ressourcename
                            update = TRUE, # up to date version of the resource
                            nh_cachedir = "NetworkHub", # name of cache
                            ...) { # additional arguments transferred to bfcadd
