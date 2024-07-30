@@ -54,7 +54,7 @@ urlmaker_stringdb <- function(type = "PPI", # or protein info for stringdb
 
   # "https://stringdb-downloads.org/download/protein.links.v12.0/9606.protein.links.v12.0.txt.gz"
 
-  #match the information about the species (id, name) with the corresponding data file (PPI/protein info)
+  # match the information about the species (id, name) with the corresponding data file (PPI/protein info)
 
   info_species <- info_species_stringdb(version = version)
   species_id <- info_species$X.taxon_id[
