@@ -1,9 +1,6 @@
 # Here we collect all the functions in order to work with the data. ----
 
-## First function is ... -----
-
-
-## What Fede has in here ...
+##
 get_networkdata_STRINGDB <- function(species,
                                      version,
                                      cache = TRUE,
@@ -11,14 +8,15 @@ get_networkdata_STRINGDB <- function(species,
                                      remap_to = c(
                                        "ENSEMBL", "gene_symbol"
                                        # , "ENTREZ"
-                                     )){
+                                     ),
+                                     ...){
 
   # matching for the species...
-  species_id <- NULL
+  species_id <- NULL # looking for the corresponding id in the following
 
-  info_species <- info_species_stringdb(version = version)
-  species_id <- info_species$X.taxon_id[
-    match(species, info_species$official_name_NCBI)
+  info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
+  species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
+    match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
   ]
 
 
