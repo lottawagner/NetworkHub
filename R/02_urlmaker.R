@@ -48,9 +48,9 @@ info_species_stringdb <- function(version = "12.0"){
 #' @examples
 #'
 
-urlmaker_stringdb <- function(type = "PPI", # or protein info for stringdb
-                              species = "Homo sapiens",
-                              version = "12.0") {
+urlmaker_stringdb <- function(type = "PPI", #QUESTIONFEDE or protein info for stringdb
+                              species,
+                              version = version) {
 
   # "https://stringdb-downloads.org/download/protein.links.v12.0/9606.protein.links.v12.0.txt.gz"
 
