@@ -72,10 +72,15 @@ cache_NetworkHub <- function(rname, # ressource name
   nh_query <- BiocFileCache::bfcquery(bfc_nh, fpath) # is the fpath already in the cache?
   if (BiocFileCache::bfccount(nh_query) == 0) { # fpath is not in the cache already ?
     rpath <- BiocFileCache::bfcadd(bfc_nh, rname, fpath, ...) # add it to the cache by identifing the ressource with rname & fpath and ... (additional arguments that are passed to cache)
-  } else { # ≠ 0 -> fpath already there?
+  }
+  if (BiocFileCache::bfccount(nh_query) == 1){ # == 1 -> fpath once in cache?
     rpath <- nh_query$rpath # use the already existing ressource path
   }
-  return(rpath) # retourns the ressource path of the cached file
+  if (BiocFileCache::bfccount(nh_query) > 1) { #TODOFEDE
+    message("WARNING - more than one version with the same fpath contained in bfc_nh", nh_query$fpath)
+  }
+
+  return(rpath) # returns the resource path of the cached file
 }
 
 # Get data from the cache ----
