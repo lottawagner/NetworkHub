@@ -1,19 +1,58 @@
 # Here we collect all the functions in order to work with the data. ----
 
+# stringdb species --------------------------------------------------------
+
+#' info_species_stringdb
+#'
+#' @param version #current version of the data files in stringdb
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' info_species_stringdb()
+#'
+info_species_stringdb <- function(version = "12.0"){
+
+  # use sprintf function to insert current version into the url
+  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt", version)
+
+  # read.delim the data from the species text file (columns separated using a delimiter)
+  df_species <- read.delim(url(url_species_stringdb))
+
+  # return the datafile to the caller
+  return(df_species)
+}
+
+
+
+
 ## Functions we use in the get_networkdata_stringdb ----
 
+#' Title
+#'
+#' @param species
+#' @param version
+#' @param cache
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' human_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",
+#'                                         version = "12.0")
 get_accessoryinfo_stringdb <- function(species,
                                        version,
                                        cache = TRUE) {
 
   # species is matched to the id in the info file
 
-  species_id <- NULL
-
-  info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
-  species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
-    match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
-  ]
+  # species_id <- NULL
+  #
+  # info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
+  # species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
+  #   match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
+  # ]
 
   # rname of accessory info defined
 
@@ -34,23 +73,23 @@ get_accessoryinfo_stringdb <- function(species,
 
   ## cache file and fetch from the cache
 
-  if (!cache | is.null(proteininfo_file)) #QUESTIONFEDE: Why do we need to say both?
-   message("Retrieving to cache...")
-   stringdb_url <- urlmaker_stringdb(
-     type = "protein_info",
-     species = species,
-     version = version
-   )
-   proteininfo_file <- cache_NetworkHub(
-     rname = rname,
-     fpath = stringdb_url
-   )
- }
+  if (!cache | is.null(proteininfo_file)) { #QUESTIONFEDE: Why do we need to say both?
+    message("Downloading to cache...")
+    stringdb_url <- urlmaker_stringdb(
+      type = "protein_info",
+      species = species,
+      version = version
+    )
+    proteininfo_file <- cache_NetworkHub(
+      rname = rname,
+      fpath = stringdb_url
+    )
+  }
 
-# reading in the fetched information file
-proteininfo_stringdb <- vroom::vroom(proteininfo_file)
+  # reading in the fetched information file
+  proteininfo_stringdb <- vroom::vroom(proteininfo_file)
 
-return(proteininfo_stringdb)
+  return(proteininfo_stringdb)
 }
 
 ## Annotation ----
@@ -86,6 +125,27 @@ build_graph_STRINGDB <- function(graph_data,
 ## final function to get the data from stringdb in the way we want it ----
 
 
+#' Title
+#'
+#' @param species
+#' @param version
+#' @param cache
+#' @param remap_identifiers
+#' @param remap_to
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' db_string_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0"
+#' )
+#'
+#' db_string_df
+#'
 get_networkdata_stringdb <- function(species,
                                      version,
                                      cache = TRUE,
@@ -121,8 +181,8 @@ get_networkdata_stringdb <- function(species,
   if (cache) {
     # tries to fetch from the cache
     message("Trying to fetch from cache...")
-    network_file <- get_NetworkHub(rname)
-  } # here we check if the file is already in the cache and use the function get_NetworkHub to take the corresponding file
+    network_file <- fetch_NetworkHub(rname)
+  } # here we check if the file is already in the cache and use the function fetch_NetworkHub to take the corresponding file
 
   if (!cache | is.null(network_file)) {
     # retrieves the file for the first time
