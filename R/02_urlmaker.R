@@ -9,29 +9,7 @@
 
 # For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by chosing a name
 
-## stringdb species -----
 
-#' info_species_stringdb
-#'
-#' @param version #current version of the data files in stringdb
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-
-info_species_stringdb <- function(version = "12.0"){
-
-  # use sprintf function to insert current version into the url
-  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt", version)
-
-  # read.delim the data from the species text file (columns separated using a delimiter)
-  df_species <- read.delim(url(url_species_stringdb))
-
-  # return the datafile to the caller
-  return(df_species)
-}
 
 
 ## stringdb urlmaker -----
@@ -47,16 +25,27 @@ info_species_stringdb <- function(version = "12.0"){
 #'
 #' @examples
 #'
-
 urlmaker_stringdb <- function(type = "PPI", #QUESTIONFEDE or protein info for stringdb
-                              species,
-                              version = version) {
+                              species = "Homo sapiens",
+                              version = "12.0") {
+
+  type <- match.arg(type, c("PPI", "protein_info"))
+  stopifnot(is.character(species))
+  stopifnot(is.character(version))
+  stopifnot(length(version) == 1)
+
+  info_species <- info_species_stringdb(version = version)
+
+  if (!(species %in% info_species$official_name_NCBI)) {
+    stop("Species not found as specified by STRINGDB, ",
+         "please check some valid entries by running `info_species_stringdb()`")
+  }
+
 
   # "https://stringdb-downloads.org/download/protein.links.v12.0/9606.protein.links.v12.0.txt.gz"
 
   # match the information about the species (id, name) with the corresponding data file (PPI/protein info)
 
-  info_species <- info_species_stringdb(version = version)
   species_id <- info_species$X.taxon_id[
     match(species, info_species$official_name_NCBI)
   ]
