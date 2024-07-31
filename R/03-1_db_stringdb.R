@@ -32,13 +32,13 @@ info_species_stringdb <- function(version = "12.0"){
 
 ## Functions we use in the get_networkdata_stringdb ----
 
-#' Title
+#' Title TODO
 #'
-#' @param species
-#' @param version
-#' @param cache
+#' @param species TODO
+#' @param version TODO
+#' @param cache TODO
 #'
-#' @return
+#' @return TODO
 #' @export
 #'
 #' @examples
@@ -76,7 +76,7 @@ get_accessoryinfo_stringdb <- function(species,
 
   ## cache file and fetch from the cache
 
-  if (!cache | is.null(proteininfo_file)) { #QUESTIONFEDE: Why do we need to say both?
+  if (!cache | is.null(proteininfo_file)) {
     message("Downloading to cache...")
     stringdb_url <- urlmaker_stringdb(
       type = "protein_info",
@@ -97,8 +97,6 @@ get_accessoryinfo_stringdb <- function(species,
 
 ## Annotation ----
 
-#QUESTIONFEDE: Is the idea here to be able to tell the user what gene/protein we are looking at in different annotation types?
-#If so, where does the accessoryinfo comes from?
 
 create_annotation_from_stringdbaccessory <- function(accessory_info) {
   accessory_info_df <- data.frame(
@@ -130,14 +128,14 @@ build_graph_STRINGDB <- function(graph_data,
 
 #' Title
 #'
-#' @param species
-#' @param version
-#' @param cache
-#' @param remap_identifiers
-#' @param remap_to
-#' @param ...
+#' @param species  TODO
+#' @param version TODO
+#' @param cache TODO
+#' @param remap_identifiers TODO
+#' @param remap_to TODO
+#' @param ... TODO
 #'
-#' @return
+#' @return TODO
 #' @export
 #'
 #' @examples

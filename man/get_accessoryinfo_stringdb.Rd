@@ -2,15 +2,22 @@
 % Please edit documentation in R/03-1_db_stringdb.R
 \name{get_accessoryinfo_stringdb}
 \alias{get_accessoryinfo_stringdb}
-\title{Title}
+\title{Title TODO}
 \usage{
 get_accessoryinfo_stringdb(species, version, cache = TRUE)
 }
 \arguments{
-\item{cache}{}
+\item{species}{TODO}
+
+\item{version}{TODO}
+
+\item{cache}{TODO}
+}
+\value{
+TODO
 }
 \description{
-Title
+Title TODO
 }
 \examples{
 human_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",

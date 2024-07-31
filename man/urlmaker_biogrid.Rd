@@ -9,10 +9,13 @@ urlmaker_biogrid(type = "PPI", species = "Homo sapiens", version = "4.4.235")
 \arguments{
 \item{version}{#current version of the data files in stringdb}
 }
+\value{
+TODO
+}
 \description{
 info_species_biogrid
 }
 \examples{
-
+# TODO
 urlmaker_biogrid
 }

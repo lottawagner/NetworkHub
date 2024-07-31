@@ -25,7 +25,7 @@
 #'
 #' @examples
 #' # TODO
-urlmaker_stringdb <- function(type = "PPI", #QUESTIONFEDE or protein info for stringdb
+urlmaker_stringdb <- function(type = "PPI",
                               species = "Homo sapiens",
                               version = "12.0") {
 
@@ -80,12 +80,11 @@ urlmaker_stringdb <- function(type = "PPI", #QUESTIONFEDE or protein info for st
 #'
 #' @param version #current version of the data files in stringdb
 #'
-#' @return
+#' @return TODO
 #' @export
 #'
 #' @examples
-#'
-
+#' # TODO
 # info_species_zip_biogrid <- function
 ## biogrid urlmaker -----
 
