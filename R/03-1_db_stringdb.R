@@ -39,6 +39,7 @@ info_species_stringdb <- function(version = "12.0"){
 #' @param cache TODO
 #'
 #' @return TODO
+#' @importFrom vroom vroom
 #' @export
 #'
 #' @examples
@@ -101,7 +102,7 @@ get_accessoryinfo_stringdb <- function(species,
 create_annotation_from_stringdbaccessory <- function(accessory_info) {
   accessory_info_df <- data.frame(
     protein_id = unique(accessory_info$`#string_protein_id`),
-    row.names = unique(acessory_info$`#string_protein_id`)
+    row.names = unique(accessory_info$`#string_protein_id`)
   )
 
   # use NA to assign a previous "value" to the variables
@@ -136,6 +137,8 @@ build_graph_STRINGDB <- function(graph_data,
 #' @param ... TODO
 #'
 #' @return TODO
+#'
+#' @importFrom vroom vroom
 #' @export
 #'
 #' @examples
@@ -209,7 +212,7 @@ get_networkdata_stringdb <- function(species,
 
   # WE COULD STOP HERE, but we won't - at the end...
 
-  #get_acessoryinfo_stringdb
+  #get_accessoryinfo_stringdb
   #annotation
   #
 
