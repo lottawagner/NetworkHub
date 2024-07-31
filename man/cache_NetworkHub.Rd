@@ -7,7 +7,16 @@
 cache_NetworkHub(rname, fpath, nh_cachedir = "NetworkHub", ...)
 }
 \arguments{
-\item{...}{}
+\item{rname}{TODO}
+
+\item{fpath}{TODO}
+
+\item{nh_cachedir}{TODO}
+
+\item{...}{TODO}
+}
+\value{
+TODO
 }
 \description{
 Title

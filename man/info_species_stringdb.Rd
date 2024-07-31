@@ -9,6 +9,9 @@ info_species_stringdb(version = "12.0")
 \arguments{
 \item{version}{#current version of the data files in stringdb}
 }
+\value{
+TODO
+}
 \description{
 info_species_stringdb
 }

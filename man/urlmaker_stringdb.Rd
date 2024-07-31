@@ -13,6 +13,12 @@ urlmaker_stringdb(type = "PPI", species = "Homo sapiens", version = "12.0")
 
 \item{version}{}
 }
+\value{
+TODO
+}
 \description{
 urlmaker_stringdb
+}
+\examples{
+# TODO
 }

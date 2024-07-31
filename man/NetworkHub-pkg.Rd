@@ -13,11 +13,11 @@ NetworkHub
 This package provides functionality to ... TODO
 }
 \author{
-\strong{Maintainer}: Lotta wagnerlo@uni-mainz.de Wagner (\href{https://orcid.org/0009-0009-7545-0173}{ORCID})
+\strong{Maintainer}: Lotta Wagner \email{wagnerlo@uni-mainz.de} (\href{https://orcid.org/0009-0009-7545-0173}{ORCID})
 
 Authors:
 \itemize{
-  \item federico marinif@uni-mainz.de Marini (\href{https://orcid.org/0000-0003-3252-7758}{ORCID})
+  \item Federico Marini \email{marinif@uni-mainz.de} (\href{https://orcid.org/0000-0003-3252-7758}{ORCID})
 }
 
 }

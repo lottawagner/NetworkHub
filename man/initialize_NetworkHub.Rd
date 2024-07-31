@@ -7,7 +7,10 @@
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 }
 \arguments{
-\item{nh_cachedir}{}
+\item{nh_cachedir}{TODO}
+}
+\value{
+TODO
 }
 \description{
 initialize_NetworkHub function
@@ -18,4 +21,6 @@ bfc_nh <- initialize_NetworkHub() # use this function to create the cache called
 bfccache(bfc_nh) # get the path to the cache
 length(bfc_nh) # how many entries?
 bfcinfo(bfc_nh) # what are the column names of the cache
+
+# nh_cachedir = default directory name where the cache will be stored
 }

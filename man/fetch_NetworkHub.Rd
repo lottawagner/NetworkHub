@@ -7,7 +7,16 @@
 fetch_NetworkHub(rname, update = TRUE, nh_cachedir = "NetworkHub", ...)
 }
 \arguments{
-\item{...}{}
+\item{rname}{TODO}
+
+\item{update}{TODO}
+
+\item{nh_cachedir}{TODO}
+
+\item{...}{TODO}
+}
+\value{
+TODO
 }
 \description{
 Title
