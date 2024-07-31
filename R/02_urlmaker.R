@@ -97,7 +97,7 @@ urlmaker_stringdb <- function(type = "PPI", #QUESTIONFEDE or protein info for st
 #' @examples
 #'
 
-info_species_zip_biogrid <- function
+# info_species_zip_biogrid <- function
 ## biogrid urlmaker -----
 
 #' urlmaker_biogrid
@@ -121,11 +121,11 @@ species_intact <- c("human",
                     "mouse"
                     )
 
-
-urlmaker_intact <- function(type = "PPI", # could be also protein info # QUESTION: WHY?
-                            species = "human",
-                            version = "current")
-  https://ftp.ebi.ac.uk/pub/databases/intact/%s/%s/species
+#
+# urlmaker_intact <- function(type = "PPI", # could be also protein info # QUESTION: WHY?
+#                             species = "human",
+#                             version = "current")
+#   https://ftp.ebi.ac.uk/pub/databases/intact/%s/%s/species
 
 # https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/
 
