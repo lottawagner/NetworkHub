@@ -16,15 +16,15 @@
 
 #' urlmaker_stringdb
 #'
-#' @param type # type of information that is stored in the file
-#' @param species # from which species does the data come from
+#' @param type type of information that is stored in the file
+#' @param species from which species does the data come from
 #' @param version
 #'
-#' @return
+#' @return TODO
 #' @export
 #'
 #' @examples
-#'
+#' # TODO
 urlmaker_stringdb <- function(type = "PPI", #QUESTIONFEDE or protein info for stringdb
                               species = "Homo sapiens",
                               version = "12.0") {

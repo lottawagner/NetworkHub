@@ -11,9 +11,12 @@
 
 #' initialize_NetworkHub function
 #'
-#' @param nh_cachedir
+#' @param nh_cachedir TODO
 #'
-#' @return
+#' @return TODO
+#'
+#' @importFrom BiocFileCache BiocFileCache
+#'
 #' @export
 #'
 #' @examples
@@ -22,9 +25,8 @@
 #' bfccache(bfc_nh) # get the path to the cache
 #' length(bfc_nh) # how many entries?
 #' bfcinfo(bfc_nh) # what are the column names of the cache
-
-# nh_cachedir = default directory name where the cache will be stored
-
+#'
+#' # nh_cachedir = default directory name where the cache will be stored
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
   # define the cache directory, with tools::R_user_dir you can create a path to the cache, which = cache, return the path for caching purposes
@@ -41,12 +43,15 @@ initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
 #' Title
 #'
-#' @param rname
-#' @param fpath
-#' @param nh_cachdir
-#' @param ...
+#' @param rname TODO
+#' @param fpath TODO
+#' @param nh_cachedir TODO
+#' @param ... TODO
 #'
-#' @return
+#' @return TODO
+#'
+#' @importFrom BiocFileCache BiocFileCache bfcquery bfccount bfcadd
+#'
 #' @export
 #'
 #' @examples
@@ -87,12 +92,12 @@ cache_NetworkHub <- function(rname, # ressource name
 
 #' Title
 #'
-#' @param rname
-#' @param update
-#' @param nh_cachedir
-#' @param ...
+#' @param rname TODO
+#' @param update TODO
+#' @param nh_cachedir TODO
+#' @param ... TODO
 #'
-#' @return
+#' @return TODO
 #' @export
 #'
 #' @examples

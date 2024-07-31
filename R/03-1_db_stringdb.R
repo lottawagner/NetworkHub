@@ -6,7 +6,10 @@
 #'
 #' @param version #current version of the data files in stringdb
 #'
-#' @return
+#' @return TODO
+#'
+#' @importFrom utils read.delim
+#'
 #' @export
 #'
 #' @examples
