@@ -12,7 +12,6 @@
 
 
 
-## stringdb urlmaker -----
 
 #' urlmaker_stringdb
 #'
@@ -69,12 +68,12 @@ urlmaker_stringdb <- function(type = "PPI",
   return(url)
 }
 
-# BIOGRID ----
+# BIOGRID --------------------------------------
+
 
 #https://downloads.thebiogrid.org/File/BioGRID/Release-Archive/BIOGRID-4.4.235/BIOGRID-ORGANISM-4.4.235.tab3.zip
 #https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.235/BIOGRID-ORGANISM-4.4.235.tab3.zip
 
-## biogrid species -----
 
 #' info_species_biogrid
 #'
@@ -86,7 +85,6 @@ urlmaker_stringdb <- function(type = "PPI",
 #' @examples
 #' # TODO
 # info_species_zip_biogrid <- function
-## biogrid urlmaker -----
 
 #' urlmaker_biogrid
 
@@ -122,3 +120,10 @@ species_intact <- c("human",
 #E.Coli Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/Escherichia.zip
 
 #Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
+
+
+# CORUM ------------------------------
+#Idee: all datei herunterladen und in get_networkdata_corum definieren welchen organimus man anschauen will
+# https://mips.helmholtz-muenchen.de/corum/download/releases/current/humanComplexes.txt.zip
+# https://mips.helmholtz-muenchen.de/corum/download/releases/current/allComplexes.txt.zip
+
