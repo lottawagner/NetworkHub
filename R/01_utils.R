@@ -11,9 +11,10 @@
 
 #' initialize_NetworkHub function
 #'
-#' @param nh_cachedir TODO
+#' @param nh_cachedir default directory name where the cache will be stored
+#' @param cache_dir user directory of the cache
 #'
-#' @return TODO
+#' @return bfc_nh variabe assigned to the chache
 #'
 #' @importFrom BiocFileCache BiocFileCache
 #'
@@ -43,12 +44,12 @@ initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
 #' Title
 #'
-#' @param rname TODO
-#' @param fpath TODO
-#' @param nh_cachedir TODO
-#' @param ... TODO
+#' @param rname resource name in the cache (local)
+#' @param fpath filepath (external)
+#' @param nh_cachedir default directory name where the cache will be stored
+#' @param ... further arguments passed to or from other methods
 #'
-#' @return TODO
+#' @return rpath returns the resource path of the cached file
 #'
 #' @importFrom BiocFileCache BiocFileCache bfcquery bfccount bfcadd
 #'
@@ -93,18 +94,18 @@ cache_NetworkHub <- function(rname, # ressource name
 
 #' Title
 #'
-#' @param rname TODO
-#' @param update TODO
-#' @param nh_cachedir TODO
-#' @param ... TODO
+#' @param rname resource name in the cache (local)
+#' @param update default parameter set to TRUE (up to date version of the resource)
+#' @param nh_cachedir default directory name where the cache will be stored
+#' @param ... further arguments passed to or from other methods
 #'
-#' @return TODO
+#' @return res_nh returns rpath to res_nh or NULL if no entry
 #' @export
 #'
 #' @examples
 #' fetch_NetworkHub(rname = "STRINGDB_Homo sapiens_v12.0")
 #'
-fetch_NetworkHub <- function(rname, # ressourcename
+fetch_NetworkHub <- function(rname, # resourcename
                            update = TRUE, # up to date version of the resource
                            nh_cachedir = "NetworkHub", # name of cache
                            ...) { # additional arguments transferred to bfcadd

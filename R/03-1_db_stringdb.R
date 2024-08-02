@@ -4,9 +4,9 @@
 
 #' info_species_stringdb
 #'
-#' @param version #current version of the data files in stringdb
+#' @param version version of the data files in stringdb
 #'
-#' @return TODO
+#' @return df_species returns the file containing info about the species annotation
 #'
 #' @importFrom utils read.delim
 #'
@@ -23,7 +23,7 @@ info_species_stringdb <- function(version = "12.0"){
   # read.delim the data from the species text file (columns separated using a delimiter)
   df_species <- read.delim(url(url_species_stringdb))
 
-  # return the datafile to the caller
+  # returns the datafile df_species
   return(df_species)
 }
 
@@ -32,14 +32,15 @@ info_species_stringdb <- function(version = "12.0"){
 
 ## Functions we use in the get_networkdata_stringdb ----
 
-#' Title TODO
+#' Get accessory info from STRINGDB
 #'
-#' @param species TODO
-#' @param version TODO
-#' @param cache TODO
+#' @param species from which species does the data come from
+#' @param version version of the data files in stringdb
+#' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #'
-#' @return TODO
+#' @return proteininfo_stringdb variable assigned to the datafile that contains info about protein annotation
 #' @importFrom vroom vroom
+#'
 #' @export
 #'
 #' @examples
@@ -129,14 +130,14 @@ build_graph_STRINGDB <- function(graph_data,
 
 #' Title
 #'
-#' @param species  TODO
-#' @param version TODO
-#' @param cache TODO
+#' @param species  from which species does the data come from
+#' @param version version of the data files in stringdb
+#' @param cache efault value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param remap_identifiers TODO
 #' @param remap_to TODO
 #' @param ... TODO
 #'
-#' @return TODO
+#' @return ppis_stringdb TODO
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -215,7 +216,7 @@ get_networkdata_stringdb <- function(species,
   #get_accessoryinfo_stringdb
   #annotation
   #
-
+  return(ppis_stringdb)
 
 }
 

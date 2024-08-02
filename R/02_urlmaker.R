@@ -17,13 +17,15 @@
 #'
 #' @param type type of information that is stored in the file
 #' @param species from which species does the data come from
-#' @param version
+#' @param version version of the data files in stringdb
 #'
-#' @return TODO
+#' @return url returns the corresponding url set by params
 #' @export
 #'
 #' @examples
-#' # TODO
+#' urlmaker_stringdb(type = "PPI",
+#'                     species = "Homo sapiens",
+#'                     version = "12.0")
 urlmaker_stringdb <- function(type = "PPI",
                               species = "Homo sapiens",
                               version = "12.0") {
@@ -77,9 +79,9 @@ urlmaker_stringdb <- function(type = "PPI",
 
 #' info_species_biogrid
 #'
-#' @param version #current version of the data files in stringdb
+#' @param version version of the data files in stringdb
 #'
-#' @return TODO
+#' @return url returns the corresponding url set by params
 #' @export
 #'
 #' @examples
