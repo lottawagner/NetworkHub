@@ -15,17 +15,25 @@ library(sysfonts)
 library(tidyverse)
 
 
-
-nwh_img <- "/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts/netzwerk.png"
-
+setwd("/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts")
+nwh_img <- image_read("netzwerk.png")
 
 sticker(subplot = nwh_img,
   package = "NetworkHub",
-  s_width = 1,
-  s_height = 1,
+  s_width = 1.2,
+  s_height = 1.2,
   s_x = 1,
-  s_y = 0.75
-) %>% print(sticker())
+  s_y = 1.2,
+  p_x = 1,
+  p_y = 0.5,
+  p_color = "white",
+  p_size = 16,
+  h_size = 1,
+  h_fill = "purple",
+  h_color = "lightgreen") %>% print(sticker())
+
+
+
 
 
 
