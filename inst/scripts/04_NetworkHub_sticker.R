@@ -20,17 +20,17 @@ nwh_img <- image_read("netzwerk.png")
 
 sticker(subplot = nwh_img,
   package = "NetworkHub",
-  s_width = 1.2,
-  s_height = 1.2,
+  s_width = 0.9,
+  s_height = 0.9,
   s_x = 1,
-  s_y = 1.2,
+  s_y = 0.7,
   p_x = 1,
-  p_y = 0.5,
-  p_color = "white",
-  p_size = 16,
-  h_size = 1,
-  h_fill = "purple",
-  h_color = "lightgreen") %>% print(sticker())
+  p_y = 1.3,
+  p_color = "darkslateblue",
+  p_size = 22,
+  h_size = 1.6,
+  h_fill = "darkseagreen",
+  h_color = "lemonchiffon") %>% print(sticker())
 
 
 
