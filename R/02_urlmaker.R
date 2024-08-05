@@ -129,3 +129,46 @@ species_intact <- c("human",
 # https://mips.helmholtz-muenchen.de/corum/download/releases/current/humanComplexes.txt.zip
 # https://mips.helmholtz-muenchen.de/corum/download/releases/current/allComplexes.txt.zip
 
+
+# HINT
+
+#links:
+# binary: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_binary_hq.txt
+# cocomplex: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_cocomp_hq.txt
+# https://hint.yulab.org/download-raw/2024-06/SaccharomycesCerevisiae_binary_hq.txt
+
+
+
+urlmaker_hint <- function(type = "binary", #default value for type
+                          species = "HomoSapiens", #default value for species
+                          version = "2024-06") { #version is always written as year - month ( 2024-06, 2020-08, ...)
+
+  # avoid errors
+  stopifnot(is.character(species))
+  stopifnot(is.character(version))
+  stopifnot(length(version) == 1)
+
+
+  # define the opportunities for species in HINT
+
+  list_species_hint <- c("HomoSapiens", "SaccharomycesCerevisiae", "SchizosaccharomycesPombe", "MusMusculus", "DrosophilaMelanogaster", "CaenorhabditisElegans", "ArabidopsisThaliana", "EscherichiaColi", "RattusNorvegicus", "OryzaSativa")
+
+  if (!(species %in% list_species_hint)) {
+    stop("Species not found as specified by HINT,",
+         "please check some valid entries by running `list_species_hint`")
+   }
+
+  # define the opportunities for the four interaction types in HINT
+  type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
+
+  # create the url depending on the type, version and species
+
+  url <- sprintf("https://hint.yulab.org/download-raw/%s/%s_%s_hq.txt",
+                 version,
+                 species,
+                 type)
+
+  return(url)
+
+}
+
