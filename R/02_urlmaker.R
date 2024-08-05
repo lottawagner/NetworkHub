@@ -4,7 +4,6 @@
 # 2. For each database one function to create an url to download/cache the data from the db
 # -> Why? because using an url where you have to define the version, species and some other variables, the user can easily access the data without the need of google search
 
-
 # STRINGDB -----
 
 # For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by chosing a name
@@ -237,7 +236,11 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 
 
 
-# CPDB -----------------------------
+
+
+
+# ONLY HUMAN
+# CPDB - ONLY HUMAN -----------------------------
 
 
 #' urlmaker_cpdb()
@@ -250,7 +253,7 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 #' @examples
 #' urlmaker_cpdb(species = "human")
 #'
-urlmaker_cpdb <- function (species = "human") {
+urlmaker_cpdb <- function (species = "human") { #default value = human because at the moment (05.08.2024) only human
 
   list_species_cpdb <- c("human", "mouse", "yeast")
 
@@ -260,19 +263,27 @@ urlmaker_cpdb <- function (species = "human") {
                  species)
   return(url)
 
-  }
-  ONLYHUMAN
-# HuRi ----------------
+}
+# HuRi - ONLY HUMAN ----------------
 
- urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
-                            type = "HI-union") {
+#' urlmaker_huri
+#'
+#' @param species default value = "human", because this database only provides human data
+#' @param type differnet datasets , more information on "http://www.interactome-atlas.org/about/"
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#'
+#' urlmaker_huri(species = "human",
+#'              type = "HI-union")
+urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
+                           type = "HI-union") {
 
   list_species_huri <- c("human")
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
-  stopifnot(is.character(version)) # make sure to type in a version as character
-  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
-
 
   if (!(species %in% list_species_huri)) { # if species is not in the list
     stop("Species not found as specified by HuRi,",
@@ -280,13 +291,13 @@ urlmaker_cpdb <- function (species = "human") {
   }
 
   # the datafile "HI-union" is an aggregate of all PPIs identified in
-                  # HI-I-05,
-                  # HI-II-14
-                  # HuRI
-                  # Venkatesan-09
-                  # Yu-11
-                  # Yang-16
-                  # Test space screens-19
+  # HI-I-05,
+  # HI-II-14
+  # HuRI
+  # Venkatesan-09
+  # Yu-11
+  # Yang-16
+  # Test space screens-19
 
   type <- c("HI-union")
 
@@ -294,11 +305,15 @@ urlmaker_cpdb <- function (species = "human") {
                  type)
   return(url)
 
- }
+}
 
-ONLYHUMAN
 
-# BIOGRID --------------------------------------
+
+# TODO
+
+
+# TODO
+# BIOGRID - TODO --------------------------------------
 
 
 #https://downloads.thebiogrid.org/File/BioGRID/Release-Archive/BIOGRID-4.4.235/BIOGRID-ORGANISM-4.4.235.tab3.zip
@@ -329,8 +344,8 @@ urlmaker_biogrid <- function(type = "PPI", # or protein info for stringdb
 
 
 
- TODO TODO
-# IntAct -----
+
+# IntAct - TODO -----
 
 species_intact <- c("human",
                     "Escherichia",
@@ -351,16 +366,18 @@ species_intact <- c("human",
 
 #Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
 
- TODO
-# CORUM ------------------------------
+
+# CORUM - TODO ------------------------------
 #Idee: all datei herunterladen und in get_networkdata_corum definieren welchen organimus man anschauen will
 # https://mips.helmholtz-muenchen.de/corum/download/releases/current/humanComplexes.txt.zip
 # https://mips.helmholtz-muenchen.de/corum/download/releases/current/allComplexes.txt.zip
-
- TODO
-# GeneMania -------------
+# GeneMania - TODO-------------
 
 # https://pages.genemania.org/data/ TODO: There are folders containing
 # multiple files for each species ... how can I work on that?
 # combine the single file manually?
- TODO
+
+
+
+
+
