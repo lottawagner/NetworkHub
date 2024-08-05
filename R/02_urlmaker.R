@@ -237,6 +237,67 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 
 
 
+# CPDB -----------------------------
+
+
+#' urlmaker_cpdb()
+#'
+#' @param species currently only human (default value)
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_cpdb(species = "human")
+#'
+urlmaker_cpdb <- function (species = "human") {
+
+  list_species_cpdb <- c("human", "mouse", "yeast")
+
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+
+  url <- sprintf("http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
+                 species)
+  return(url)
+
+  }
+  ONLYHUMAN
+# HuRi ----------------
+
+ urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
+                            type = "HI-union") {
+
+  list_species_huri <- c("human")
+
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
+
+
+  if (!(species %in% list_species_huri)) { # if species is not in the list
+    stop("Species not found as specified by HuRi,",
+         "please check some valid entries by running `list_species_huri`") # stop function and print
+  }
+
+  # the datafile "HI-union" is an aggregate of all PPIs identified in
+                  # HI-I-05,
+                  # HI-II-14
+                  # HuRI
+                  # Venkatesan-09
+                  # Yu-11
+                  # Yang-16
+                  # Test space screens-19
+
+  type <- c("HI-union")
+
+  url <- sprintf("http://www.interactome-atlas.org/data/%s.tsv",
+                 type)
+  return(url)
+
+ }
+
+ONLYHUMAN
+
 # BIOGRID --------------------------------------
 
 
