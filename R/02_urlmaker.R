@@ -4,6 +4,11 @@
 # 2. For each database one function to create an url to download/cache the data from the db
 # -> Why? because using an url where you have to define the version, species and some other variables, the user can easily access the data without the need of google search
 
+# Comment on comments
+#UPDATEVERSION - for databases where version is not defined in url
+#SPECIESDEFINITION - for databases where species is not defined in url
+
+
 # STRINGDB -----
 
 # For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by chosing a name
@@ -297,6 +302,47 @@ urlmaker_iid <- function(species = "human", #
   return(url)
 }
 
+
+# Innate DB -------------------
+
+
+urlmaker_innatedb <- function(url = url){
+
+  url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
+}  #SPECIESDEFINITION
+
+
+# species NCBI listed in ncbi_taxid_host_organism
+
+list_ncbispecies_innatedb <- c(   "taxid:10090",
+                                  "taxid:9606",
+                                  "taxid:4932",
+                                  "taxid:0",
+                                  "taxid:9615",
+                                  "taxid:7108",
+                                  "taxid:10116",
+                                  "taxid:9534",
+                                  "taxid:10029",
+                                  "taxid:9031",
+                                  "taxid:9479",
+                                  "taxid:9986",
+                                  "taxid:10026",
+                                  "taxid:93934",
+                                  "taxid:9913",
+                                  "taxid:10760",
+                                  "taxid:111296",
+                                  "taxid:10469",
+                                  "taxid:101841",
+                                  "taxid:562",
+                                  "taxid:452646",
+                                  "taxid:7227",
+                                  "taxid:9580",
+                                  "taxid:10455",
+                                  "taxid:10036",
+                                  "taxid:-1",
+                                  "taxid:9527",
+                                  "taxid:9666",
+                                  "taxid:7088")
 
 # CPDB - ONLY HUMAN -----------------------------
 
