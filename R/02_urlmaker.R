@@ -303,7 +303,7 @@ urlmaker_iid <- function(species = "human", #
 }
 
 
-# Innate DB -------------------
+# Innate DB - SPECIESDEFINITION -------------------
 
 
 urlmaker_innatedb <- function(url = url){
@@ -343,6 +343,48 @@ list_ncbispecies_innatedb <- c(   "taxid:10090",
                                   "taxid:9527",
                                   "taxid:9666",
                                   "taxid:7088")
+
+# iRefIndex ----------------------------
+
+info_species_irefindex <- function(version = "2023-08-29"){
+
+  list_species_irefindex <- c("Homo sapiens" = "9606",
+                              "Mus musculus" = "10090",
+                              "Saccharomyces cerevisiae" = "559292",
+                              "Escherichia" = "562",
+                              "Rattus norvegicus" = "10116",
+                              "Saccharomyces cerevisiae" = "4932",
+                              "Drosophila melanogaster" = "7227",
+                              "Caenorhabditis elegans" = "6239")
+
+  # returns the datafile df_species
+  return(list_species_irefindex)
+}
+
+urlmaker_irefindex <- function(species,
+                               version = "2023-08-29"){
+
+
+
+  species_id <- match.arg(species, info_species_irefindex())
+
+  url <- sprintf("https://storage.googleapis.com/irefindex-data/archive/release_20.0/psi_mitab/MITAB2.6/%s.mitab.%s.txt.zip",
+                 species_id,
+                 version)
+
+
+
+  return(url)
+}
+
+urlmaker_irefindex(species = "Homo sapiens")info_species_irefindex <- c("9606" <- species == "Homo sapiens",
+                            "10090" <- species == "Mus musculus",
+                            "559292" <- species == "Saccharomyces cerevisiae",
+                            "562" <- species == "Escherichia",
+                            "10116" <- species == "Rattus norvegicus",
+                            "4932" <- species == "Saccharomyces cerevisiae",
+                            "7227" <- species == "Drosophila melanogaster",
+                            "6239" <- species == "Caenorhabditis elegans"))
 
 # CPDB - ONLY HUMAN -----------------------------
 
