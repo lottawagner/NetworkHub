@@ -216,7 +216,7 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 
   # using sprintf to define the url of FunCoup by looking at the corresponding version and species
 
-  # current version is in download folder #UPDATEVERSION
+  # current version is stored on website in download folder #UPDATEVERSION
   if (version == "5.0") {
     url <- sprintf("https://funcoup.org/downloads/download.action?type=network&instanceID=24480085&fileName=FC%s_%s_full.gz",
                  version,
@@ -240,6 +240,64 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 
 
 # ONLY HUMAN
+# IID --------------------
+
+#' urlmaker_iid()
+#'
+#' @param species types listed in list_species_iid depending on current version, default value = "human" #UPDATEVERSION
+#' @param version version of IID , default value = "2021-05", value as type "2021-05" #UPDATEVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_iid(species = "mouse")
+urlmaker_iid <- function(species = "human", #
+                         version = "2021-05") { # version of IID not updated since
+
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1 ) # make sure to type in a version with the length == 1
+
+
+  # define the opportunities for species in IID
+
+  list_species_iid <- c ("alpaca",
+                         "cat",
+                         "chicken",
+                         "cow",
+                         "dog",
+                         "duck",
+                         "fly",
+                         "guinea_pig",
+                         "horse",
+                         "human",
+                         "mouse",
+                         "pig",
+                         "rabbit",
+                         "rat",
+                         "sheep",
+                         "turkey",
+                         "worm",
+                         "yeast")
+                          # list species is actualized for version IID version 2021-05
+                          # UPDATEVERSION
+
+  # check that the value for species is listed in IID
+  if (!species %in% list_species_iid){
+    stop("Species not found as specified by IID,",
+         "please check some valid entries of `list_species_iid` and on the webiste 'https://iid.ophid.utoronto.ca/search_by_proteins/'")
+  }
+
+  # create the url depending on the species
+  url <- sprintf("https://iid.ophid.utoronto.ca/static/download/%s_annotated_PPIs.txt.gz",
+  species)
+
+  #return the url for IID and the corresponding species
+  return(url)
+}
+
+
 # CPDB - ONLY HUMAN -----------------------------
 
 
