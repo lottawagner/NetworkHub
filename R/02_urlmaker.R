@@ -450,7 +450,6 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 
 
 
-
 # CPDB - ONLY HUMAN -----------------------------
 
 
@@ -562,6 +561,43 @@ return(url)
 
 
 
+
+
+# PathwayCommons (PC) - ONLY HUMAN ----------------
+
+#' urlmaker_pc()
+#'
+#' @param species default value = "Homo sapiens", because only one species
+#' @param version default value = "v12" because v14 doesn't contain all datafiles #UPDATEVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#'
+#' urlmaker_pc()
+#'
+urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapiens", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
+                         version = "v12") { # default value = "v12", because in "v14" not all datafiles are updated already #UPDATEVERSION
+
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
+
+  # check that the value for species is listed in PathwayCommons
+  if (species != "Homo sapiens") { # if species is not in the list
+    stop("Species not found as specified by PathwayCommons,",
+         " PathwayCommons only contains data for 'Homo sapiens'") # stop function and print
+  }
+
+  # create url depending on the version
+  url <- sprintf("https://download.baderlab.org/PathwayCommons/PC2/%s/PathwayCommons12.All.hgnc.txt.gz",
+                 version)
+
+  # return the url
+  return (url)
+
+}
 
 
 
