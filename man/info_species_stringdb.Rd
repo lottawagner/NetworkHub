@@ -7,10 +7,10 @@
 info_species_stringdb(version = "12.0")
 }
 \arguments{
-\item{version}{#current version of the data files in stringdb}
+\item{version}{version of the data files in stringdb}
 }
 \value{
-TODO
+df_species returns the file containing info about the species annotation
 }
 \description{
 info_species_stringdb

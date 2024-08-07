@@ -7,10 +7,12 @@
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 }
 \arguments{
-\item{nh_cachedir}{TODO}
+\item{nh_cachedir}{default directory name where the cache will be stored}
+
+\item{cache_dir}{user directory of the cache}
 }
 \value{
-TODO
+bfc_nh variabe assigned to the chache
 }
 \description{
 initialize_NetworkHub function

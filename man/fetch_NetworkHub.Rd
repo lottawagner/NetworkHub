@@ -7,16 +7,16 @@
 fetch_NetworkHub(rname, update = TRUE, nh_cachedir = "NetworkHub", ...)
 }
 \arguments{
-\item{rname}{TODO}
+\item{rname}{resource name in the cache (local)}
 
-\item{update}{TODO}
+\item{update}{default parameter set to TRUE (up to date version of the resource)}
 
-\item{nh_cachedir}{TODO}
+\item{nh_cachedir}{default directory name where the cache will be stored}
 
-\item{...}{TODO}
+\item{...}{further arguments passed to or from other methods}
 }
 \value{
-TODO
+res_nh returns rpath to res_nh or NULL if no entry
 }
 \description{
 Title

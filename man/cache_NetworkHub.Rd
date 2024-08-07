@@ -7,16 +7,16 @@
 cache_NetworkHub(rname, fpath, nh_cachedir = "NetworkHub", ...)
 }
 \arguments{
-\item{rname}{TODO}
+\item{rname}{resource name in the cache (local)}
 
-\item{fpath}{TODO}
+\item{fpath}{filepath (external)}
 
-\item{nh_cachedir}{TODO}
+\item{nh_cachedir}{default directory name where the cache will be stored}
 
-\item{...}{TODO}
+\item{...}{further arguments passed to or from other methods}
 }
 \value{
-TODO
+rpath returns the resource path of the cached file
 }
 \description{
 Title

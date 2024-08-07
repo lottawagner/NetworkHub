@@ -7,10 +7,10 @@
 urlmaker_biogrid(type = "PPI", species = "Homo sapiens", version = "4.4.235")
 }
 \arguments{
-\item{version}{#current version of the data files in stringdb}
+\item{version}{version of the data files in stringdb}
 }
 \value{
-TODO
+url returns the corresponding url set by params
 }
 \description{
 info_species_biogrid

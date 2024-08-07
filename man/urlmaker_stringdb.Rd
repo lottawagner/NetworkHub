@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_urlmaker.R
 \name{urlmaker_stringdb}
 \alias{urlmaker_stringdb}
-\title{urlmaker_stringdb}
+\title{urlmaker_stringdb()}
 \usage{
 urlmaker_stringdb(type = "PPI", species = "Homo sapiens", version = "12.0")
 }
@@ -11,14 +11,16 @@ urlmaker_stringdb(type = "PPI", species = "Homo sapiens", version = "12.0")
 
 \item{species}{from which species does the data come from}
 
-\item{version}{}
+\item{version}{version of the data files in stringdb}
 }
 \value{
-TODO
+url returns the corresponding url set by params
 }
 \description{
-urlmaker_stringdb
+urlmaker_stringdb()
 }
 \examples{
-# TODO
+urlmaker_stringdb(type = "PPI",
+                    species = "Homo sapiens",
+                    version = "12.0")
 }

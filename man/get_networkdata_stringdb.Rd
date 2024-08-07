@@ -14,11 +14,11 @@ get_networkdata_stringdb(
 )
 }
 \arguments{
-\item{species}{TODO}
+\item{species}{from which species does the data come from}
 
-\item{version}{TODO}
+\item{version}{version of the data files in stringdb}
 
-\item{cache}{TODO}
+\item{cache}{efault value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
 \item{remap_identifiers}{TODO}
 
@@ -27,7 +27,7 @@ get_networkdata_stringdb(
 \item{...}{TODO}
 }
 \value{
-TODO
+ppis_stringdb TODO
 }
 \description{
 Title

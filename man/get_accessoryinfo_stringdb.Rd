@@ -2,22 +2,22 @@
 % Please edit documentation in R/03-1_db_stringdb.R
 \name{get_accessoryinfo_stringdb}
 \alias{get_accessoryinfo_stringdb}
-\title{Title TODO}
+\title{Get accessory info from STRINGDB}
 \usage{
 get_accessoryinfo_stringdb(species, version, cache = TRUE)
 }
 \arguments{
-\item{species}{TODO}
+\item{species}{from which species does the data come from}
 
-\item{version}{TODO}
+\item{version}{version of the data files in stringdb}
 
-\item{cache}{TODO}
+\item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 }
 \value{
-TODO
+proteininfo_stringdb variable assigned to the datafile that contains info about protein annotation
 }
 \description{
-Title TODO
+Get accessory info from STRINGDB
 }
 \examples{
 human_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",
