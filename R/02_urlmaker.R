@@ -450,6 +450,22 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 
 
 
+# Reactome ---------------
+#' urlmaker_reactome()
+#'
+#' @param version default value = "current" #UPDATEVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_reactome()
+
+urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
+  url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.tab-delimited.txt"
+  return(url)
+}
+
 # CPDB - ONLY HUMAN -----------------------------
 
 
@@ -598,6 +614,7 @@ urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapien
   return (url)
 
 }
+
 
 
 
