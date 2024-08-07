@@ -462,6 +462,10 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 #' urlmaker_reactome()
 
 urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
+
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
   url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.tab-delimited.txt"
   return(url)
 }
@@ -618,36 +622,38 @@ urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapien
 
 
 
+
+
 # BIOGRID - TODO --------------------------------------
 
 
-#https://downloads.thebiogrid.org/File/BioGRID/Release-Archive/BIOGRID-4.4.235/BIOGRID-ORGANISM-4.4.235.tab3.zip
-#https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.235/BIOGRID-ORGANISM-4.4.235.tab3.zip
 
 
-#' info_species_biogrid
+
+#' urlmaker_biogrid()
 #'
-#' @param version version of the data files in stringdb
+#' @param version version of the data files in BioGRID
 #'
-#' @return url returns the corresponding url set by params
+#' @return url returns the corresponding url set by params #SPECIESDEFINITION
 #' @export
 #'
 #' @examples
-#' # TODO
-# info_species_zip_biogrid <- function
+#' urlmaker_biogrid()
 
-#' urlmaker_biogrid
+urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (august 2024) #SPECIESDEFINITION
 
-urlmaker_biogrid <- function(type = "PPI", # or protein info for stringdb
-                              species = "Homo sapiens",
-                              version = "4.4.235") {
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
+  #create the url to download a zip file for ALL species depending on the version
+  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ORGANISM-%s.tab3.zip",
+                 version,
+                 version)
+
+  #return the url
+  return (url)
 
 }
-
-
-
-
-
 
 
 # IntAct - TODO -----
