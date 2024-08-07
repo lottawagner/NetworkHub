@@ -41,7 +41,7 @@ urlmaker_stringdb <- function(type = "PPI",
 
   info_species <- info_species_stringdb(version = version) # assign info_species to the info about stringdb species of the chosen version using function info_species_stringdb() defined in 03-01_db_stringdb.R
 
-  # check that the value for species is listed in HINT
+  # check that the value for species is listed in StringDB
   if (!(species %in% info_species$official_name_NCBI)) {
     stop("Species not found as specified by STRINGDB, ",
          "please check some valid entries by running `info_species_stringdb()`")
@@ -306,7 +306,8 @@ urlmaker_iid <- function(species = "human", #
 # Innate DB - SPECIESDEFINITION -------------------
 
 
-urlmaker_innatedb <- function(url = url){
+urlmaker_innatedb <- function(url = url,
+                              version = "5.4"){ # default value = "5.4" #UPDATEVERSION
 
   url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
 }  #SPECIESDEFINITION
@@ -314,75 +315,88 @@ urlmaker_innatedb <- function(url = url){
 
 # species NCBI listed in ncbi_taxid_host_organism
 
-list_ncbispecies_innatedb <- c(   "taxid:10090",
-                                  "taxid:9606",
-                                  "taxid:4932",
+info_species_innatedb <- list("Mus musculus" = "10090",
+                              "Homo sapiens" = "9606",
+                              "Saccharomyces cerevisiae" ="4932",
                                   "taxid:0",
-                                  "taxid:9615",
-                                  "taxid:7108",
-                                  "taxid:10116",
-                                  "taxid:9534",
-                                  "taxid:10029",
-                                  "taxid:9031",
-                                  "taxid:9479",
-                                  "taxid:9986",
-                                  "taxid:10026",
-                                  "taxid:93934",
-                                  "taxid:9913",
-                                  "taxid:10760",
-                                  "taxid:111296",
-                                  "taxid:10469",
-                                  "taxid:101841",
-                                  "taxid:562",
-                                  "taxid:452646",
-                                  "taxid:7227",
-                                  "taxid:9580",
-                                  "taxid:10455",
-                                  "taxid:10036",
+                              "Canis lupus familiaris" = "9615",
+                              "Spodoptera frugiperda" = "7108",
+                              "Rattus norvegicus" = "10116",
+                              "Chlorocebus aethiops" = "9534",
+                              "Cricetulus griseus" = "10029",
+                              "Gallus gallus" = "9031",
+                              "Platyrrhini" = "9479",
+                              "Oryctolagus cuniculus" = "9986",
+                              "Cricetinae" = "10026",
+                              "Coturnix japonica" = "93934",
+                              "Bos taurus" = "9913",
+                              "Escherichia phage T7" = "10760",
+                              "Yeast two-hybrid vector pC-ACT.2" = "111296",
+                              "unidentified baculovirus" = "10469",
+                              "Chlorocebus aethiops aethiops" = "101841",
+                              "Escherichia coli"  ="562",
+                              "Neogale vison" = "452646",
+                              "Drosophila melanogaster" = "7227",
+                              "Hylobates lar" = "9580",
+                              "Spodoptera frugiperda multiple nucleopolyhedrovirus" = "10455",
+                              "Mesocricetus auratus" = "10036",
                                   "taxid:-1",
-                                  "taxid:9527",
-                                  "taxid:9666",
-                                  "taxid:7088")
+                              "Cercopithecidae" = "9527",
+                              "Mustela lutreola" =  "9666",
+                              "Lepidoptera" = "7088")
 
 # iRefIndex ----------------------------
 
 
-
-
-"Mus musculus" <- "10090",
-"Saccharomyces cerevisiae" = "559292",
-"Escherichia" = "562",
-"Rattus norvegicus" = "10116",
-"Saccharomyces cerevisiae" = "4932",
-"Drosophila melanogaster" = "7227",
-"Caenorhabditis elegans" = "6239"
-
-  # returns the datafile df_species
-
-
-
+#' #' urlmaker_irefindex()
+#'
+#' @param species from which species does the data come from, default value = "Homo sapiens"
+#' @param version version of data files in iRefIndex, default value = "2023-08-29" #UPDATEVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_irefindex <- function(species = "Homo sapiens",
+#'                                 version = "2023-08-29")
+#'
 urlmaker_irefindex <- function(species,
-                               version = "2023-08-29"){
-species_id <-
-  "9606" <- species == "Homo sapiens",
-  "10090" <- species == "Mus musculus",
-  "559292" <- species ==  "Saccharomyces cerevisiae",
-  "562" <- species == "Escherichia",
-  "10116" <- species == "Rattus norvegicus",
-  "4932" <- species == "Saccharomyces cerevisiae",
-  "7227" <- species == "Drosophila melanogaster",
-  "6239" <- species == "Caenorhabditis elegans")
+                               version = "2023-08-29"){ #default value for version = "2023-08-29" #UPDATEVERSION
 
+  stopifnot(is.character(species))                  # make sure to type in a species name as character
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
+  # create a list that contains species names and corresponding IDs
+  info_species_irefindex <- list(
+    "Homo sapiens" = "9606",
+    "Mus musculus" = "10090",
+    "Saccharomyces cerevisiae" = "559292",
+    "Escherichia" = "562",
+    "Rattus norvegicus" = "10116",
+    "Saccharomyces cerevisiae" = "4932",
+    "Drosophila melanogaster" = "7227",
+    "Caenorhabditis elegans" = "6239"
+  )
 
+  # check that the value for species is listed in iRefIndex
+  if (!species %in% names(info_species_irefindex)) {
+    stop("Species not found as specified by iRefIndex, ",
+         "please check some valid entries in info_species_irefindex or on the website 'https://irefindex.vib.be/wiki/index.php/README_MITAB2.6_for_iRefIndex_20.0#Column_number:_29_.28Host_organism_taxid.29`")
+  }
+
+  # fetch the species_id from info_species_irefindex
+  species_id <- info_species_irefindex[[species]]
+
+  # create the url for iRefIndex depending on species_id and version
   url <- sprintf("https://storage.googleapis.com/irefindex-data/archive/release_20.0/psi_mitab/MITAB2.6/%s.mitab.%s.txt.zip",
                  species_id,
                  version)
 
-
-
+  # return the url
   return(url)
 }
+
 
 
 # CPDB - ONLY HUMAN -----------------------------
@@ -404,6 +418,12 @@ urlmaker_cpdb <- function (species = "human") { #default value = human because a
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
 
+  if (!(species %in% list_species_cpdb)) { # if species is not in the list
+    stop("Species not found as specified by CPDB,",
+         "CPDB only contains data for 'human', 'mouse' and 'yeast'") # stop function and print
+  }
+
+
   url <- sprintf("http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
                  species)
   return(url)
@@ -414,7 +434,7 @@ urlmaker_cpdb <- function (species = "human") { #default value = human because a
 #' urlmaker_huri
 #'
 #' @param species default value = "human", because this database only provides human data
-#' @param type differnet datasets , more information on "http://www.interactome-atlas.org/about/"
+#' @param type different datasets , more information on "http://www.interactome-atlas.org/about/"
 #'
 #' @return url returns the corresponding url set by params
 #' @export
@@ -424,15 +444,16 @@ urlmaker_cpdb <- function (species = "human") { #default value = human because a
 #' urlmaker_huri(species = "human",
 #'              type = "HI-union")
 urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
-                           type = "HI-union") {
+                           type = "HI-union") { #default value = "HI-union", because it contains nearly all data from HuRi
 
-  list_species_huri <- c("human")
+
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(type))
 
-  if (!(species %in% list_species_huri)) { # if species is not in the list
+  if (species != "human") { # if species is not in the list
     stop("Species not found as specified by HuRi,",
-         "please check some valid entries by running `list_species_huri`") # stop function and print
+         "HuRi only contains data for 'human'") # stop function and print
   }
 
   # the datafile "HI-union" is an aggregate of all PPIs identified in
@@ -444,10 +465,11 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
   # Yang-16
   # Test space screens-19
 
-  type <- c("HI-union")
+  type <- c("HI-union", "Lit-BM")
 
   url <- sprintf("http://www.interactome-atlas.org/data/%s.tsv",
                  type)
+
   return(url)
 
 }
@@ -458,6 +480,38 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 
 
 # TODO
+# MatrixDB - ONLY HUMAN ------------------
+
+#' urlmaker_matrixdb()
+#'
+#' @param species default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_matrixdb()
+#'
+urlmaker_matrixdb <- function(species = "human"){ #UPDATEVERSION
+
+  stopifnot(is.character(species))                  # make sure to type in a species name as character
+
+  # check that the value for species is listed in MatrixDB
+  if (species != "human") {
+    stop("Species not found as specified by MatrixDB,
+         MatrixDB only provide data for 'human'")
+  }
+
+  url <- "http://matrixdb.univ-lyon1.fr/download/matrixdb_FULL.tab.gz"
+
+return(url)
+
+}
+
+
+
+
+
 # BIOGRID - TODO --------------------------------------
 
 
@@ -526,3 +580,5 @@ species_intact <- c("human",
 
 
 
+
+#
