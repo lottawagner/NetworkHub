@@ -7,6 +7,7 @@
 # Comment on comments
 #UPDATEVERSION - for databases where version is not defined in url
 #SPECIESDEFINITION - for databases where species is not defined in url
+#CURRENTVERSION - for databases only providing data for current version (no archive)
 
 
 # STRINGDB -----
@@ -398,6 +399,57 @@ urlmaker_irefindex <- function(species,
 }
 
 
+# MINT -----------
+
+#' #' urlmaker_mint()
+#'
+#' @param species from which species does the data come from, default value = "Homo sapiens"
+#' @param version version of data files in MINT, default value = "current" #CURRENTVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_irefindex <- function(species = "Homo Sapiens")
+#'
+
+urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sapiens"
+                           version = "current") { # default value = current , can not fetch previous versions #CURRENTVERSION
+
+  stopifnot(is.character(species))                  # make sure to type in a species name as character
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
+
+  # create a list that contains species names and corresponding names in the url
+
+  info_species_mint <- list( "all organisms" = "*",
+                        "Homo Sapiens" = "species:human",
+                        "Mus Musculus" = "species:mouse",
+                        "Drosophila Melanogaster" = "species:fruit%20fly",
+                        "Saccharomyces Cerevisiae" = "species:yeast")
+
+  # check that the value for species is listed in MINT
+  if (!species %in% names(info_species_mint)) {
+    stop("Species not found as specified by MNT, ",
+         "please check some valid entries in info_species_mint or on the website 'https://mint.bio.uniroma2.it/index.php/download/'")
+    }
+
+
+  # fetch the species_name from info_species_mint
+  species_name <- info_species_mint[[species]]
+
+  # create the url for MINT depending on version and species_name
+  url <- sprintf( "http://www.ebi.ac.uk/Tools/webservices/psicquic/mint/webservices/%s/search/query/%s",
+                  version,
+                  species_name)
+
+  # return the url
+  return(url)
+}
+
+
+
 
 # CPDB - ONLY HUMAN -----------------------------
 
@@ -512,6 +564,7 @@ return(url)
 
 
 
+
 # BIOGRID - TODO --------------------------------------
 
 
@@ -581,4 +634,4 @@ species_intact <- c("human",
 
 
 
-#
+
