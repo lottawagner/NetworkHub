@@ -303,47 +303,6 @@ urlmaker_iid <- function(species = "human", #
 }
 
 
-# Innate DB - SPECIESDEFINITION -------------------
-
-
-urlmaker_innatedb <- function(url = url,
-                              version = "5.4"){ # default value = "5.4" #UPDATEVERSION
-
-  url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
-}  #SPECIESDEFINITION
-
-
-# species NCBI listed in ncbi_taxid_host_organism
-
-info_species_innatedb <- list("Mus musculus" = "10090",
-                              "Homo sapiens" = "9606",
-                              "Saccharomyces cerevisiae" ="4932",
-                                  "taxid:0",
-                              "Canis lupus familiaris" = "9615",
-                              "Spodoptera frugiperda" = "7108",
-                              "Rattus norvegicus" = "10116",
-                              "Chlorocebus aethiops" = "9534",
-                              "Cricetulus griseus" = "10029",
-                              "Gallus gallus" = "9031",
-                              "Platyrrhini" = "9479",
-                              "Oryctolagus cuniculus" = "9986",
-                              "Cricetinae" = "10026",
-                              "Coturnix japonica" = "93934",
-                              "Bos taurus" = "9913",
-                              "Escherichia phage T7" = "10760",
-                              "Yeast two-hybrid vector pC-ACT.2" = "111296",
-                              "unidentified baculovirus" = "10469",
-                              "Chlorocebus aethiops aethiops" = "101841",
-                              "Escherichia coli"  ="562",
-                              "Neogale vison" = "452646",
-                              "Drosophila melanogaster" = "7227",
-                              "Hylobates lar" = "9580",
-                              "Spodoptera frugiperda multiple nucleopolyhedrovirus" = "10455",
-                              "Mesocricetus auratus" = "10036",
-                                  "taxid:-1",
-                              "Cercopithecidae" = "9527",
-                              "Mustela lutreola" =  "9666",
-                              "Lepidoptera" = "7088")
 
 # iRefIndex ----------------------------
 
@@ -449,32 +408,65 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 
 
 
-# BIOGRID - SPECIESDEFINITION -------------------------------------
+# GeneMania -------------
 
-#' urlmaker_biogrid()
+#' urlmaker_genemania()
 #'
-#' @param version version of the data files in BioGRID
+#' @param species types listed in list_species_genemania depending on current version, default value = "Homo_sapiens"
+#' @param version version of GeneMania , default value = "current" #UPDATEVERSION
 #'
-#' @return url returns the corresponding url set by params #SPECIESDEFINITION
+#'
+#' @return url returns the corresponding url set by params
 #' @export
 #'
 #' @examples
-#' urlmaker_biogrid()
+#' urlmaker_genemania( species = "Homo_sapiens",
+#'                      version = "current" )
+#'
+urlmaker_genemania <- function ( species = "Homo_sapiens",
+                                 version = "current") { #default value = "current"
 
-urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (August 2024) #SPECIESDEFINITION
-
+  stopifnot(is.character(species))                  # make sure to type in a species name as character
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
-  #create the url to download a zip file for ALL species depending on the version
-  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ORGANISM-%s.tab3.zip",
+
+  # create a list of all species in GeneMania
+
+  info_species_genemania <- c("Arabidopsis_thaliana",
+                              "Caenorhabditis_elegans",
+                              "Danio_rerio",
+                              "Drosophila_melanogaster",
+                              "Escherichia_coli",
+                              "Homo_sapiens",
+                              "Mus_musculus",
+                              "Rattus_norvegicus",
+                              "Saccharomyces_cerevisiae")
+
+  # make sure that files stored in archive have another value in url
+  if (version == "current")
+    archive <- ""
+
+  else
+    archive <- "archive/"
+
+  # check that the value for species is listed in GeneMania
+  if (! species %in% info_species_genemania) {
+    stop("Species not found as specified by GeneMania, ",
+         "please check some valid entries in info_species_genemania or on the website 'https://genemania.org/data/current/'")
+  }
+
+
+  # create the link depending on the version and species
+  url <- sprintf("https://genemania.org/data/%s%s/%s.COMBINED/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt",
+                 archive,
                  version,
-                 version)
+                 species)
 
-  #return the url
-  return (url)
-
+  # return the url
+  return(url)
 }
+
 
 
 
@@ -652,6 +644,79 @@ urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapien
 
 
 
+
+
+# Innate DB - SPECIESDEFINITION -------------------
+
+
+urlmaker_innatedb <- function(url = url,
+                              version = "5.4"){ # default value = "5.4" #UPDATEVERSION
+
+  url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
+}  #SPECIESDEFINITION
+
+
+# species NCBI listed in ncbi_taxid_host_organism
+
+info_species_innatedb <- list("Mus musculus" = "10090",
+                              "Homo sapiens" = "9606",
+                              "Saccharomyces cerevisiae" ="4932",
+                              "taxid:0",
+                              "Canis lupus familiaris" = "9615",
+                              "Spodoptera frugiperda" = "7108",
+                              "Rattus norvegicus" = "10116",
+                              "Chlorocebus aethiops" = "9534",
+                              "Cricetulus griseus" = "10029",
+                              "Gallus gallus" = "9031",
+                              "Platyrrhini" = "9479",
+                              "Oryctolagus cuniculus" = "9986",
+                              "Cricetinae" = "10026",
+                              "Coturnix japonica" = "93934",
+                              "Bos taurus" = "9913",
+                              "Escherichia phage T7" = "10760",
+                              "Yeast two-hybrid vector pC-ACT.2" = "111296",
+                              "unidentified baculovirus" = "10469",
+                              "Chlorocebus aethiops aethiops" = "101841",
+                              "Escherichia coli"  ="562",
+                              "Neogale vison" = "452646",
+                              "Drosophila melanogaster" = "7227",
+                              "Hylobates lar" = "9580",
+                              "Spodoptera frugiperda multiple nucleopolyhedrovirus" = "10455",
+                              "Mesocricetus auratus" = "10036",
+                              "taxid:-1",
+                              "Cercopithecidae" = "9527",
+                              "Mustela lutreola" =  "9666",
+                              "Lepidoptera" = "7088")
+
+# BIOGRID - SPECIESDEFINITION -------------------------------------
+
+#' urlmaker_biogrid()
+#'
+#' @param version version of the data files in BioGRID
+#'
+#' @return url returns the corresponding url set by params #SPECIESDEFINITION
+#' @export
+#'
+#' @examples
+#' urlmaker_biogrid()
+
+urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (August 2024) #SPECIESDEFINITION
+
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
+  #create the url to download a zip file for ALL species depending on the version
+  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ORGANISM-%s.tab3.zip",
+                 version,
+                 version)
+
+  #return the url
+  return (url)
+
+}
+
+
+
 # CORUM - SPECIESDEFINITION ------------------------------
 
 #' urlmaker_corum()
@@ -678,86 +743,34 @@ urlmaker_corum <- function (version = "current"){ #default value set to current,
 
 
 
-# GeneMania -------------
+# IntAct - SPECIESDEFINITION ---------------------------------
 
-#' urlmaker_genemania()
+#' urlmaker_intact()
 #'
-#' @param species types listed in list_species_genemania depending on current version, default value = "Homo_sapiens"
-#' @param version version of GeneMania , default value = "current" #UPDATEVERSION
+#' @param version version of the data files in IntAct, default value = "current" (August 2024  = 2024-05-23 18:09	6.6G)
 #'
-#'
-#' @return url returns the corresponding url set by params
+#' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
 #' @export
 #'
 #' @examples
-#' urlmaker_genemania( species = "Homo_sapiens",
-#'                      version = "current" )
-#'
-urlmaker_genemania <- function ( species = "Homo_sapiens",
-                                 version = "current") { #default value = "current"
+#' urlmaker_intact(version = "current")
 
-  stopifnot(is.character(species))                  # make sure to type in a species name as character
+urlmaker_intact <- function(version = "current") { # default value for version, because Intact provides this file only for current (August 2024 = 2024-05-23 18:09	6.6G)
+
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
+  # as there is only the current version of this file we can't change the link so we need
+  if (!version == "current")
+    stop("make sure that you use the current version of the intact.txt file, as there is only one url")
 
-  # create a list of all species in GeneMania
+  # create url depending on version
+  url <- sprintf("https://ftp.ebi.ac.uk/pub/databases/intact/%s/psimitab/intact.txt",
+                 version)
 
-  info_species_genemania <- c("Arabidopsis_thaliana",
-                              "Caenorhabditis_elegans",
-                              "Danio_rerio",
-                              "Drosophila_melanogaster",
-                              "Escherichia_coli",
-                              "Homo_sapiens",
-                              "Mus_musculus",
-                              "Rattus_norvegicus",
-                              "Saccharomyces_cerevisiae")
-
-  # make sure that files stored in archive have another value in url
-  if (version == "current")
-    archive <- ""
-
-  else
-    archive <- "archive/"
-
-  # check that the value for species is listed in GeneMania
-  if (! species %in% info_species_genemania) {
-      stop("Species not found as specified by GeneMania, ",
-           "please check some valid entries in info_species_genemania or on the website 'https://genemania.org/data/current/'")
-    }
-
-
-  # create the link depending on the version and species
-  url <- sprintf("https://genemania.org/data/%s%s/%s.COMBINED/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt",
-                 archive,
-                 version,
-                 species)
-
-  # return the url
+  #return the url
   return(url)
+
 }
-
-
-
-# IntAct - TODO -----
-
-species_intact <- c("human",
-                    "Escherichia",
-                    "mouse"
-                    )
-
-#
-# urlmaker_intact <- function(type = "PPI", # could be also protein info # QUESTION: WHY?
-#                             species = "human",
-#                             version = "current")
-#   https://ftp.ebi.ac.uk/pub/databases/intact/%s/%s/species
-
-# https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/
-
-#Human Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/human.zip
-
-#E.Coli Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/Escherichia.zip
-
-#Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
 
 
