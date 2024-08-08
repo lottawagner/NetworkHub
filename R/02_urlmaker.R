@@ -450,6 +450,35 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 
 
 
+# BIOGRID - SPECIESDEFINITION -------------------------------------
+
+#' urlmaker_biogrid()
+#'
+#' @param version version of the data files in BioGRID
+#'
+#' @return url returns the corresponding url set by params #SPECIESDEFINITION
+#' @export
+#'
+#' @examples
+#' urlmaker_biogrid()
+
+urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (August 2024) #SPECIESDEFINITION
+
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
+  #create the url to download a zip file for ALL species depending on the version
+  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ORGANISM-%s.tab3.zip",
+                 version,
+                 version)
+
+  #return the url
+  return (url)
+
+}
+
+
+
 # Reactome ---------------
 #' urlmaker_reactome()
 #'
@@ -624,37 +653,37 @@ urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapien
 
 
 
-# BIOGRID - TODO --------------------------------------
+# CORUM - SPECIESDEFINITION ------------------------------
 
-
-
-
-
-#' urlmaker_biogrid()
+#' urlmaker_corum()
 #'
-#' @param version version of the data files in BioGRID
+#' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
 #'
-#' @return url returns the corresponding url set by params #SPECIESDEFINITION
+#' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
 #' @export
 #'
 #' @examples
-#' urlmaker_biogrid()
-
-urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (august 2024) #SPECIESDEFINITION
+#' urlmaker_corum()
+urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
 
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
-  #create the url to download a zip file for ALL species depending on the version
-  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ORGANISM-%s.tab3.zip",
-                 version,
-                 version)
 
-  #return the url
+  url <- sprintf("https://mips.helmholtz-muenchen.de/corum/download/releases/%s/allComplexes.txt.zip",
+                 version)
   return (url)
 
 }
 
+
+
+
+# GeneMania -------------
+
+# https://pages.genemania.org/data/ TODO: There are folders containing
+# multiple files for each species ... how can I work on that?
+# combine the single file manually?
 
 # IntAct - TODO -----
 
@@ -676,21 +705,5 @@ species_intact <- c("human",
 #E.Coli Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/Escherichia.zip
 
 #Mouse Zip -> https://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/species/mouse.zip
-
-
-# CORUM - TODO ------------------------------
-#Idee: all datei herunterladen und in get_networkdata_corum definieren welchen organimus man anschauen will
-# https://mips.helmholtz-muenchen.de/corum/download/releases/current/humanComplexes.txt.zip
-# https://mips.helmholtz-muenchen.de/corum/download/releases/current/allComplexes.txt.zip
-# GeneMania - TODO-------------
-
-# https://pages.genemania.org/data/ TODO: There are folders containing
-# multiple files for each species ... how can I work on that?
-# combine the single file manually?
-
-
-
-
-
 
 
