@@ -16,16 +16,16 @@ library(tidyverse)
 
 
 setwd("/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts")
-nwh_img <- image_read("netzwerk.png")
+nwh_img <- image_read("N_blue.png")
 
 sticker(subplot = nwh_img,
-  package = "NetworkHub",
+  package = "etworkHub",
   s_width = 0.9,
   s_height = 0.9,
-  s_x = 1,
-  s_y = 0.7,
-  p_x = 1,
-  p_y = 1.3,
+  s_x = 1.1,
+  s_y = 0.5,
+  p_x = 0.2,
+  p_y = 1,
   p_color = "darkslateblue",
   p_size = 22,
   h_size = 1.6,
