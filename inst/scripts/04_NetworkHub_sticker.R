@@ -30,7 +30,10 @@ sticker(subplot = nwh_img,
   p_size = 17,
   h_size = 1.6,
   h_fill = "tomato1",
-  h_color = "white") %>% print(sticker())
+  h_color = "#E5E5E5",
+  url = "https://github.com/lottawagner/NetworkHub",
+  u_size = 3.5,
+  u_color = "white") %>% print(sticker())
 
 
 
