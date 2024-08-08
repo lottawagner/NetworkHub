@@ -2,20 +2,19 @@
 % Please edit documentation in R/02_urlmaker.R
 \name{urlmaker_biogrid}
 \alias{urlmaker_biogrid}
-\title{info_species_biogrid}
+\title{urlmaker_biogrid()}
 \usage{
-urlmaker_biogrid(type = "PPI", species = "Homo sapiens", version = "4.4.235")
+urlmaker_biogrid(version = "4.4.236")
 }
 \arguments{
-\item{version}{version of the data files in stringdb}
+\item{version}{version of the data files in BioGRID}
 }
 \value{
-url returns the corresponding url set by params
+url returns the corresponding url set by params #SPECIESDEFINITION
 }
 \description{
-info_species_biogrid
+urlmaker_biogrid()
 }
 \examples{
-# TODO
-urlmaker_biogrid
+urlmaker_biogrid()
 }

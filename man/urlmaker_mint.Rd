@@ -18,6 +18,6 @@ url returns the corresponding url set by params
 #' urlmaker_mint()
 }
 \examples{
-urlmaker_irefindex <- function(species = "Homo Sapiens")
+urlmaker_mint(species = "Homo Sapiens")
 
 }
