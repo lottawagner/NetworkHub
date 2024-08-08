@@ -16,7 +16,7 @@ library(tidyverse)
 
 
 setwd("/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts")
-nwh_img <- image_read("N_orange.png")
+nwh_img <- image_read("N_green.png")
 
 sticker(subplot = nwh_img,
   package = "etworkHub",
@@ -26,7 +26,7 @@ sticker(subplot = nwh_img,
   s_y = 1,
   p_x = 1.275,
   p_y = 1,
-  p_color = "tomato1",
+  p_color = "#A2CD5A",
   p_size = 17,
   h_size = 1.6,
   h_fill = "slateblue3",
