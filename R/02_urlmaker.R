@@ -167,7 +167,6 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 
 # FunCoup ----------
 
-
 #' urlmaker_funcoup()
 #'
 #' @param version version of FunCoup , default value = "5.0", value as type "5.0" #UPDATEVERSION
@@ -410,7 +409,7 @@ urlmaker_irefindex <- function(species,
 #' @export
 #'
 #' @examples
-#' urlmaker_irefindex <- function(species = "Homo Sapiens")
+#' urlmaker_mint(species = "Homo Sapiens")
 #'
 
 urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sapiens"
@@ -431,7 +430,7 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 
   # check that the value for species is listed in MINT
   if (!species %in% names(info_species_mint)) {
-    stop("Species not found as specified by MNT, ",
+    stop("Species not found as specified by MINT, ",
          "please check some valid entries in info_species_mint or on the website 'https://mint.bio.uniroma2.it/index.php/download/'")
     }
 
@@ -681,9 +680,64 @@ urlmaker_corum <- function (version = "current"){ #default value set to current,
 
 # GeneMania -------------
 
-# https://pages.genemania.org/data/ TODO: There are folders containing
-# multiple files for each species ... how can I work on that?
-# combine the single file manually?
+#' urlmaker_genemania()
+#'
+#' @param species types listed in list_species_genemania depending on current version, default value = "Homo_sapiens"
+#' @param version version of GeneMania , default value = "current" #UPDATEVERSION
+#'
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' urlmaker_genemania( species = "Homo_sapiens",
+#'                      version = "current" )
+#'
+urlmaker_genemania <- function ( species = "Homo_sapiens",
+                                 version = "current") { #default value = "current"
+
+  stopifnot(is.character(species))                  # make sure to type in a species name as character
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
+
+  # create a list of all species in GeneMania
+
+  info_species_genemania <- c("Arabidopsis_thaliana",
+                              "Caenorhabditis_elegans",
+                              "Danio_rerio",
+                              "Drosophila_melanogaster",
+                              "Escherichia_coli",
+                              "Homo_sapiens",
+                              "Mus_musculus",
+                              "Rattus_norvegicus",
+                              "Saccharomyces_cerevisiae")
+
+  # make sure that files stored in archive have another value in url
+  if (version == "current")
+    archive <- ""
+
+  else
+    archive <- "archive/"
+
+  # check that the value for species is listed in GeneMania
+  if (! species %in% info_species_genemania) {
+      stop("Species not found as specified by GeneMania, ",
+           "please check some valid entries in info_species_genemania or on the website 'https://genemania.org/data/current/'")
+    }
+
+
+  # create the link depending on the version and species
+  url <- sprintf("https://genemania.org/data/%s%s/%s.COMBINED/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt",
+                 archive,
+                 version,
+                 species)
+
+  # return the url
+  return(url)
+}
+
+
 
 # IntAct - TODO -----
 
