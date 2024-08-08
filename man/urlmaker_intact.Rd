@@ -16,5 +16,5 @@ url returns the corresponding url set by params #SPECIESDEFINITION later on
 urlmaker_intact()
 }
 \examples{
-urlmaker_intact(version = "current") )
+urlmaker_intact(version = "current")
 }
