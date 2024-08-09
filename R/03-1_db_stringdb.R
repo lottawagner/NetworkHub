@@ -27,9 +27,6 @@ info_species_stringdb <- function(version = "12.0"){
   return(df_species)
 }
 
-
-
-
 ## Functions we use in the get_networkdata_stringdb ----
 
 #' Get accessory info from STRINGDB
@@ -52,12 +49,12 @@ get_accessoryinfo_stringdb <- function(species,
 
   # species is matched to the id in the info file
 
-  # species_id <- NULL
-  #
-  # info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
-  # species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
-  #   match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
-  # ]
+  species_id <- NULL
+
+  info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
+  species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
+   match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
+  ]
 
   # rname of accessory info defined
 
@@ -85,10 +82,12 @@ get_accessoryinfo_stringdb <- function(species,
       species = species,
       version = version
     )
+
     proteininfo_file <- cache_NetworkHub(
       rname = rname,
       fpath = stringdb_url
     )
+
   }
 
   # reading in the fetched information file
@@ -101,6 +100,8 @@ get_accessoryinfo_stringdb <- function(species,
 
 
 create_annotation_from_stringdbaccessory <- function(accessory_info) {
+
+  # create a dataframe that contains the unique string_protein_ids as protein_id and rname
   accessory_info_df <- data.frame(
     protein_id = unique(accessory_info$`#string_protein_id`),
     row.names = unique(accessory_info$`#string_protein_id`)
@@ -111,12 +112,28 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) {
   accessory_info_df$gene_symbol <- NA
   # accessory_info_df$entrez_id <- NA
 
+  # filter dataframe to look up rows that contain Ensemble_gene or Ensembl_EntrezGene as source
   df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene",]
-}
+  df_genesymbol <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
+
+  # assign IDs into dataframe
+  accessory_info_df$ensembl_id <-
+    df_ensembl$alias[match(accessory_info_df$protein_id, df_ensembl$`#string_protein_id`)]
+  accessory_info_df$gene_symbol <-
+    df_genesymbol$alias[match(accessory_info_df$protein_id, df_genesymbol$`#string_protein_id`)]
+
+
+
+  # return the dataframe accessory_info_df
+
+  return(accessory_info_df)
+
+
+  }
 
 ## Graph ----
 
-build_graph_STRINGDB <- function(graph_data,
+build_graph_stringdb <- function(graph_data,
                                    output_format = c("igraph", "graphnel", "sif"),
                                    min_score_threshold = NULL,
                                    ## alternatives? native for cytoscape?
@@ -125,10 +142,9 @@ build_graph_STRINGDB <- function(graph_data,
   }
 
 
-## final function to get the data from stringdb in the way we want it ----
+## final function to get the data from stringdb in the way we want it ---------
 
-
-#' Title
+#' get_networkdata_stringdb()
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in stringdb
