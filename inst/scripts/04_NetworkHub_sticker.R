@@ -16,25 +16,25 @@ library(tidyverse)
 
 
 setwd("/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts")
-nwh_img <- image_read("N_blue.png")
+nwh_img <- image_read("N_green.png")
 
 
 sticker(subplot = nwh_img,
-  package = "etworkHub",
-  s_width = 0.65,
-  s_height = 0.65,
-  s_x = 0.45,
+  package = "etwork  ub",
+  s_width = 1.6,
+  s_height = 1.6,
+  s_x = 0.98,
   s_y = 1,
-  p_x = 1.275,
+  p_x = 1.2,
   p_y = 1,
-  p_color = "blue",
-  p_size = 68,
+  p_color = "#A2CD5A",
+  p_size = 64,
   h_size = 1.6,
-  h_fill = "tomato1",
+  h_fill = "slateblue3",
   h_color = "#E5E5E5",
-  url = "https://github.com/lottawagner/NetworkHub",
-  u_size = 14,
-  u_color = "white",
+  url = "www.bioconductor.org",
+  u_size = 18,
+  u_color = "#E5E5E5",
   dpi = 1200) %>% print(sticker())
 
 
