@@ -16,7 +16,7 @@ library(tidyverse)
 
 
 setwd("/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts")
-nwh_img <- image_read("N_orange.png")
+nwh_img <- image_read("N_green.png")
 
 
 sticker(subplot = nwh_img,
@@ -27,14 +27,14 @@ sticker(subplot = nwh_img,
   s_y = 1,
   p_x = 1.2,
   p_y = 1,
-  p_color = "#ff5100ff",
+  p_color = "#B3EE3A",
   p_size = 64,
   h_size = 1.6,
-  h_fill = "lightblue",
-  h_color = "#014076ff",
+  h_fill = "#6959CD",
+  h_color = "slateblue4",
   url = "www.bioconductor.org",
   u_size = 18,
-  u_color = "#014076ff",
+  u_color = "#B3EE3A",
   dpi = 1200) %>% print(sticker())
 
 
