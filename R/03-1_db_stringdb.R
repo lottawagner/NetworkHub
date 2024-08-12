@@ -1,8 +1,8 @@
 # Here we collect all the functions in order to work with the data. ----
 
-# stringdb species --------------------------------------------------------
+## info_species_stringdb() done --------------------------------------------------------
 
-#' info_species_stringdb
+#' info_species_stringdb()
 #'
 #' @param version version of the data files in stringdb
 #'
@@ -18,7 +18,8 @@
 info_species_stringdb <- function(version = "12.0"){
 
   # use sprintf function to insert current version into the url
-  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt", version)
+  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
+                                  version)
 
   # read.delim the data from the species text file (columns separated using a delimiter)
   df_species <- read.delim(url(url_species_stringdb))
@@ -27,7 +28,7 @@ info_species_stringdb <- function(version = "12.0"){
   return(df_species)
 }
 
-## Functions we use in the get_networkdata_stringdb ----
+## get_accessoryinfo_stringdb() done ----
 
 #' Get accessory info from STRINGDB
 #'
@@ -96,9 +97,17 @@ get_accessoryinfo_stringdb <- function(species,
   return(proteininfo_stringdb)
 }
 
-## Annotation ----
+## create_annotation_from_stringdbaccessory() ----
 
-
+#' create_annotation_from_stringdbaccessory()
+#'
+#' @param accessory_info #protein_info file from stringdb defined in get_networkhubdata_stringdb <- only use this function inside the other
+#'
+#' @return accessory_info_df dataframe that assignes each protein_id to ensemble or gene_symbol
+#' @export
+#'
+#' @examples
+#' create_annotation_from_stringdbaccessory(accessory_info) # accessory_info in get_networkdata_stringdb()
 create_annotation_from_stringdbaccessory <- function(accessory_info) {
 
   # create a dataframe that contains the unique string_protein_ids as protein_id and rname
@@ -115,6 +124,7 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) {
   # filter dataframe to look up rows that contain Ensemble_gene or Ensembl_EntrezGene as source
   df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene",]
   df_genesymbol <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
+  # df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
 
   # assign IDs into dataframe
   accessory_info_df$ensembl_id <-
@@ -123,37 +133,22 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) {
     df_genesymbol$alias[match(accessory_info_df$protein_id, df_genesymbol$`#string_protein_id`)]
 
 
-
   # return the dataframe accessory_info_df
-
   return(accessory_info_df)
-
-
   }
 
-## Graph ----
-
-build_graph_stringdb <- function(graph_data,
-                                   output_format = c("igraph", "graphnel", "sif"),
-                                   min_score_threshold = NULL,
-                                   ## alternatives? native for cytoscape?
-                                   subset_nodes = NULL) {
-
-  }
-
-
-## final function to get the data from stringdb in the way we want it ---------
+## get_networkdata_stringdb() ---------
 
 #' get_networkdata_stringdb()
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in stringdb
-#' @param cache efault value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param remap_identifiers TODO
-#' @param remap_to TODO
-#' @param ... TODO
+#' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
+#' @param remap_identifiers default value set to TRUE (using accessory_info functions to map unique ids with common used (ensembl)
+#' @param remap_to type of remap ("ENSEMBL", "gene_symbol")
+#' @param ... 	further arguments passed to or from other methods
 #'
-#' @return ppis_stringdb TODO
+#' @return ppis_stringdb
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -207,7 +202,7 @@ get_networkdata_stringdb <- function(species,
 
   if (!cache | is.null(network_file)) {
     # retrieves the file for the first time
-    message("Retrieving to cache...")
+    message("Downloading to cache...")
     # buildup from "base" stringdb url
     stringdb_url <-
       urlmaker_stringdb(
@@ -216,26 +211,154 @@ get_networkdata_stringdb <- function(species,
         version = version
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_stringdb
 
-
+    # and cache_NetworkHub to cache the file from the url source
     network_file <- cache_NetworkHub(
       rname = rname,
       fpath = stringdb_url
-    ) # and cache_NetworkHub to cache the file from the url source
+    )
   }
 
   # read in the resource, whether cached or freshly downloaded
   ppis_stringdb <- vroom::vroom(network_file)
-  #ppis_stringdb <- read.delim(network_file, sep = " ")
+  ## ppis_stringdb <- read.delim(network_file, sep = " ")
 
-  # WE COULD STOP HERE, but we won't - at the end...
+  # id remap_identifiers = TRUE we use accessory functions to get ensmble id as node and gene_symbol as label
+  if (remap_identifiers){
+    accessory_info <- get_accessoryinfo_stringdb(
+      species = species,
+      version = version
+    )
 
-  #get_accessoryinfo_stringdb
-  #annotation
-  #
+  # create a dataframe using the accessory functions
+  accessory_info_df <-
+    create_annotation_from_stringdbaccessory(accessory_info)
+
+  ppis_stringdb$geneid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["ensembl_id"]]
+  ppis_stringdb$geneid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["ensembl_id"]]
+  ppis_stringdb$gene_1 <- accessory_info_df[ppis_stringdb$protein1, ][["gene_symbol"]]
+  ppis_stringdb$gene_2 <- accessory_info_df[ppis_stringdb$protein2, ][["gene_symbol"]]
+  }
+
+  # return ppis-stringdb containing remaped identifiers
   return(ppis_stringdb)
+}
+
+
+
+
+
+## build_graph_stringdb() ----
+
+#' build_graph_stringdb()
+#'
+#' @param graph_data data describing the nodes and edges of the network
+#' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
+#' @param min_score_threshold optional threshold to filter edges based on their combination score
+#' @param subset_nodes optional vector of nodes to extract only a part of the network
+#'
+#' @return my_graph object
+#'
+#' @importFrom igraph igraph
+#' @export
+#'
+#' @examples
+#'
+#' network_all <- build_graph_stringdb(graph_data = graph_data,
+#'                                     output_format = "igraph",
+#'                                     min_score_threshold = 600)
+#' TODO
+build_graph_stringdb <- function(graph_data, # data describing the nodes and edges of the network
+                                 output_format = c("igraph", "graphnel", "sif"), # vector that specifies possible output formats
+                                 min_score_threshold = NULL, # optional threshold to filter edges based on their combination score
+                                 subset_nodes = NULL) { # optional vector of nodes to extract only a part of the network
+
+  # graph data comes from the reading in function
+  # now we need to check on the...
+
+  colnames(graph_data)
+
+  # create a histogram of the scores in the column combined_score in graph_data to define the threshold
+  hist(graph_data$combines_score, breaks = 50)
+  score_threshold <- 200
+
+
+  # if there is a min_score_treshold #filter and only store edges that have a higher/same value as the threshold
+  if (!is.null(min_score_threshold)){
+    graph_data_processed <- graph_data[graph_data$combined_score >= min_score_threshold, ]
+
+  # no threshold ? # work with all edges
+  } else {
+    graph_data_processed <- graph_data
+  }
+
+  dim(graph_data)
+  dim(graph_data_processed)
+
+  # create an igraph object out of filtered data which is specified as undirected
+  whole_graph <-
+    igraph::graph.data.frame(d = graph_data_processed, directed = FALSE)
+
+
+  # if there are subset nodes # create a subgraph which only contains edges and nodes from subset_nodes
+  if (length(subset_nodes) > 0){
+    my_graph <- igraph::induced_subgraph(
+      whole_graph,
+      which(V(whole_graph)$name %in% subset_nodes)
+    )
+
+  # if there are no subset_nodes # create the whole graph
+  } else {
+    my_graph <- whole_graph
+  }
+
+  # simplify graph by removing multiple edges and loops
+  my_graph <- igraph::simplify(my_graph)
+
+  #return my_graph
+  return(my_graph)
 
 }
 
 
+## build_graph() allgemeine Funktion? --------------------
+
+#' Title
+#'
+#' @param graph_data data describing the nodes and edges of the network
+#' @param data_source database (e.g.: "stringdb")
+#' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
+#' @param min_score_threshold optional threshold to filter edges based on their combination score
+#' @param subset_nodes optional vector of nodes to extract only a part of the network
+#'
+#' @return my_graph object
+#' @export
+#'
+#' @examples
+#' build_graph()
+#' TODO
+
+build_graph <- function(graph_data, # data describing the nodes and edges of the network
+                        data_source = "stringdb",
+                        output_format = c("igraph", "grpahnel", "sif"), # Vector that specifies the desired output formats
+                        min_score_threshold, # optional threshold for filtering the edges based on a combination score
+                        subset_nodes){ # optional subset of nodes that can be used to create a subgraph
+
+  # define the data_source and the corresponding handling for the graph
+  if (data_source == "stringdb") {
+    my_graph <- build_graph_stringdb(
+      graph_data = graph_data,
+      output_format = output_format,
+      min_score_threshold = min_score_threshold,
+      subset_nodes = subset_nodes
+    )
+
+  # still needs to be defined
+  } else {
+    #TODO once we worked on the other databases
+  }
+
+  #return my_graph
+  return (my_graph)
+}
 
 

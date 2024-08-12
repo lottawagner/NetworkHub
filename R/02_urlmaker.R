@@ -12,11 +12,7 @@
 
 # STRINGDB -----
 
-# For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by chosing a name
-
-
-
-
+# For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by choosing a name
 
 #' urlmaker_stringdb()
 #'
