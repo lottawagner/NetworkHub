@@ -42,7 +42,7 @@ info_species_stringdb <- function(version = "12.0"){
 #' @export
 #'
 #' @examples
-#' human_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",
+#' human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
 #'                                         version = "12.0")
 get_accessoryinfo_stringdb <- function(species,
                                        version,
@@ -108,7 +108,7 @@ get_accessoryinfo_stringdb <- function(species,
 #'
 #' @examples
 #' create_annotation_from_stringdbaccessory(accessory_info) # accessory_info in get_networkdata_stringdb()
-create_annotation_from_stringdbaccessory <- function(accessory_info) {
+create_annotation_from_stringdbaccessory <- function(accessory_info = "human_acc_stringdb") { #QUESTION - where does accessory_info comes from?
 
   # create a dataframe that contains the unique string_protein_ids as protein_id and rname
   accessory_info_df <- data.frame(
@@ -122,7 +122,7 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) {
   # accessory_info_df$entrez_id <- NA
 
   # filter dataframe to look up rows that contain Ensemble_gene or Ensembl_EntrezGene as source
-  df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene",]
+  df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene", ]
   df_genesymbol <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
   # df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
 
