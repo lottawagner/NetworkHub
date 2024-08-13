@@ -18,6 +18,7 @@
 info_species_stringdb <- function(version = "12.0"){
 
   # use sprintf function to insert current version into the url
+
   url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
                                   version)
 

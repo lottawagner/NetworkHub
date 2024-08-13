@@ -62,19 +62,18 @@ Bringing the content into a graph
 sdb_human <- get_networkdata_stringdb("Homo sapiens",
                                       version = "12.0")
 dim(sdb_human)
-head(sdb_human)
 ```
 
-The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess...
+The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess... #TODO: takes realy long
 
 ```{r sdbprint}
-sdb_human
+head(sdb_human)
 ```
 
 
 # Use case: DE on the graph!
 
-Load in for example the results from differential expression
+Load in for example the results from differential expression #TODO: there is no package called ‘DeeDee’ 
 
 ```{r loadde}
 # res object
@@ -104,13 +103,15 @@ se_macrophage <-
 se_macrophage
 ```
 
-DeeDee is just to put into the same SE object all the info on DE contrasts. That's a work in progress, but adding rowData info would also simply do it.
+DeeDee is just to put into the same SE object all the info on DE contrasts. That's a work in progress, but adding rowData info would also simply do it. #TODO
 
 Going from the DE genes to the proteins...
 
+
+
 ```{r auxinfo}
 aux_info_string <- get_accessoryinfo_stringdb(species = "Homo sapiens",
-                                              version = "11.5")
+                                              version = "12.0")
 
 anno_df_string <- create_annotation_from_stringdbaccessory(aux_info_string)
 
