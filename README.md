@@ -1,6 +1,6 @@
 # NetworkHub
 
-![sticker](/inst/scripts/etwork  ub.png)
+![sticker](/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts/etwork  ub.png)
 
 ## Installation 
 
