@@ -30,6 +30,6 @@ my_graph object
 Title
 }
 \examples{
-build_graph()
+
 TODO
 }

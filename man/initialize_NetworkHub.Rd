@@ -23,6 +23,7 @@ bfc_nh <- initialize_NetworkHub() # use this function to create the cache called
 bfccache(bfc_nh) # get the path to the cache
 length(bfc_nh) # how many entries?
 bfcinfo(bfc_nh) # what are the column names of the cache
+bfcremove(bfc_nh, c("BF6", "BF7"))
 
 # nh_cachedir = default directory name where the cache will be stored
 }

@@ -4,7 +4,7 @@
 \alias{create_annotation_from_stringdbaccessory}
 \title{create_annotation_from_stringdbaccessory()}
 \usage{
-create_annotation_from_stringdbaccessory(accessory_info = "human_acc_stringdb")
+create_annotation_from_stringdbaccessory(accessory_info)
 }
 \arguments{
 \item{accessory_info}{#protein_info file from stringdb defined in get_networkhubdata_stringdb <- only use this function inside the other}
@@ -16,5 +16,5 @@ accessory_info_df dataframe that assignes each protein_id to ensemble or gene_sy
 create_annotation_from_stringdbaccessory()
 }
 \examples{
-create_annotation_from_stringdbaccessory(accessory_info) # accessory_info in get_networkdata_stringdb()
+create_annotation_from_stringdbaccessory(accessory_info)# accessory_info in get_networkdata_stringdb()
 }
