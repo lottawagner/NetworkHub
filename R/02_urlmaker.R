@@ -51,6 +51,8 @@ urlmaker_stringdb <- function(type = "PPI",
   ]
 
   # here we define the url for the different type options
+  #QUESTION: my link is stringdb-downloads and yours is:
+  #https://stringdb-static.org/download/protein.links.full.v%s/%s.protein.links.full.v%s.txt.gz
 
   if (type == "PPI") {
     url <- sprintf(
@@ -61,7 +63,7 @@ urlmaker_stringdb <- function(type = "PPI",
     )
   } else if (type == "protein_info") {
     url <- sprintf(
-      "https://stringdb-downloads.org/download/protein.info.v%s/%s.protein.info.v%s.txt.gz",
+      "https://stringdb-downloads.org/download/protein.aliases.v%s/%s.protein.aliases.v%s.txt.gz",
       version,
       species_id,
       version

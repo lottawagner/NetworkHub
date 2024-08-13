@@ -60,7 +60,7 @@ get_accessoryinfo_stringdb <- function(species,
   # rname of accessory info defined
 
   rname <- paste0(
-    "STRINGDB_accessoryInfo_",
+    "stringdb_accessoryInfo_",
     species,
     "v_",
     version
@@ -107,8 +107,8 @@ get_accessoryinfo_stringdb <- function(species,
 #' @export
 #'
 #' @examples
-#' create_annotation_from_stringdbaccessory(accessory_info) # accessory_info in get_networkdata_stringdb()
-create_annotation_from_stringdbaccessory <- function(accessory_info = "human_acc_stringdb") { #QUESTION - where does accessory_info comes from?
+#' create_annotation_from_stringdbaccessory(accessory_info)# accessory_info in get_networkdata_stringdb()
+create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION - where does accessory_info comes from?
 
   # create a dataframe that contains the unique string_protein_ids as protein_id and rname
   accessory_info_df <- data.frame(
@@ -188,7 +188,7 @@ get_networkdata_stringdb <- function(species,
   ## elegantly done in another smaller utility function
 
   rname <- paste0(
-    "STRINGDB_",
+    "stringdb_",
     species,
     "_v",
     version

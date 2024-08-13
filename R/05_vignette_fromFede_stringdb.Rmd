@@ -29,32 +29,31 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
+# Installation 
+
+```{r eval = FALSE}
+if(!requireNamespace("NetworkHub", quietly = TRUE))
+    install.packages("NetworkHub")
+BiocManager::install("NetworkHub")
+``` 
+
+
 # Graph fetching
 
+## Initilazation of the cache of "NetworkHub"
 ```{r init}
 library("NetworkHub")
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 ```
 
-
+##
 ```{r speciesinfo}
-info_species_stringdb() |> 
+main_core_organisms <- info_species_stringdb() |> 
   dplyr::filter(STRING_type == "core") |> 
-  head()
+  head() |> 
+  dplyr::pull(official_name_NCBI)
 
-main_core_organisms <- c(
-  "Homo sapiens",
-  "Mus musculus",
-  "Arabidopsis thaliana",
-  "Saccharomyces cerevisiae",
-  "Danio rerio",
-  "Drosophila melanogaster",
-  "Caenorhabditis elegans",
-  "Pseudomonas aeruginosa PAO1",
-  "Escherichia coli str. K-12 substr. MG1655"
-)
-
-main_core_organisms %in% info_species_stringdb()$official_name_NCBI
+main_core_organisms 
 ```
 
 Bringing the content into a graph
@@ -63,6 +62,7 @@ Bringing the content into a graph
 sdb_human <- get_networkdata_stringdb("Homo sapiens",
                                       version = "12.0")
 dim(sdb_human)
+head(sdb_human)
 ```
 
 The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess...

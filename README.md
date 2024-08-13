@@ -1,10 +1,6 @@
-# NetworkHub
+# NetworkHub 
 
-
-```{r}
-knitr::include_graphics("/Users/mac/R/2024_Master_IMBEI/NetworkHub/inst/scripts/etwork  ub.png")
-````
-
+<img src="inst/scripts/etwork  ub.png" alt="NetworkHubSticker" width="200"/>
 
 ## Installation 
 
