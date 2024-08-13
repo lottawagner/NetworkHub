@@ -2,7 +2,7 @@
 % Please edit documentation in R/01_utils.R
 \name{fetch_NetworkHub}
 \alias{fetch_NetworkHub}
-\title{Title}
+\title{fetch_NetworkHub()}
 \usage{
 fetch_NetworkHub(rname, update = TRUE, nh_cachedir = "NetworkHub", ...)
 }
@@ -19,7 +19,7 @@ fetch_NetworkHub(rname, update = TRUE, nh_cachedir = "NetworkHub", ...)
 res_nh returns rpath to res_nh or NULL if no entry
 }
 \description{
-Title
+fetch_NetworkHub()
 }
 \examples{
 fetch_NetworkHub(rname = "STRINGDB_Homo sapiens_v12.0")

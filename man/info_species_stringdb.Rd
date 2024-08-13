@@ -2,7 +2,7 @@
 % Please edit documentation in R/03-1_db_stringdb.R
 \name{info_species_stringdb}
 \alias{info_species_stringdb}
-\title{info_species_stringdb}
+\title{info_species_stringdb()}
 \usage{
 info_species_stringdb(version = "12.0")
 }
@@ -13,7 +13,7 @@ info_species_stringdb(version = "12.0")
 df_species returns the file containing info about the species annotation
 }
 \description{
-info_species_stringdb
+info_species_stringdb()
 }
 \examples{
 info_species_stringdb()

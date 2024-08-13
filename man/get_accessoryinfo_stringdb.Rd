@@ -20,6 +20,6 @@ proteininfo_stringdb variable assigned to the datafile that contains info about 
 Get accessory info from STRINGDB
 }
 \examples{
-human_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",
+human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
                                         version = "12.0")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/03-1_db_stringdb.R
 \name{get_networkdata_stringdb}
 \alias{get_networkdata_stringdb}
-\title{Title}
+\title{get_networkdata_stringdb()}
 \usage{
 get_networkdata_stringdb(
   species,
@@ -18,19 +18,19 @@ get_networkdata_stringdb(
 
 \item{version}{version of the data files in stringdb}
 
-\item{cache}{efault value set to TRUE (automatically checks if the data file is already stored in the cache)}
+\item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
-\item{remap_identifiers}{TODO}
+\item{remap_identifiers}{default value set to TRUE (using accessory_info functions to map unique ids with common used (ensembl)}
 
-\item{remap_to}{TODO}
+\item{remap_to}{type of remap ("ENSEMBL", "gene_symbol")}
 
-\item{...}{TODO}
+\item{...}{further arguments passed to or from other methods}
 }
 \value{
-ppis_stringdb TODO
+ppis_stringdb
 }
 \description{
-Title
+get_networkdata_stringdb()
 }
 \examples{
 

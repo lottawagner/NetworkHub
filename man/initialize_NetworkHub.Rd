@@ -2,7 +2,7 @@
 % Please edit documentation in R/01_utils.R
 \name{initialize_NetworkHub}
 \alias{initialize_NetworkHub}
-\title{initialize_NetworkHub function}
+\title{initialize_NetworkHub()}
 \usage{
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 }
@@ -15,7 +15,7 @@ initialize_NetworkHub(nh_cachedir = "NetworkHub")
 bfc_nh variabe assigned to the chache
 }
 \description{
-initialize_NetworkHub function
+initialize_NetworkHub()
 }
 \examples{
 library("BiocFileCache") # load the library of the package
