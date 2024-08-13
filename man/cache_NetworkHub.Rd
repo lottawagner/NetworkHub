@@ -2,7 +2,7 @@
 % Please edit documentation in R/01_utils.R
 \name{cache_NetworkHub}
 \alias{cache_NetworkHub}
-\title{Title}
+\title{cache_NetworkHub()}
 \usage{
 cache_NetworkHub(rname, fpath, nh_cachedir = "NetworkHub", ...)
 }
@@ -19,7 +19,7 @@ cache_NetworkHub(rname, fpath, nh_cachedir = "NetworkHub", ...)
 rpath returns the resource path of the cached file
 }
 \description{
-Title
+cache_NetworkHub()
 }
 \examples{
 # for example, retrieve something from stringDB

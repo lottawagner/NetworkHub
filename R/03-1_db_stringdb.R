@@ -334,7 +334,7 @@ build_graph_stringdb <- function(graph_data, # data describing the nodes and edg
 #' @export
 #'
 #' @examples
-#' build_graph()
+#'
 #' TODO
 
 build_graph <- function(graph_data, # data describing the nodes and edges of the network
@@ -362,3 +362,6 @@ build_graph <- function(graph_data, # data describing the nodes and edges of the
 }
 
 
+
+## map experiment data to graph #TODO
+## iplot_graph #TODO

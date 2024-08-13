@@ -3,13 +3,8 @@
 # 2. a function to cache_NetworkHub files from dbs
 # 3. a function to get_NetworkHub files out of the cache
 
-# Set up NetworkHub cache -----
-
-## Create a "directory" for the NetworkHub cache, where you can later on store and get the PPI data -------
-
-#QUESTION: Why does it make sense to create a function doing that? Is it easier for the user to just use the function?
-
-#' initialize_NetworkHub function
+# initialize_NetworkHub() -------
+#' initialize_NetworkHub()
 #'
 #' @param nh_cachedir default directory name where the cache will be stored
 #' @param cache_dir user directory of the cache
@@ -40,9 +35,9 @@ initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 }
 
 
-# retrieve datafiles and store them in the cache ----
+# cache_NetworkHub() ----
 
-#' Title
+#' cache_NetworkHub()
 #'
 #' @param rname resource name in the cache (local)
 #' @param fpath filepath (external)
@@ -90,9 +85,9 @@ cache_NetworkHub <- function(rname, # ressource name
   return(rpath) # returns the resource path of the cached file
 }
 
-# Get data from the cache ----
+# fetch_NetworkHub() ----
 
-#' Title
+#' fetch_NetworkHub()
 #'
 #' @param rname resource name in the cache (local)
 #' @param update default parameter set to TRUE (up to date version of the resource)
