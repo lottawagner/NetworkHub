@@ -279,7 +279,7 @@ build_graph_stringdb <- function(graph_data, # data describing the nodes and edg
   colnames(graph_data)
 
   # create a histogram of the scores in the column combined_score in graph_data to define the threshold
-  hist(graph_data$combines_score, breaks = 50)
+  hist(graph_data$combined_score, breaks = 50)
   score_threshold <- 200
 
 
