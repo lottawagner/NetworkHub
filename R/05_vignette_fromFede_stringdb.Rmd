@@ -40,13 +40,15 @@ BiocManager::install("NetworkHub")
 
 # Graph fetching
 
-## Initilazation of the cache of "NetworkHub"
+Initialization of the cache of "NetworkHub"
+
 ```{r init}
 library("NetworkHub")
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 ```
 
-##
+Extract the main core organisms of StringDB
+
 ```{r speciesinfo}
 main_core_organisms <- info_species_stringdb() |> 
   dplyr::filter(STRING_type == "core") |> 
@@ -56,7 +58,7 @@ main_core_organisms <- info_species_stringdb() |>
 main_core_organisms 
 ```
 
-Bringing the content into a graph
+Bringing the content into a table that later will be used to build a graph 
 
 ```{r getsdb}
 sdb_human <- get_networkdata_stringdb("Homo sapiens",
@@ -64,7 +66,7 @@ sdb_human <- get_networkdata_stringdb("Homo sapiens",
 dim(sdb_human)
 ```
 
-The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess... #TODO: takes realy long
+The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess... #TODO: takes really long
 
 ```{r sdbprint}
 head(sdb_human)
@@ -92,15 +94,19 @@ dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
 dds_macrophage <- estimateSizeFactors(dds_macrophage)
 
-se_macrophage <- 
-  DeeDee::DeeDeeExperiment(
-    dds_macrophage, 
-    de_results = list(
-      macrores = res_de
-    )
-  )
 
-se_macrophage
+#se_macrophage <- rbind(dds_macrophage, res_de) #TODO
+    
+
+#se_macrophage <- 
+#  DeeDee::DeeDeeExperiment(
+#    dds_macrophage, 
+#    de_results = list(
+#      macrores = res_de
+#    )
+#  )
+
+#se_macrophage
 ```
 
 DeeDee is just to put into the same SE object all the info on DE contrasts. That's a work in progress, but adding rowData info would also simply do it. #TODO
@@ -127,7 +133,7 @@ Getting a subnetwork for the DE proteins...
 
 ```{r makegraph}
 library("igraph")
-de_proteins_subgraph <- build_graph_STRINGDB(graph_data = sdb_human, 
+de_proteins_subgraph <- build_graph_stringdb(graph_data = sdb_human, 
                                              output_format = "igraph",
                                              min_score_threshold = 200,
                                              subset_nodes = first_proteins)
