@@ -71,8 +71,8 @@ cache_NetworkHub <- function(rname, # ressource name
 
   # check if filepath (fpath) is already being tracked
 
-  nh_query <- BiocFileCache::bfcquery(bfc_nh, fpath) # is the fpath already in the cache?
-  if (BiocFileCache::bfccount(nh_query) == 0) { # fpath is not in the cache already ?
+  nh_query <- BiocFileCache::bfcquery(bfc_nh, fpath)
+  if (BiocFileCache::bfccount(nh_query) == 0) {
     rpath <- BiocFileCache::bfcadd(bfc_nh, rname, fpath, ...) # add it to the cache by identifing the ressource with rname & fpath and ... (additional arguments that are passed to cache)
   }
   if (BiocFileCache::bfccount(nh_query) == 1){ # == 1 -> fpath once in cache?
