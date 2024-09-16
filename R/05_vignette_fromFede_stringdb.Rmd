@@ -37,7 +37,6 @@ if(!requireNamespace("NetworkHub", quietly = TRUE))
 BiocManager::install("NetworkHub")
 ``` 
 
-
 # Graph fetching
 
 Initialization of the cache of "NetworkHub"
@@ -47,29 +46,29 @@ library("NetworkHub")
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 ```
 
-Extract the main core organisms of StringDB
+Extract the main core species of StringDB
 
 ```{r speciesinfo}
-main_core_organisms <- info_species_stringdb() |> 
+main_core_species <- info_species_stringdb() |> 
   dplyr::filter(STRING_type == "core") |> 
-  head() |> 
+  head()|> #be aware there are many more than just the head organisms
   dplyr::pull(official_name_NCBI)
 
-main_core_organisms 
+main_core_species 
 ```
 
-Bringing the content into a table that later will be used to build a graph 
+Bringing the content of one species into a table that later will be used to build a graph 
 
-```{r getsdb}
-sdb_human <- get_networkdata_stringdb("Homo sapiens",
+```{r getstringdb}
+stringdb_human <- get_networkdata_stringdb("Homo sapiens",
                                       version = "12.0")
-dim(sdb_human)
+dim(stringdb_human)
 ```
 
 The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess... #TODO: takes really long
 
-```{r sdbprint}
-head(sdb_human)
+```{r stringdbprint}
+head(stringdb_human)
 ```
 
 
@@ -77,11 +76,21 @@ head(sdb_human)
 
 Load in for example the results from differential expression #TODO: there is no package called ‘DeeDee’ 
 
+Packages that are requiered:
+
+```{r stringdb requiered packages for DE, eval = FALSE}
+
+if(!requireNamespace("GeneTonic", quietly = TRUE))
+    install.packages("GeneTonic")
+BiocManager::install("GeneTonic")
+```
+
+
 ```{r loadde}
 # res object
-data(res_de_macrophage, package = "GeneTonic")
-res_de <- res_macrophage_IFNg_vs_naive
-first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"])
+data(res_de_macrophage, package = "GeneTonic") #get/take a differential expressed datafile
+res_de <- res_macrophage_IFNg_vs_naive # in this case use as an example de datafile to look into IFNg vs naive macrophages
+first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #extract the first 150 differential expressed genes out of the datafile and their id
 
 library("macrophage")
 library("DESeq2")
@@ -95,7 +104,7 @@ rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
 dds_macrophage <- estimateSizeFactors(dds_macrophage)
 
 
-#se_macrophage <- rbind(dds_macrophage, res_de) #TODO
+#se_macrophage <- rbind(dds_macrophage, res_de) #TaODO
     
 
 #se_macrophage <- 
