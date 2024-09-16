@@ -34,7 +34,7 @@ sticker(subplot = nwh_img,
   h_fill = "#d6dffaff",
   h_color = "#91a9f2ff",
   url = "www.bioconductor.org",
-  u_size = 18,
+  u_size = 26,
   u_color = "#473c8bff",
   dpi = 1200) %>% print(sticker())
 
