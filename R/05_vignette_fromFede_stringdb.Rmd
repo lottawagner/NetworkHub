@@ -89,8 +89,8 @@ BiocManager::install("GeneTonic")
 ```{r loadde}
 # res object
 data(res_de_macrophage, package = "GeneTonic") #get/take a differential expressed datafile
-res_de <- res_macrophage_IFNg_vs_naive # in this case use as an example de datafile to look into IFNg vs naive macrophages
-first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #extract the first 150 differential expressed genes out of the datafile and their id
+res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
+first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #Generate a tidy table with the results of DESeq2 (GeneTonic::deseqresult2df) and extract the first 150 differential expressed genes out of the datafile and their id (first column) and remove rows with missing values (na.omit()) 
 
 library("macrophage")
 library("DESeq2")
