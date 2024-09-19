@@ -92,10 +92,10 @@ data(res_de_macrophage, package = "GeneTonic") #get/take a differential expresse
 res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
 first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #Generate a tidy table with the results of DESeq2 (GeneTonic::deseqresult2df) and extract the first 150 differential expressed genes out of the datafile and their id (first column) and remove rows with missing values (na.omit()) 
 
-library("macrophage")
-library("DESeq2")
-library("org.Hs.eg.db")
-library("AnnotationDbi")
+library("macrophage") #demo dataset
+library("DESeq2") #package to perform differential expression analysis
+library("org.Hs.eg.db") #databank for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...  
+library("AnnotationDbi") #TODO why AnnotationDbi? not AnnotationHub?
 
 # dds object
 data("gse", package = "macrophage")
@@ -104,7 +104,7 @@ rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
 dds_macrophage <- estimateSizeFactors(dds_macrophage)
 
 
-#se_macrophage <- rbind(dds_macrophage, res_de) #TaODO
+#se_macrophage <- rbind(dds_macrophage, res_de) #TODO
     
 
 #se_macrophage <- 

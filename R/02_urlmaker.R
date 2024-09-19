@@ -654,7 +654,7 @@ urlmaker_innatedb <- function(url = url,
 }  #SPECIESDEFINITION
 
 
-# species NCBI listed in ncbi_taxid_host_organism
+# species NCBI listed in ncbi_taxid_host_organism #TODO
 
 info_species_innatedb <- list("Mus musculus" = "10090",
                               "Homo sapiens" = "9606",

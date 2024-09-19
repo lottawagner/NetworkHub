@@ -1,6 +1,5 @@
-# Here we collect all the functions in order to work with the data. ----
 
-## info_species_stringdb() done --------------------------------------------------------
+## info_species_stringdb() --------------------------------------------------------
 
 #' info_species_stringdb()
 #'
@@ -29,7 +28,7 @@ info_species_stringdb <- function(version = "12.0"){
   return(df_species)
 }
 
-## get_accessoryinfo_stringdb() done ----
+## get_accessoryinfo_stringdb()  -------------
 
 #' Get accessory info from STRINGDB
 #'
@@ -120,19 +119,20 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
   # use NA to assign a previous "value" to the variables
   accessory_info_df$ensemble_id <- NA
   accessory_info_df$gene_symbol <- NA
-  # accessory_info_df$entrez_id <- NA
+  accessory_info_df$entrez_id <- NA
 
   # filter dataframe to look up rows that contain Ensemble_gene or Ensembl_EntrezGene as source
   df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene", ]
   df_genesymbol <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
-  # df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
+  df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
 
   # assign IDs into dataframe
   accessory_info_df$ensembl_id <-
     df_ensembl$alias[match(accessory_info_df$protein_id, df_ensembl$`#string_protein_id`)]
   accessory_info_df$gene_symbol <-
     df_genesymbol$alias[match(accessory_info_df$protein_id, df_genesymbol$`#string_protein_id`)]
-
+  accessory_info_df$entrez_id <-
+    df_genesymbol$alias[match(accessory_info_df$protein_id, df_entrez_id$`#string_protein_id`)]
 
   # return the dataframe accessory_info_df
   return(accessory_info_df)
@@ -223,7 +223,7 @@ get_networkdata_stringdb <- function(species,
   ppis_stringdb <- vroom::vroom(network_file)
   ## ppis_stringdb <- read.delim(network_file, sep = " ")
 
-  # id remap_identifiers = TRUE we use accessory functions to get ensmble id as node and gene_symbol as label
+  # id remap_identifiers = TRUE we use accessory functions to get ensemble id, gene_symbol and entrez
   if (remap_identifiers){
     accessory_info <- get_accessoryinfo_stringdb(
       species = species,
@@ -234,10 +234,12 @@ get_networkdata_stringdb <- function(species,
   accessory_info_df <-
     create_annotation_from_stringdbaccessory(accessory_info)
 
-  ppis_stringdb$geneid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["ensembl_id"]]
-  ppis_stringdb$geneid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["ensembl_id"]]
+  ppis_stringdb$ensemblid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["ensembl_id"]]
+  ppis_stringdb$ensemblid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["ensembl_id"]]
   ppis_stringdb$gene_1 <- accessory_info_df[ppis_stringdb$protein1, ][["gene_symbol"]]
   ppis_stringdb$gene_2 <- accessory_info_df[ppis_stringdb$protein2, ][["gene_symbol"]]
+  ppis_stringdb$entrezid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["entrez_id"]]
+  ppis_stringdb$entrezid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["entrez_id"]]
   }
 
   # return ppis-stringdb containing remaped identifiers
@@ -275,8 +277,9 @@ build_graph_stringdb <- function(graph_data, # data describing the nodes and edg
 
   # graph data comes from the reading in function
   # now we need to check on the...
+  colnames(graph_data) #returns the names of the coulmns of the corresponding dataframe
 
-  colnames(graph_data)
+
 
   # create a histogram of the scores in the column combined_score in graph_data to define the threshold
   hist(graph_data$combined_score, breaks = 50)
@@ -319,49 +322,6 @@ build_graph_stringdb <- function(graph_data, # data describing the nodes and edg
   return(my_graph)
 
 }
-
-
-## build_graph() allgemeine Funktion? --------------------
-
-#' Title
-#'
-#' @param graph_data data describing the nodes and edges of the network
-#' @param data_source database (e.g.: "stringdb")
-#' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
-#' @param min_score_threshold optional threshold to filter edges based on their combination score
-#' @param subset_nodes optional vector of nodes to extract only a part of the network
-#'
-#' @return my_graph object
-#' @export
-#'
-#' @examples
-#'
-#' TODO
-
-build_graph <- function(graph_data, # data describing the nodes and edges of the network
-                        data_source = "stringdb",
-                        output_format = c("igraph", "grpahnel", "sif"), # Vector that specifies the desired output formats
-                        min_score_threshold, # optional threshold for filtering the edges based on a combination score
-                        subset_nodes){ # optional subset of nodes that can be used to create a subgraph
-
-  # define the data_source and the corresponding handling for the graph
-  if (data_source == "stringdb") {
-    my_graph <- build_graph_stringdb(
-      graph_data = graph_data,
-      output_format = output_format,
-      min_score_threshold = min_score_threshold,
-      subset_nodes = subset_nodes
-    )
-
-  # still needs to be defined
-  } else {
-    #TODO once we worked on the other databases
-  }
-
-  #return my_graph
-  return (my_graph)
-}
-
 
 
 ## map experiment data to graph #TODO
