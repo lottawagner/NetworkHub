@@ -4,9 +4,8 @@
 #' @param version version of the data files in hint
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param type different interaction files provided by hint (all high-quality)
-#' @param annotation expanding the dataframe with four columns ( Entrez_ID and Ensembl_ID )
+#' @param add_annotation expanding the dataframe with four columns ( Entrez_ID and Ensembl_ID )
 #' @param ... 	further arguments passed to or from other methods
-
 #'
 #' @return ppis_hint
 #'
@@ -16,7 +15,7 @@
 #' @examples
 #'
 #' db_hint_df <- get_networkdata_hint(
-#'   species = "Homo sapiens",
+#'   species = "HomoSapiens",
 #'   version = "2024-06",
 #'   type = "binary"
 #' )
@@ -28,20 +27,11 @@ get_networkdata_hint <- function(species,
                                  version,
                                  type = "binary",
                                  cache = TRUE,
-                                 annotation = TRUE,
+                                 add_annotation = TRUE,
                                  ...) {
 
   # matching for the species...
-  list_species_hint <- c("HomoSapiens",
-                         "SaccharomycesCerevisiae",
-                         "SchizosaccharomycesPombe",
-                         "MusMusculus",
-                         "DrosophilaMelanogaster",
-                         "CaenorhabditisElegans",
-                         "ArabidopsisThaliana",
-                         "EscherichiaColi",
-                         "RattusNorvegicus",
-                         "OryzaSativa")
+
 
   # list species is actualized for version HINT "2024-06"
   # UPDATEVERSION
@@ -97,8 +87,14 @@ get_networkdata_hint <- function(species,
 #
   message(dim(ppis_hint))
 
-  if (annotation) {
-    ppi_hint_df_annotated <- annotation_hint(species = species,
+  colnames(ppis_hint)[colnames(ppis_hint) == "Gene_A"] <- "GeneSymbol_A"
+  colnames(ppis_hint)[colnames(ppis_hint) == "Gene_B"] <- "GeneSymbol_B"
+
+
+
+  if (add_annotation) {
+    ppi_hint_df_annotated <- annotation_hint(ppi_hint = ppis_hint,
+                                             species = species,
                                              version = version,
                                              type = type)
     return(ppi_hint_df_annotated)
@@ -106,11 +102,23 @@ get_networkdata_hint <- function(species,
 
 
 
-  if (!annotation) {
+  if (!add_annotation) {
     return(ppis_hint)
   }
 
 }
+
+
+list_species_hint <- c("HomoSapiens",
+                       "SaccharomycesCerevisiae",
+                       "SchizosaccharomycesPombe",
+                       "MusMusculus",
+                       "DrosophilaMelanogaster",
+                       "CaenorhabditisElegans",
+                       "ArabidopsisThaliana",
+                       "EscherichiaColi",
+                       "RattusNorvegicus",
+                       "OryzaSativa")
 
 ## annotation
 
@@ -127,35 +135,35 @@ get_networkdata_hint <- function(species,
 #'
 #' annotation_hint(species = "HomoSapiens", version = "2024-06", type = "binary")
 #'
-annotation_hint <- function(species = "HomoSapiens",
+annotation_hint <- function(ppi_hint,
+                            species = "HomoSapiens",
                             version,
                             type){
 
   #add annotation
 
-  type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
+  # type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
+  #
+  # rname <- paste0(
+  #   "hint_",
+  #   species,
+  #   "_v",
+  #   version,
+  #   "_type",
+  #   type
+  # )
+  #
+  # hint_url <-
+  #   urlmaker_hint(
+  #     type = type,
+  #     species = species,
+  #     version = version)
+  #
+  # network_file <- cache_NetworkHub(
+  #   rname = rname,
+  #   fpath = hint_url
+  # )
 
-  rname <- paste0(
-    "hint_",
-    species,
-    "_v",
-    version,
-    "_type",
-    type
-  )
-
-  hint_url <-
-    urlmaker_hint(
-      type = type,
-      species = species,
-      version = version)
-
-  network_file <- cache_NetworkHub(
-    rname = rname,
-    fpath = hint_url
-  )
-
-  ppis_hint <- vroom::vroom(network_file)
 
   if (species == "HomoSapiens") {
     library(org.Hs.eg.db)
@@ -164,37 +172,65 @@ annotation_hint <- function(species = "HomoSapiens",
     stop("Annotation database for the species is not implemented yet.")
   }
 
-  protein_ids_A <- unique(ppis_hint$Uniprot_A)
-  protein_ids_B <- unique(ppis_hint$Uniprot_B)
+  all_prot_ids <- unique(c(ppi_hint$Uniprot_A, ppi_hint$Uniprot_B))
 
-  # Annotations for Uniprot_A (EntrezID, EnsemblID)
-  annotations_A <- AnnotationDbi::select(
-    annotation_db,
-    keys = protein_ids_A,
-    columns = c("ENTREZID", "ENSEMBL"),
-    keytype = "UNIPROT"
+  anno_df <- data.frame(
+    uniprot_id = all_prot_ids,
+    ensembl_id = mapIds(
+      annotation_db, keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+    entrez_id = mapIds(
+      annotation_db, keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+    row.names = all_prot_ids
   )
 
-  # Annotations for Uniprot_A (EntrezID, EnsemblID)
-  annotations_B <- AnnotationDbi::select(
-    annotation_db,
-    keys = protein_ids_B,
-    columns = c("ENTREZID", "ENSEMBL"),
-    keytype = "UNIPROT"
-  )
+  ppis_hint_annotated <- ppi_hint
 
-  # define the names vor the columns
-  colnames(annotations_A) <- c("Uniprot_A", "Entrezid_A", "Ensembl_A")
-  colnames(annotations_B) <- c("Uniprot_B", "Entrezid_B", "Ensembl_B")
+  ppis_hint_annotated$Ensembl_A <-
+    anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
+  ppis_hint_annotated$Ensembl_B <-
+    anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
 
-  # merge with ppis_hint
-  ppis_hint_annotated <- merge(ppis_hint, annotations_A, by = "Uniprot_A", all.x = TRUE)
-  ppis_hint_annotated <- merge(ppis_hint_annotated, annotations_B, by = "Uniprot_B", all.x = TRUE)
-
-  message(dim(ppis_hint_annotated)[1]) #rows
-  message(dim(ppis_hint_annotated)[2]) #columns
+  ppis_hint_annotated$Entrez_A <-
+    anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
+  ppis_hint_annotated$Entrez_B <-
+    anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
 
   return(ppis_hint_annotated)
+
+
+
+
+  # protein_ids_A <- unique(ppis_hint$Uniprot_A)
+  # protein_ids_B <- unique(ppis_hint$Uniprot_B)
+  #
+  # # Annotations for Uniprot_A (EntrezID, EnsemblID)
+  # annotations_A <- AnnotationDbi::select(
+  #   annotation_db,
+  #   keys = protein_ids_A,
+  #   columns = c("ENTREZID", "ENSEMBL"),
+  #   keytype = "UNIPROT"
+  # )
+  #
+  # # Annotations for Uniprot_A (EntrezID, EnsemblID)
+  # annotations_B <- AnnotationDbi::select(
+  #   annotation_db,
+  #   keys = protein_ids_B,
+  #   columns = c("ENTREZID", "ENSEMBL"),
+  #   keytype = "UNIPROT"
+  # )
+  #
+  # # define the names vor the columns
+  # colnames(annotations_A) <- c("Uniprot_A", "Entrezid_A", "Ensembl_A")
+  # colnames(annotations_B) <- c("Uniprot_B", "Entrezid_B", "Ensembl_B")
+  #
+  # # merge with ppis_hint
+  # ppis_hint_annotated <- merge(ppis_hint, annotations_A, by = "Uniprot_A", all.x = TRUE)
+  # ppis_hint_annotated <- merge(ppis_hint_annotated, annotations_B, by = "Uniprot_B", all.x = TRUE)
+  #
+  # message(dim(ppis_hint_annotated)[1]) #rows
+  # message(dim(ppis_hint_annotated)[2]) #columns
+  #
+  # return(ppis_hint_annotated)
 
 }
 
