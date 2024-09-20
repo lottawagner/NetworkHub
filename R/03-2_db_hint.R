@@ -3,8 +3,10 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in hint
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param ... 	further arguments passed to or from other methods
 #' @param type different interaction files provided by hint (all high-quality)
+#' @param annotation expanding the dataframe with four columns ( Entrez_ID and Ensembl_ID )
+#' @param ... 	further arguments passed to or from other methods
+
 #'
 #' @return ppis_hint
 #'
@@ -26,6 +28,7 @@ get_networkdata_hint <- function(species,
                                  version,
                                  type = "binary",
                                  cache = TRUE,
+                                 annotation = TRUE,
                                  ...) {
 
   # matching for the species...
@@ -94,7 +97,65 @@ get_networkdata_hint <- function(species,
 #
   message(dim(ppis_hint))
 
+  if (annotation) {
+    ppi_hint_df_annotated <- annotation_hint(species = species,
+                                             version = version,
+                                             type = type)
+    return(ppi_hint_df_annotated)
+  }
+
+
+
+  if (!annotation) {
+    return(ppis_hint)
+  }
+
+}
+
+## annotation
+
+#' annotation_hint
+#'
+#' @param species
+#' @param version
+#' @param type
+#'
+#' @return ppis_hint_annotated
+#' @export
+#'
+#' @examples
+#'
+#' annotation_hint(species = "HomoSapiens", version = "2024-06", type = "binary")
+#'
+annotation_hint <- function(species = "HomoSapiens",
+                            version,
+                            type){
+
   #add annotation
+
+  type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
+
+  rname <- paste0(
+    "hint_",
+    species,
+    "_v",
+    version,
+    "_type",
+    type
+  )
+
+  hint_url <-
+    urlmaker_hint(
+      type = type,
+      species = species,
+      version = version)
+
+  network_file <- cache_NetworkHub(
+    rname = rname,
+    fpath = hint_url
+  )
+
+  ppis_hint <- vroom::vroom(network_file)
 
   if (species == "HomoSapiens") {
     library(org.Hs.eg.db)
@@ -130,20 +191,10 @@ get_networkdata_hint <- function(species,
   ppis_hint_annotated <- merge(ppis_hint, annotations_A, by = "Uniprot_A", all.x = TRUE)
   ppis_hint_annotated <- merge(ppis_hint_annotated, annotations_B, by = "Uniprot_B", all.x = TRUE)
 
-  message(dim(ppis_hint_annotated)[1])
+  message(dim(ppis_hint_annotated)[1]) #rows
+  message(dim(ppis_hint_annotated)[2]) #columns
 
-  # return ppis-hint
-  return(ppis_hint)
-}
-
-## annotation
-
-annotation_hint <- function(annotation_info){
-
-  annotation_info_df <- data.frame(
-    protein_id = unique(annotation_info$`Gene_A`),
-    row.names = unique(annotation_info$`Gene_B`)
-  )
+  return(ppis_hint_annotated)
 
 }
 
