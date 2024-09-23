@@ -21,8 +21,7 @@
 #' bfccache(bfc_nh) # get the path to the cache
 #' length(bfc_nh) # how many entries?
 #' bfcinfo(bfc_nh) # what are the column names of the cache
-#' bfcremove(bfc_nh, c("BF6", "BF7"))
-#'
+#' bfcremove(bfc_nh, c("BFC10", "BFC11", "BFC12", "BFC13"))
 #' # nh_cachedir = default directory name where the cache will be stored
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 

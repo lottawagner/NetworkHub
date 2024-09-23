@@ -111,7 +111,7 @@ get_networkdata_hint <- function(species,
 
 # outside of function ----------
 
-
+#TODO do I need to load the library?
 BiocManager::install("AnnotationDbi")
 BiocManager::install("org.Hs.eg.db")
 BiocManager::install("org.Sc.sgd.db")
@@ -121,7 +121,7 @@ BiocManager::install("org.Dm.eg.db")
 BiocManager::install("org.Ce.eg.db")
 BiocManager::install("org.At.tair.db")
 BiocManager::install("org.Rn.eg.db")
-BiocManager::install("org.Os.eg.db")
+
 library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(org.Sc.sgd.db)
@@ -130,7 +130,7 @@ library(org.Dm.eg.db)
 library(org.Ce.eg.db)
 library(org.At.tair.db)
 library(org.Rn.eg.db)
-library(org.Os.eg.db)
+
 
 
 list_species_hint <- c("HomoSapiens",
@@ -153,7 +153,7 @@ list_db_annotationdbi_hint <- c("org.Hs.eg.db",
                                "org.At.tair.db",
                                NA,
                                "org.Rn.eg.db",
-                               "org.Os.eg.db")
+                               NA)
 
 
 hint_db_annotations <- data.frame(
@@ -201,12 +201,6 @@ annotation_hint <- function(ppi_hint,
       stop("Annotation database for the species is not implemented yet.")
     }
   }
-
-  #TODO do I need to load the library?
-  #TODOERROR 20240920 Error in annotation_hint(ppi_hint = ppis_hint, species = species, version = version,  : Annotation database for the species is not implemented yet.
-
-
-
 
   all_prot_ids <- unique(c(ppi_hint$Uniprot_A, ppi_hint$Uniprot_B))
 
