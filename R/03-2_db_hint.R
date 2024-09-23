@@ -1,3 +1,6 @@
+
+# get_networkdata_hint() -----------
+
 #' get_networkdata_hint()
 #'
 #' @param species  from which species does the data come from
@@ -25,12 +28,11 @@
 
 get_networkdata_hint <- function(species,
                                  version,
-                                 type = "binary",
+                                 type = "binary", #c("binary", "cocomp", "lcb", "lcc")
                                  cache = TRUE,
                                  add_annotation = TRUE,
                                  ...) {
 
-  # matching for the species...
 
 
   # list species is actualized for version HINT "2024-06"
@@ -43,10 +45,11 @@ get_networkdata_hint <- function(species,
          "please check some valid entries by running `list_species_hint`") # stop function and print
   }
 
+
+  # type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
+
   # buildup of the resource location for the version and all
   ## elegantly done in another smaller utility function
-
-  type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
 
   rname <- paste0(
     "hint_",
@@ -106,6 +109,29 @@ get_networkdata_hint <- function(species,
 
 }
 
+# outside of function ----------
+
+
+BiocManager::install("AnnotationDbi")
+BiocManager::install("org.Hs.eg.db")
+BiocManager::install("org.Sc.sgd.db")
+BiocManager::install("org.Sc.sgd.db")
+BiocManager::install("org.Mm.eg.db")
+BiocManager::install("org.Dm.eg.db")
+BiocManager::install("org.Ce.eg.db")
+BiocManager::install("org.At.tair.db")
+BiocManager::install("org.Rn.eg.db")
+BiocManager::install("org.Os.eg.db")
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(org.Sc.sgd.db)
+library(org.Mm.eg.db)
+library(org.Dm.eg.db)
+library(org.Ce.eg.db)
+library(org.At.tair.db)
+library(org.Rn.eg.db)
+library(org.Os.eg.db)
+
 
 list_species_hint <- c("HomoSapiens",
                        "SaccharomycesCerevisiae",
@@ -137,43 +163,48 @@ hint_db_annotations <- data.frame(
 )
 
 
-## annotation
+# annotation_hint() --------
 
-#' annotation_hint
+#' annotation_hint ()
 #'
-#' @param species
-#' @param version
-#' @param type
+#' @param species  from which species does the data come from
+#' @param version version of the data files in hint
+#' @param type different interaction files provided by hint (all high-quality)
+#' @param ppi_hint variable defined by ppis_hint in get_networkdata_hint()
 #'
-#' @return ppis_hint_annotated
+#'@return ppis_hint_annotated
 #' @export
 #'
 #' @examples
 #'
-#' annotation_hint(species = "HomoSapiens", version = "2024-06", type = "binary")
+#' annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
 #'
 
+
 annotation_hint <- function(ppi_hint,
-                            species = "HomoSapiens",
+                            species,
                             version,
                             type){
 
 # find database on corresponding species
 
+  if (!(species %in% list_species_hint)) { # if species is not in the list
+    stop("Species not found as specified by HINT,",
+         "please check some valid entries by running `list_species_hint`") # stop function and print
+  }
 
   if (species %in% list_species_hint) {
     annotation_db <-
-      hint_db_annotations$anno_db[match(species, hint_db_annotations$species)]
+      hint_db_annotations$anno_db_hint[match(species, hint_db_annotations$species)]
+
+    if (is.na(annotation_db)) {
+      stop("Annotation database for the species is not implemented yet.")
+    }
   }
 
   #TODO do I need to load the library?
   #TODOERROR 20240920 Error in annotation_hint(ppi_hint = ppis_hint, species = species, version = version,  : Annotation database for the species is not implemented yet.
 
-  if (!(species %in% list_species_hint)) { # if species is not in the list
-    stop("Species not found as specified by HINT,",
-         "please check some valid entries by running `list_species_hint`") # stop function and print
-  }
-    stop("Annotation database for the species is not implemented yet.")
 
 
 
