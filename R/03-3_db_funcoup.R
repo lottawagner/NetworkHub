@@ -5,22 +5,19 @@
 #' @param species  from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns ( Entrez_ID and Ensembl_ID )
+#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_funcoup
 #' @return ppis_annotated_funcoup
 #'
 #' @importFrom vroom vroom
+#'
 #' @export
 #'
 #' @examples
 #'
-#' db_funcoup_df <- get_networkdata_funcoup(
-#'   species = "H.sapiens",
-#'   version = "5.0",
-#' )
-#'
+#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0")
 #' db_funcoup_df
 #'
 
@@ -86,10 +83,8 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   colnames(ppis_funcoup)[colnames(ppis_funcoup) == "2:Gene1"] <- "Ensembl_A"
   colnames(ppis_funcoup)[colnames(ppis_funcoup) == "3:Gene2"] <- "Ensembl_B"
 
-  head(ppis_funcoup)
-
   if (add_annotation) {
-    ppis_funcoup_df_annotated <- annotation_funcoup(ppis_funcoup = ppis_funcoup,
+    ppis_funcoup_df_annotated <- annotation_funcoup(ppi_funcoup = ppis_funcoup,
                                              species = species,
                                              version = version)
     message(dim(ppis_funcoup_df_annotated))
@@ -106,41 +101,6 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
 
 
 # outside of function ----------
-
-#TODO do I need to load the library?
-BiocManager::install("AnnotationDbi", force = TRUE)
-# BiocManager::install("org.At.tair.db")
-# BiocManager::install("org.Bt.eg.db")
-# BiocManager::install("org.Ce.eg.db")
-# BiocManager::install("org.Cf.eg.db")
-# BiocManager::install("org.Dm.eg.db")
-# BiocManager::install("org.Dr.eg.db")
-# BiocManager::install("org.EcK12.eg.db")
-# BiocManager::install("org.Gg.eg.db")
-BiocManager::install("org.Hs.eg.db")
-BiocManager::install("org.Mm.eg.db")
-# BiocManager::install("org.Pf.plasmo.db")
-# BiocManager::install("org.Rn.eg.db")
-# BiocManager::install("org.Sc.sgd.db")
-# BiocManager::install("org.Ss.eg.db")
-
-
-library(AnnotationDbi)
-# library(org.At.tair.db)
-# library(org.Bt.eg.db)
-# library(org.Ce.eg.db)
-# library(org.Cf.eg.db)
-# library(org.Dm.eg.db)
-# library(org.Dr.eg.db)
-# library(org.EcK12.eg.db)
-# library(org.Gg.eg.db)
-library(org.Hs.eg.db)
-library(org.Mm.eg.db)
-# library(org.Pf.plasmo.db)
-# library(org.Rn.eg.db)
-# library(org.Sc.sgd.db)
-# library(org.Ss.eg.db)
-
 
 list_species_funcoup <- c( "A.thaliana",
                            "B.subtilis",
@@ -177,7 +137,7 @@ list_db_annotationdbi_funcoup <- c("org.At.tair.db",
                                    NA,
                                    "org.Mm.eg.db",
                                    NA,
-                                   "org.Pf.plasmo.db",
+                                   NA,
                                    "org.Rn.eg.db",
                                    "org.Sc.sgd.db",
                                    NA,
@@ -198,18 +158,35 @@ funcoup_db_annotations <- data.frame(
 #'
 #' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
-#' @param ppis_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
+#' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
 #'
-#'@return ppis_funcoup_annotated
+#' @importFrom AnnotationDbi mapIds
+#'
+#' @import org.At.tair.db
+#' @import org.Bt.eg.db
+#' @import org.Ce.eg.db
+#' @import org.Cf.eg.db
+#' @import org.Dm.eg.db
+#' @import org.Dr.eg.db
+#' @import org.EcK12.eg.db
+#' @import org.Gg.eg.db
+#' @import org.Hs.eg.db
+#' @import org.Mm.eg.db
+#' @import org.Rn.eg.db
+#' @import org.Sc.sgd.db
+#' @import org.Ss.eg.db
+#'
+#' @return ppis_funcoup_annotated
 #' @export
 #'
 #' @examples
 #'
-#' annotation_funcoup(ppis_funcoup, species = "H.sapiens", version = "5.0")
+#' # annotation_funcoup(ppi_funcoup, species = "H.sapiens", version = "5.0")
+#' #TODO: what can I do here as ppi_funcoup is not defined in annotation_funcoup()
 #'
 
 
-annotation_funcoup <- function(ppis_funcoup,
+annotation_funcoup <- function(ppi_funcoup,
                             species,
                             version){
 
@@ -229,7 +206,7 @@ annotation_funcoup <- function(ppis_funcoup,
     }
   }
 
-  all_gene_ids <- unique(c(ppis_funcoup$Ensembl_A, ppis_funcoup$Ensembl_B))
+  all_gene_ids <- unique(c(ppi_funcoup$Ensembl_A, ppi_funcoup$Ensembl_B))
 
   print(dim(all_gene_ids))
 
@@ -244,7 +221,7 @@ annotation_funcoup <- function(ppis_funcoup,
     row.names = all_gene_ids
   )
 
-  ppis_funcoup_annotated <- ppis_funcoup
+  ppis_funcoup_annotated <- ppi_funcoup
 
   ppis_funcoup_annotated$GeneSymbol_A <-
     anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]

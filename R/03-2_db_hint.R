@@ -111,28 +111,6 @@ get_networkdata_hint <- function(species,
 
 # outside of function ----------
 
-#TODO do I need to load the library?
-BiocManager::install("AnnotationDbi")
-BiocManager::install("org.Hs.eg.db")
-# BiocManager::install("org.Sc.sgd.db")
-# BiocManager::install("org.Sc.sgd.db")
-# BiocManager::install("org.Mm.eg.db")
-# BiocManager::install("org.Dm.eg.db")
-# BiocManager::install("org.Ce.eg.db")
-# BiocManager::install("org.At.tair.db")
-# BiocManager::install("org.Rn.eg.db")
-
-library(AnnotationDbi)
-library(org.Hs.eg.db)
-# library(org.Sc.sgd.db)
-# library(org.Mm.eg.db)
-# library(org.Dm.eg.db)
-# library(org.Ce.eg.db)
-# library(org.At.tair.db)
-# library(org.Rn.eg.db)
-
-
-
 list_species_hint <- c("HomoSapiens",
                        "SaccharomycesCerevisiae",
                        "SchizosaccharomycesPombe",
@@ -156,11 +134,10 @@ list_db_annotationdbi_hint <- c("org.Hs.eg.db",
                                NA)
 
 
-hint_db_annotations <- data.frame(
-  species = list_species_hint,
-  anno_db_hint = list_db_annotationdbi_hint,
-  row.names = list_species_hint
-)
+hint_db_annotations <- data.frame(species = list_species_hint,
+                                  anno_db_hint = list_db_annotationdbi_hint,
+                                  row.names = list_species_hint
+                                  )
 
 
 # annotation_hint() --------
@@ -172,13 +149,25 @@ hint_db_annotations <- data.frame(
 #' @param type different interaction files provided by hint (all high-quality)
 #' @param ppi_hint variable defined by ppis_hint in get_networkdata_hint()
 #'
+#' @importFrom AnnotationDbi mapIds
+#' @import org.Hs.eg.db
+#' @import org.Sc.sgd.db
+#' @import org.Mm.eg.db
+#' @import org.Dm.eg.db
+#' @import org.Ce.eg.db
+#' @import org.At.tair.db
+#' @import org.Rn.eg.db
+#'
+#'
 #'@return ppis_hint_annotated
-#' @export
+#'
+#'@export
+#'
 #'
 #' @examples
 #'
-#' annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
-#'
+#' # annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
+#' #TODO: what can I do here as ppi_funcoup is not defined in annotation_hint()?
 
 
 annotation_hint <- function(ppi_hint,
@@ -231,6 +220,9 @@ annotation_hint <- function(ppi_hint,
 
 
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
+
+
+
 
 
 

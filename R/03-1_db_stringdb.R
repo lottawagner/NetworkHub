@@ -107,7 +107,9 @@ get_accessoryinfo_stringdb <- function(species,
 #' @export
 #'
 #' @examples
-#' create_annotation_from_stringdbaccessory(accessory_info)# accessory_info in get_networkdata_stringdb()
+#' # create_annotation_from_stringdbaccessory(accessory_info)
+#' #TODO: what can I do here as ppi_funcoup is not defined?
+#'
 create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION - where does accessory_info comes from?
 
   # create a dataframe that contains the unique string_protein_ids as protein_id and rname
@@ -119,20 +121,20 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
   # use NA to assign a previous "value" to the variables
   accessory_info_df$ensemble_id <- NA
   accessory_info_df$gene_symbol <- NA
-  accessory_info_df$entrez_id <- NA
+  #accessory_info_df$entrez_id <- NA
 
   # filter dataframe to look up rows that contain Ensemble_gene or Ensembl_EntrezGene as source
   df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene", ]
   df_genesymbol <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
-  df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
+  #df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
 
   # assign IDs into dataframe
   accessory_info_df$ensembl_id <-
     df_ensembl$alias[match(accessory_info_df$protein_id, df_ensembl$`#string_protein_id`)]
   accessory_info_df$gene_symbol <-
     df_genesymbol$alias[match(accessory_info_df$protein_id, df_genesymbol$`#string_protein_id`)]
-  accessory_info_df$entrez_id <-
-    df_genesymbol$alias[match(accessory_info_df$protein_id, df_entrez_id$`#string_protein_id`)]
+  #accessory_info_df$entrez_id <-
+  #  df_genesymbol$alias[match(accessory_info_df$protein_id, df_entrez_id$`#string_protein_id`)]
 
   # return the dataframe accessory_info_df
   return(accessory_info_df)
@@ -238,8 +240,8 @@ get_networkdata_stringdb <- function(species,
   ppis_stringdb$ensemblid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["ensembl_id"]]
   ppis_stringdb$gene_1 <- accessory_info_df[ppis_stringdb$protein1, ][["gene_symbol"]]
   ppis_stringdb$gene_2 <- accessory_info_df[ppis_stringdb$protein2, ][["gene_symbol"]]
-  ppis_stringdb$entrezid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["entrez_id"]]
-  ppis_stringdb$entrezid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["entrez_id"]]
+  #ppis_stringdb$entrezid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["entrez_id"]]
+  #ppis_stringdb$entrezid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["entrez_id"]]
   }
 
   # return ppis-stringdb containing remaped identifiers
@@ -250,78 +252,78 @@ get_networkdata_stringdb <- function(species,
 
 
 
-## build_graph_stringdb() ----
-
-#' build_graph_stringdb()
+#' ## build_graph_stringdb() ----
 #'
-#' @param graph_data data describing the nodes and edges of the network
-#' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
-#' @param min_score_threshold optional threshold to filter edges based on their combination score
-#' @param subset_nodes optional vector of nodes to extract only a part of the network
+#' #' build_graph_stringdb()
+#' #'
+#' #' @param graph_data data describing the nodes and edges of the network
+#' #' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
+#' #' @param min_score_threshold optional threshold to filter edges based on their combination score
+#' #' @param subset_nodes optional vector of nodes to extract only a part of the network
+#' #'
+#' #' @return my_graph object
+#' #'
+#' #' @importFrom igraph igraph
+#' #' @export
+#' #'
+#' #' @examples
+#' #'
+#' #' network_all <- build_graph_stringdb(graph_data = graph_data,
+#' #'                                     output_format = "igraph",
+#' #'                                     min_score_threshold = 600)
+#' #' TODO
+#' build_graph_stringdb <- function(graph_data, # data describing the nodes and edges of the network
+#'                                  output_format = c("igraph", "graphnel", "sif"), # vector that specifies possible output formats
+#'                                  min_score_threshold = NULL, # optional threshold to filter edges based on their combination score
+#'                                  subset_nodes = NULL) { # optional vector of nodes to extract only a part of the network
 #'
-#' @return my_graph object
+#'   # graph data comes from the reading in function
+#'   # now we need to check on the...
+#'   colnames(graph_data) #returns the names of the coulmns of the corresponding dataframe
 #'
-#' @importFrom igraph igraph
-#' @export
 #'
-#' @examples
 #'
-#' network_all <- build_graph_stringdb(graph_data = graph_data,
-#'                                     output_format = "igraph",
-#'                                     min_score_threshold = 600)
-#' TODO
-build_graph_stringdb <- function(graph_data, # data describing the nodes and edges of the network
-                                 output_format = c("igraph", "graphnel", "sif"), # vector that specifies possible output formats
-                                 min_score_threshold = NULL, # optional threshold to filter edges based on their combination score
-                                 subset_nodes = NULL) { # optional vector of nodes to extract only a part of the network
-
-  # graph data comes from the reading in function
-  # now we need to check on the...
-  colnames(graph_data) #returns the names of the coulmns of the corresponding dataframe
-
-
-
-  # create a histogram of the scores in the column combined_score in graph_data to define the threshold
-  hist(graph_data$combined_score, breaks = 50)
-  score_threshold <- 200
-
-
-  # if there is a min_score_treshold #filter and only store edges that have a higher/same value as the threshold
-  if (!is.null(min_score_threshold)){
-    graph_data_processed <- graph_data[graph_data$combined_score >= min_score_threshold, ]
-
-  # no threshold ? # work with all edges
-  } else {
-    graph_data_processed <- graph_data
-  }
-
-  dim(graph_data)
-  dim(graph_data_processed)
-
-  # create an igraph object out of filtered data which is specified as undirected
-  whole_graph <-
-    igraph::graph.data.frame(d = graph_data_processed, directed = FALSE)
-
-
-  # if there are subset nodes # create a subgraph which only contains edges and nodes from subset_nodes
-  if (length(subset_nodes) > 0){
-    my_graph <- igraph::induced_subgraph(
-      whole_graph,
-      which(V(whole_graph)$name %in% subset_nodes)
-    )
-
-  # if there are no subset_nodes # create the whole graph
-  } else {
-    my_graph <- whole_graph
-  }
-
-  # simplify graph by removing multiple edges and loops
-  my_graph <- igraph::simplify(my_graph)
-
-  #return my_graph
-  return(my_graph)
-
-}
+#'   # create a histogram of the scores in the column combined_score in graph_data to define the threshold
+#'   hist(graph_data$combined_score, breaks = 50)
+#'   score_threshold <- 200
+#'
+#'
+#'   # if there is a min_score_treshold #filter and only store edges that have a higher/same value as the threshold
+#'   if (!is.null(min_score_threshold)){
+#'     graph_data_processed <- graph_data[graph_data$combined_score >= min_score_threshold, ]
+#'
+#'   # no threshold ? # work with all edges
+#'   } else {
+#'     graph_data_processed <- graph_data
+#'   }
+#'
+#'   dim(graph_data)
+#'   dim(graph_data_processed)
+#'
+#'   # create an igraph object out of filtered data which is specified as undirected
+#'   whole_graph <-
+#'     igraph::graph.data.frame(d = graph_data_processed, directed = FALSE)
+#'
+#'
+#'   # if there are subset nodes # create a subgraph which only contains edges and nodes from subset_nodes
+#'   if (length(subset_nodes) > 0){
+#'     my_graph <- igraph::induced_subgraph(
+#'       whole_graph,
+#'       which(V(whole_graph)$name %in% subset_nodes)
+#'     )
+#'
+#'   # if there are no subset_nodes # create the whole graph
+#'   } else {
+#'     my_graph <- whole_graph
+#'   }
+#'
+#'   # simplify graph by removing multiple edges and loops
+#'   my_graph <- igraph::simplify(my_graph)
+#'
+#'   #return my_graph
+#'   return(my_graph)
+#'
+#' }
 
 
 ## map experiment data to graph #TODO
