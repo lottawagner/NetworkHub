@@ -7,7 +7,6 @@
 #' initialize_NetworkHub()
 #'
 #' @param nh_cachedir default directory name where the cache will be stored
-#' @param cache_dir user directory of the cache
 #'
 #' @return bfc_nh variabe assigned to the chache
 #'
@@ -21,7 +20,7 @@
 #' bfccache(bfc_nh) # get the path to the cache
 #' length(bfc_nh) # how many entries?
 #' bfcinfo(bfc_nh) # what are the column names of the cache
-#' bfcremove(bfc_nh, c("BFC10", "BFC11", "BFC12", "BFC13"))
+#' # bfcremove(bfc_nh, c("BFC10", "BFC11", "BFC12", "BFC13"))
 #' # nh_cachedir = default directory name where the cache will be stored
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
@@ -135,42 +134,42 @@ if (is.null(res_nh)) {
 
 ## build_graph() allgemeine Funktion? --------------------
 
-#' Title
+#' #' Title
+#' #'
+#' #' @param graph_data data describing the nodes and edges of the network
+#' #' @param data_source database (e.g.: "stringdb")
+#' #' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
+#' #' @param min_score_threshold optional threshold to filter edges based on their combination score
+#' #' @param subset_nodes optional vector of nodes to extract only a part of the network
+#' #'
+#' #' @return my_graph object
+#' #' @export
+#' #'
+#' #' @examples
+#' #'
+#' #' TODO
 #'
-#' @param graph_data data describing the nodes and edges of the network
-#' @param data_source database (e.g.: "stringdb")
-#' @param output_format vector that specifies possible output formats ("igraph", "grpahnel", "sif")
-#' @param min_score_threshold optional threshold to filter edges based on their combination score
-#' @param subset_nodes optional vector of nodes to extract only a part of the network
+#' build_graph <- function(graph_data, # data describing the nodes and edges of the network
+#'                         data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint", "genemania", "reactome", "cpdb", "huri", "matrixdb", "pathwaycommons", "innatedb", "biogrid", "corum", "intact"),
+#'                         output_format = c("igraph", "grpahnel", "sif"), # Vector that specifies the desired output formats
+#'                         min_score_threshold, # optional threshold for filtering the edges based on a combination score
+#'                         subset_nodes){ # optional subset of nodes that can be used to create a subgraph
 #'
-#' @return my_graph object
-#' @export
+#'   # define the data_source and the corresponding handling for the graph
+#'   if (data_source == "stringdb") {
+#'     my_graph <- build_graph_stringdb(
+#'       graph_data = graph_data,
+#'       output_format = output_format,
+#'       min_score_threshold = min_score_threshold,
+#'       subset_nodes = subset_nodes
+#'     )
 #'
-#' @examples
+#'     # still needs to be defined
+#'   } else {
+#'     #TODO once we worked on the other databases
+#'   }
 #'
-#' TODO
-
-build_graph <- function(graph_data, # data describing the nodes and edges of the network
-                        data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint", "genemania", "reactome", "cpdb", "huri", "matrixdb", "pathwaycommons", "innatedb", "biogrid", "corum", "intact"),
-                        output_format = c("igraph", "grpahnel", "sif"), # Vector that specifies the desired output formats
-                        min_score_threshold, # optional threshold for filtering the edges based on a combination score
-                        subset_nodes){ # optional subset of nodes that can be used to create a subgraph
-
-  # define the data_source and the corresponding handling for the graph
-  if (data_source == "stringdb") {
-    my_graph <- build_graph_stringdb(
-      graph_data = graph_data,
-      output_format = output_format,
-      min_score_threshold = min_score_threshold,
-      subset_nodes = subset_nodes
-    )
-
-    # still needs to be defined
-  } else {
-    #TODO once we worked on the other databases
-  }
-
-  #return my_graph
-  return (my_graph)
-}
+#'   #return my_graph
+#'   return (my_graph)
+#' }
 
