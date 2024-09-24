@@ -221,13 +221,13 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 
   # current version is stored on website in download folder #UPDATEVERSION
   if (version == "5.0") {
-    url <- sprintf("https://funcoup.org/downloads/download.action?type=network&instanceID=24480085&fileName=FC%s_%s_full.gz",
+    url <- sprintf("https://funcoup.org/downloads/download.action?type=network&instanceID=24480085&fileName=FC%s_%s_compact.gz",
                  version,
                  species)
 
   # archived versions are in archive folder #UPDATEVERSION
   } else if (version != "5.0") {
-    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_full.gz",
+    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_compact.gz",
                    version,
                    version,
                    species)
