@@ -22,7 +22,22 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
   BiocFileCache,
-  vroom
+  vroom,
+  dbplyr,
+  AnnotationDbi,
+  org.At.tair.db,
+  org.Bt.eg.db,
+  org.Ce.eg.db,
+  org.Cf.eg.db,
+  org.Dm.eg.db,
+  org.Dr.eg.db,
+  org.EcK12.eg.db,
+  org.Gg.eg.db,
+  org.Hs.eg.db,
+  org.Mm.eg.db,
+  org.Rn.eg.db,
+  org.Sc.sgd.db,
+  org.Ss.eg.db
 Suggests: 
   knitr,
   rmarkdown

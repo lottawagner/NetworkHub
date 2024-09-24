@@ -4,10 +4,10 @@
 \alias{annotation_funcoup}
 \title{annotation_funcoup ()}
 \usage{
-annotation_funcoup(ppis_funcoup, species, version)
+annotation_funcoup(ppi_funcoup, species, version)
 }
 \arguments{
-\item{ppis_funcoup}{variable defined by ppis_funcoup in get_networkdata_funcoup()}
+\item{ppi_funcoup}{variable defined by ppis_funcoup in get_networkdata_funcoup()}
 
 \item{species}{from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisae", "S.pombe", "S.scrofa", "S.solfataricus")}
 
@@ -21,6 +21,7 @@ annotation_funcoup ()
 }
 \examples{
 
-annotation_funcoup(ppis_funcoup, species = "H.sapiens", version = "5.0")
+# annotation_funcoup(ppi_funcoup, species = "H.sapiens", version = "5.0")
+#TODO: what can I do here as ppi_funcoup is not defined in annotation_funcoup()
 
 }

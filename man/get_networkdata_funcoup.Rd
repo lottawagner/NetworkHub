@@ -19,12 +19,14 @@ get_networkdata_funcoup(
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
-\item{add_annotation}{expanding the dataframe with four columns ( Entrez_ID and Ensembl_ID )}
+\item{add_annotation}{expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)}
 
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
 ppis_funcoup
+
+ppis_annotated_funcoup
 }
 \description{
 get_networkdata_funcoup()

@@ -16,5 +16,7 @@ accessory_info_df dataframe that assignes each protein_id to ensemble or gene_sy
 create_annotation_from_stringdbaccessory()
 }
 \examples{
-create_annotation_from_stringdbaccessory(accessory_info)# accessory_info in get_networkdata_stringdb()
+# create_annotation_from_stringdbaccessory(accessory_info)
+#TODO: what can I do here as ppi_funcoup is not defined?
+
 }
