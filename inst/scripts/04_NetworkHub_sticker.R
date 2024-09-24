@@ -36,6 +36,7 @@ sticker(subplot = nwh_img,
   url = "www.bioconductor.org",
   u_size = 26,
   u_color = "#473c8bff",
+  filename = "networkhub_sticker.png",
   dpi = 1200) %>% print(sticker())
 
 ##ff5100ff
