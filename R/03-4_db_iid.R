@@ -89,26 +89,30 @@ get_networkdata_iid <- function( species,
   colnames(ppis_iid)[colnames(ppis_iid) == "symbol1"] <- "GeneSymbol_A"
   colnames(ppis_iid)[colnames(ppis_iid) == "symbol2"] <- "GeneSymbol_B"
 
-  if (species %in% list_species_iid) {
-    annotation_db <-
+  annotation_db <-
       iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
 
-    if ((add_annotation) & (!is.na(annotation_db))) {
-      ppi_iid_df_annotated <- annotation_iid(ppi_iid = ppis_iid,
+  if (add_annotation && !is.na(annotation_db)) {
+    ppi_iid_df_annotated <- annotation_iid(ppi_iid = ppis_iid,
                                              species = species,
                                              version = version)
-      return(ppi_iid_df_annotated)
-    }
+    return(ppi_iid_df_annotated)
+  }
 
-    if ((add_annotation) & (is.na(annotation_db))) {
-      return(ppis_iid)
-    }
+  if (add_annotation && is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_iid only containing annotation columns for Uniprot_A/B & GeneSymbol_A/B.")
+    return(ppis_iid)
+  }
 
-    if (!add_annotation) {
+  if (!add_annotation) {
       return(ppis_iid)
-    }
   }
 }
+
+
+
 
 
 
@@ -206,11 +210,10 @@ annotation_iid <- function(ppi_iid,
          "please check some valid entries by running `list_species_iid`") # stop function and print
   }
 
-  if (species %in% list_species_iid) {
-    annotation_db <-
+  annotation_db <-
       iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
 
-    if (!is.na(annotation_db)) {
+  if (!is.na(annotation_db)) {
     all_prot_ids <- unique(c(ppi_iid$Uniprot_A, ppi_iid$Uniprot_B))
     anno_df <- data.frame(
       uniprot_id = all_prot_ids,
@@ -224,36 +227,26 @@ annotation_iid <- function(ppi_iid,
 
     ppis_iid_annotated <- ppi_iid
 
+    #adding Ensembl
     ppis_iid_annotated$Ensembl_A <-
       anno_df$ensembl_id[match(ppis_iid_annotated$Uniprot_A, anno_df$uniprot_id)]
     ppis_iid_annotated$Ensembl_B <-
       anno_df$ensembl_id[match(ppis_iid_annotated$Uniprot_B, anno_df$uniprot_id)]
 
+    #adding Entrez
     ppis_iid_annotated$Entrez_A <-
       anno_df$entrez_id[match(ppis_iid_annotated$Uniprot_A, anno_df$uniprot_id)]
     ppis_iid_annotated$Entrez_B <-
       anno_df$entrez_id[match(ppis_iid_annotated$Uniprot_B, anno_df$uniprot_id)]
 
     return(ppis_iid_annotated)
-    }
+  }
 
 
-    if (is.na(annotation_db)) {
-      message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
-            "You will get ppi_iid_df_annotated only containing annotation columns for Uniprot_A/B & GeneSymbol_A/B.") #TODO How can I make ppis_iid  returned from get_networkdata_iid() if add_annotation = TRUE
-      return(ppi_iid)
-    }
+  if (is.na(annotation_db)) {
+    return(ppi_iid)
   }
 }
-
-
-
-
-
-
-
-
 
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
