@@ -93,7 +93,10 @@ get_networkdata_hint <- function(species,
   colnames(ppis_hint)[colnames(ppis_hint) == "Gene_A"] <- "GeneSymbol_A"
   colnames(ppis_hint)[colnames(ppis_hint) == "Gene_B"] <- "GeneSymbol_B"
 
-  if (add_annotation) {
+  annotation_db <-
+    hint_db_annotations$anno_db_hint[match(species, hint_db_annotations$species)]
+
+  if (add_annotation && !is.na(annotation_db)) {
     ppi_hint_df_annotated <- annotation_hint(ppi_hint = ppis_hint,
                                              species = species,
                                              version = version,
@@ -101,7 +104,12 @@ get_networkdata_hint <- function(species,
     return(ppi_hint_df_annotated)
   }
 
-
+  if (add_annotation && is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_hint(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_hint containing annotation for Uniprot_ and GeneSymbol_.")
+    return(ppis_hint)
+  }
 
   if (!add_annotation) {
     return(ppis_hint)
@@ -182,39 +190,41 @@ annotation_hint <- function(ppi_hint,
          "please check some valid entries by running `list_species_hint`") # stop function and print
   }
 
-  if (species %in% list_species_hint) {
-    annotation_db <-
-      hint_db_annotations$anno_db_hint[match(species, hint_db_annotations$species)]
+  annotation_db <-
+    hint_db_annotations$anno_db_hint[match(species, hint_db_annotations$species)]
 
-    if (is.na(annotation_db)) {
-      stop("Annotation database for the species is not implemented yet.")
-    }
+  if (!is.na(annotation_db)) {
+    all_prot_ids <- unique(c(ppi_hint$Uniprot_A, ppi_hint$Uniprot_B))
+
+    anno_df <- data.frame(
+      uniprot_id = all_prot_ids,
+      ensembl_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+      entrez_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+      row.names = all_prot_ids
+    )
+
+    ppis_hint_annotated <- ppi_hint
+
+    #adding Ensembl
+    ppis_hint_annotated$Ensembl_A <-
+      anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
+    ppis_hint_annotated$Ensembl_B <-
+      anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
+
+    #adding Entrez
+    ppis_hint_annotated$Entrez_A <-
+      anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
+    ppis_hint_annotated$Entrez_B <-
+      anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
+
+    return(ppis_hint_annotated)
   }
 
-  all_prot_ids <- unique(c(ppi_hint$Uniprot_A, ppi_hint$Uniprot_B))
-
-  anno_df <- data.frame(
-    uniprot_id = all_prot_ids,
-    ensembl_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
-    entrez_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
-    row.names = all_prot_ids
-  )
-
-  ppis_hint_annotated <- ppi_hint
-
-  ppis_hint_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_hint_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-  ppis_hint_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_hint_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-  return(ppis_hint_annotated)
+  if (is.na(annotation_db)) {
+    return(ppi_hint)
+  }
 
 }
 
