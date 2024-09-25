@@ -83,7 +83,10 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   colnames(ppis_funcoup)[colnames(ppis_funcoup) == "2:Gene1"] <- "Ensembl_A"
   colnames(ppis_funcoup)[colnames(ppis_funcoup) == "3:Gene2"] <- "Ensembl_B"
 
-  if (add_annotation) {
+  annotation_db <-
+    funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
+
+  if (add_annotation && !is.na(annotation_db)) {
     ppis_funcoup_df_annotated <- annotation_funcoup(ppi_funcoup = ppis_funcoup,
                                              species = species,
                                              version = version)
@@ -91,11 +94,16 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     return(ppis_funcoup_df_annotated)
   }
 
-  if (!add_annotation) {
+  if (add_annotation && is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_funcoup only containing annotation columns for Ensembl_.")
     return(ppis_funcoup)
-    message(dim(ppis_funcoup))
   }
 
+  if (!add_annotation) {
+    return(ppis_funcoup)
+  }
 
 }
 
@@ -197,49 +205,50 @@ annotation_funcoup <- function(ppi_funcoup,
          "please check some valid entries by running `list_species_funcoup`") # stop function and print
   }
 
-  if (species %in% list_species_funcoup) {
-    annotation_db <-
-      funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
 
-    if (is.na(annotation_db)) {
-      stop("Annotation database for the species is not implemented yet.")
-    }
+  annotation_db <-
+    funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
+
+  if (!is.na(annotation_db)) {
+
+    all_gene_ids <- unique(c(ppi_funcoup$Ensembl_A, ppi_funcoup$Ensembl_B))
+
+    anno_df <- data.frame(
+      ensembl_id = all_gene_ids,
+      gene_symbol = mapIds(
+        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "SYMBOL", multiVals = "first"),
+      uniprot_id = mapIds(
+        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "UNIPROT", multiVals = "first"),
+      entrez_id = mapIds(
+        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "ENTREZID", multiVals = "first"),
+      row.names = all_gene_ids
+    )
+
+    ppis_funcoup_annotated <- ppi_funcoup
+
+    #adding GeneSymbol
+    ppis_funcoup_annotated$GeneSymbol_A <-
+      anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
+    ppis_funcoup_annotated$GeneSymbol_B <-
+      anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
+    #adding Uniprot
+    ppis_funcoup_annotated$Uniprot_A <-
+      anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
+    ppis_funcoup_annotated$Uniprot_B <-
+      anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
+    #adding Entrez
+    ppis_funcoup_annotated$Entrez_A <-
+      anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
+    ppis_funcoup_annotated$Entrez_B <-
+      anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
+
+    #TODO maybe create a dataframe that only contains 8 columns (GeneSymbol_A/B, uniprot A/B, Ensmebl A/B, Entrez A/B)?
+  return(ppis_funcoup_annotated)
   }
 
-  all_gene_ids <- unique(c(ppi_funcoup$Ensembl_A, ppi_funcoup$Ensembl_B))
-
-  print(dim(all_gene_ids))
-
-  anno_df <- data.frame(
-    ensembl_id = all_gene_ids,
-    gene_symbol = mapIds(
-      get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "SYMBOL", multiVals = "first"),
-    uniprot_id = mapIds(
-      get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "UNIPROT", multiVals = "first"),
-    entrez_id = mapIds(
-      get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "ENTREZID", multiVals = "first"),
-    row.names = all_gene_ids
-  )
-
-  ppis_funcoup_annotated <- ppi_funcoup
-
-  ppis_funcoup_annotated$GeneSymbol_A <-
-    anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-  ppis_funcoup_annotated$GeneSymbol_B <-
-    anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-  ppis_funcoup_annotated$Uniprot_A <-
-    anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-  ppis_funcoup_annotated$Uniprot_B <-
-    anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-  ppis_funcoup_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-  ppis_funcoup_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-  #TODO maybe create a dataframe that only contains 8 columns (GeneSymbol_A/B, uniprot A/B, Ensmebl A/B, Entrez A/B)?
-  return(ppis_funcoup_annotated)
+  if (is.na(annotation_db)) {
+    return(ppi_funcoup)
+  }
 
 }
 
