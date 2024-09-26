@@ -315,41 +315,41 @@ urlmaker_iid <- function(species = "human", #
 #'
 #' @examples
 #' urlmaker_irefindex <- function(species = "Homo sapiens",
-#'                                 version = "2023-08-29")
+#'                                 version = "08-28-2023")
 #'
 urlmaker_irefindex <- function(species,
-                               version = "2023-08-29"){ #default value for version = "2023-08-29" #UPDATEVERSION
+                               version = "08-28-2023"){ #default value for version = "08-28-2023" #UPDATEVERSION
 
   stopifnot(is.character(species))                  # make sure to type in a species name as character
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
   # create a list that contains species names and corresponding IDs
-  info_species_irefindex <- list(
-    "Homo sapiens" = "9606",
-    "Mus musculus" = "10090",
-    "Saccharomyces cerevisiae" = "559292",
-    "Escherichia" = "562",
-    "Rattus norvegicus" = "10116",
-    "Saccharomyces cerevisiae" = "4932",
-    "Drosophila melanogaster" = "7227",
-    "Caenorhabditis elegans" = "6239"
+
+  list_species_irefindex <- c ( "Homo sapiens",
+                                "Mus musculus",
+                                "Saccharomyces cerevisiae S288C",
+                                "Escherichia",
+                                "Rattus norvegicus",
+                                "Saccharomyces cerevisiae",
+                                "Drosophila melanogaster",
+                                "Caenorhabditis elegans"
   )
 
   # check that the value for species is listed in iRefIndex
-  if (!species %in% names(info_species_irefindex)) {
+  if (!species %in% list_species_irefindex) {
     stop("Species not found as specified by iRefIndex, ",
-         "please check some valid entries in info_species_irefindex or on the website 'https://irefindex.vib.be/wiki/index.php/README_MITAB2.6_for_iRefIndex_20.0#Column_number:_29_.28Host_organism_taxid.29`")
+         "please check some valid entries in info_species_irefindex_id or on the website 'https://irefindex.vib.be/wiki/index.php/README_MITAB2.6_for_iRefIndex_20.0#Column_number:_29_.28Host_organism_taxid.29`")
   }
 
   # fetch the species_id from info_species_irefindex
-  species_id <- info_species_irefindex[[species]]
+  species_row <- irefindex_db_annotations[irefindex_db_annotations$species_irefindex == species, ]
+  species_id <- species_row$species_id
 
   # create the url for iRefIndex depending on species_id and version
   url <- sprintf("https://storage.googleapis.com/irefindex-data/archive/release_20.0/psi_mitab/MITAB2.6/%s.mitab.%s.txt.zip",
                  species_id,
                  version)
-
   # return the url
   return(url)
 }
