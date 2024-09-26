@@ -4,7 +4,7 @@
 \alias{urlmaker_irefindex}
 \title{#' urlmaker_irefindex()}
 \usage{
-urlmaker_irefindex(species, version = "2023-08-29")
+urlmaker_irefindex(species, version = "08-28-2023")
 }
 \arguments{
 \item{species}{from which species does the data come from, default value = "Homo sapiens"}
@@ -19,6 +19,6 @@ url returns the corresponding url set by params
 }
 \examples{
 urlmaker_irefindex <- function(species = "Homo sapiens",
-                                version = "2023-08-29")
+                                version = "08-28-2023")
 
 }
