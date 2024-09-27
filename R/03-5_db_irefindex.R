@@ -15,8 +15,8 @@
 #' @examples
 #'
 #' db_irefindex_df <- get_networkdata_irefindex(
-#'   species = Homo sapiens"
-#' )
+#'   species = "Homo sapiens",
+#'   version = "08-28-2023")
 #'
 #' db_irefindex_df
 #'

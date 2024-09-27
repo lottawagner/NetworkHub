@@ -17,12 +17,13 @@
 #'
 #' @examples
 #'
-#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0")
+#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
 #' db_funcoup_df
 #'
 
 get_networkdata_funcoup <- function(species = "H.sapiens",
                                  version = "5.0",
+                                 type = c("compact", "full"),
                                  cache = TRUE,
                                  add_annotation = TRUE,
                                  ...) {
