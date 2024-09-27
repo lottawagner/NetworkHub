@@ -178,59 +178,154 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 #' urlmaker_funcoup( version = "4.1",
 #'                   species = "B.taurus")
 urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as type "5.0"
-                             species = "H.sapiens") { # default value = "H.sapiens", value as type first letter (capital) of first name, full second name with small letters
+                             species = "H.sapiens", # default value = "H.sapiens", value as type first letter (capital) of first name, full second name with small letters
+                             type = c("compact", "full")) { #for current version compact recommended, for older versions only full possible
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(version)) # make sure to type in a version as character
   stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
 
-  # define the opportunities for species in FunCoup
+  # define the opportunities for species in FunCoup 5.0
 
-  list_species_funcoup <- c( "A.thaliana",
-                          "B.subtilis",
-                          "B.taurus",
-                          "C.elegans",
-                          "C.familiaris",
-                          "C.intestinalis",
-                          "D.melanogatser",
-                          "D.rerio",
-                          "E.coli",
-                          "G.gallus",
-                          "H.sapiens",
-                          "M.jannaschii",
-                          "M.musculus",
-                          "O.sativa",
-                          "P.falciparum",
-                          "R.norvegicus",
-                          "S.cerevisae",
-                          "S.pombe",
-                          "S.scrofa",
-                          "S.solfataricus"
-                          )
-
-                          # list species is actualized for version FC5.0
-                          # UPDATEVERSION
-
-  # check that the value for species is listed in FunCoup
-  if (!(species %in% list_species_funcoup)) {
-    stop("Species not found as specified by FunCoup,",
-         "please check some valid entries and version of `list_species_funcoup`")
-  }
+  message("NOTE: FunCoup provides different species for the differnet version and uses different names. Check on <https://funcoup.org/archive/> for the correct definition.")
 
   # using sprintf to define the url of FunCoup by looking at the corresponding version and species
 
   # current version is stored on website in download folder #UPDATEVERSION
+
   if (version == "5.0") {
-    url <- sprintf("https://funcoup.org/downloads/download.action?type=network&instanceID=24480085&fileName=FC%s_%s_compact.gz",
-                 version,
-                 species)
+
+    list_species_funcoup_5.0 <- c( "A.thaliana",
+                                   "B.subtilis",
+                                   "B.taurus",
+                                   "C.elegans",
+                                   "C.familiaris",
+                                   "C.intestinalis",
+                                   "D.melanogatser",
+                                   "D.rerio",
+                                   "E.coli",
+                                   "G.gallus",
+                                   "H.sapiens",
+                                   "M.jannaschii",
+                                   "M.musculus",
+                                   "O.sativa",
+                                   "P.falciparum",
+                                   "R.norvegicus",
+                                   "S.cerevisae",
+                                   "S.pombe",
+                                   "S.scrofa",
+                                   "S.solfataricus"
+                                  )
+
+    if (!species %in% list_species_funcoup_5.0){
+      stop("Species not found as specified by Funcoup version 5.0,",
+           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    }
+
+
+    url <- sprintf("https://funcoup.org/downloads/download.action?type=network&instanceID=24480085&fileName=FC%s_%s_%s.gz",
+                  version,
+                  species,
+                  type)
 
   # archived versions are in archive folder #UPDATEVERSION
-  } else if (version != "5.0") {
-    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_compact.gz",
+  }
+
+  if ( version == "4.1" || version == "4.0"){
+
+    list_species_funcoup_4._ <- c( "A.thaliana",
+                                   "B.subtilis",
+                                   "B.taurus",
+                                   "C.elegans",
+                                   "C.familiaris",
+                                   "C.intestinalis",
+                                   "D.melanogatser",
+                                   "D.rerio",
+                                   "E.coli",
+                                   "G.gallus",
+                                   "H.sapiens",
+                                   "M.musculus",
+                                   "O.sativa",
+                                   "P.falciparum",
+                                   "R.norvegicus",
+                                   "S.cerevisae",
+                                   "S.pombe"
+                                  )
+    if (!species %in% list_species_funcoup_4._){
+      stop("Species not found as specified by Funcoup version 4.0 or 4.1,",
+           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    }
+
+    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_full.gz",
                    version,
                    version,
                    species)
+
+    if ( type == "compact" ) {
+      message("NOTE: For version 4.0 & 4.1: Only the full datafile is provided by funcoup.")
+    }
+  }
+
+
+  if (version == "3.0") {
+
+    list_species_funcoup_3.0 <- c( "A.thaliana",
+                                   "C.elegans",
+                                   "C.familiaris",
+                                   "C.intestinalis",
+                                   "D.melanogatser",
+                                   "D.rerio",
+                                   "G.gallus",
+                                   "H.sapiens",
+                                   "M.jannaschii",
+                                   "M.musculus",
+                                   "P.falciparum",
+                                   "R.norvegicus",
+                                   "S.cerevisae"
+                                  )
+
+
+    if (!species %in% list_species_funcoup_3.0){
+        stop("Species not found as specified by Funcoup version 3.0,",
+             "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    }
+
+    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_%s.gz",
+                   version,
+                   version,
+                   species,
+                   type)
+  }
+
+
+  if ( version == "2.0") {
+
+    list_species_funcoup_2.0 <- c("athaliana",
+                                  "celegans",
+                                  "cfamiliaris",
+                                  "cintestinalis",
+                                  "dmelanogaster",
+                                  "drerio",
+                                  "ggallus",
+                                  "hsapiens",
+                                  "mmusculus",
+                                  "rnorvegicus",
+                                  "scerevisiae")
+
+
+    if (!species %in% list_species_funcoup_2.0){
+      stop("Species not found as specified by Funcoup version 2.0,",
+           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    }
+
+    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=%s.%s.pfc01.tsv.gz",
+                   version,
+                   species,
+                   type)
+  }
+
+  if ( version == "1.0") {
+    stop("No url provided by NetworkHub for version 1.0")
   }
 
   # return value is "url
