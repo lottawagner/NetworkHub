@@ -18,7 +18,7 @@ url returns the corresponding url set by params
 #' urlmaker_irefindex()
 }
 \examples{
-urlmaker_irefindex <- function(species = "Homo sapiens",
-                                version = "08-28-2023")
-
+url_irefindex <- urlmaker_irefindex(species = "Homo sapiens",
+                                    version = "08-28-2023")
+url_irefindex
 }

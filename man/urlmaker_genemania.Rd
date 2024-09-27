@@ -18,7 +18,7 @@ url returns the corresponding url set by params
 urlmaker_genemania()
 }
 \examples{
-urlmaker_genemania( species = "Homo_sapiens",
-                     version = "current" )
-
+url_genemania <- urlmaker_genemania(species = "Homo_sapiens",
+                                    version = "current")
+url_genemania
 }

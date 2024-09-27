@@ -18,6 +18,6 @@ url returns the corresponding url set by params
 #' urlmaker_mint()
 }
 \examples{
-urlmaker_mint(species = "Homo Sapiens")
-
+url_mint <- urlmaker_mint(species = "Homo Sapiens")
+url_mint
 }

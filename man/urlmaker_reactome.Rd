@@ -16,5 +16,6 @@ url returns the corresponding url set by params
 urlmaker_reactome()
 }
 \examples{
-urlmaker_reactome()
+url_reactome <- urlmaker_reactome()
+url_reactome
 }

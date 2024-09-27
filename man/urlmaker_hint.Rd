@@ -20,7 +20,8 @@ url returns the corresponding url set by params
 urlmaker_hint()
 }
 \examples{
-urlmaker_hint(type = "binary",
-              species = "HomoSapiens",
-              version = "2024-06")
+url_hint <- urlmaker_hint( type = "binary",
+                           species = "HomoSapiens",
+                           version = "2024-06")
+url_hint
 }

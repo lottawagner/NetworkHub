@@ -18,5 +18,6 @@ url returns the corresponding url set by params
 urlmaker_iid()
 }
 \examples{
-urlmaker_iid(species = "mouse")
+url_iid <- urlmaker_iid(species = "mouse")
+url_iid
 }

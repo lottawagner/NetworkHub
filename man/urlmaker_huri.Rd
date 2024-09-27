@@ -2,9 +2,9 @@
 % Please edit documentation in R/02_urlmaker.R
 \name{urlmaker_huri}
 \alias{urlmaker_huri}
-\title{urlmaker_huri}
+\title{urlmaker_huri()}
 \usage{
-urlmaker_huri(species = "human", type = "HI-union")
+urlmaker_huri(species = "human", type = c("HI-union", "Lit-BM"))
 }
 \arguments{
 \item{species}{default value = "human", because this database only provides human data}
@@ -15,10 +15,11 @@ urlmaker_huri(species = "human", type = "HI-union")
 url returns the corresponding url set by params
 }
 \description{
-urlmaker_huri
+urlmaker_huri()
 }
 \examples{
 
-urlmaker_huri(species = "human",
-             type = "HI-union")
+url_huri <- urlmaker_huri(species = "human",
+                          type = "HI-union")
+url_huri
 }

@@ -16,5 +16,6 @@ url returns the corresponding url set by params #SPECIESDEFINITION
 urlmaker_biogrid()
 }
 \examples{
-urlmaker_biogrid()
+url_biogrid <- urlmaker_biogrid()
+url_biogrid
 }

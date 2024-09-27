@@ -4,7 +4,11 @@
 \alias{urlmaker_funcoup}
 \title{urlmaker_funcoup()}
 \usage{
-urlmaker_funcoup(version = "5.0", species = "H.sapiens")
+urlmaker_funcoup(
+  version = "5.0",
+  species = "H.sapiens",
+  type = c("compact", "full")
+)
 }
 \arguments{
 \item{version}{version of FunCoup , default value = "5.0", value as type "5.0" #UPDATEVERSION}
@@ -18,6 +22,8 @@ url returns the corresponding url set by params
 urlmaker_funcoup()
 }
 \examples{
-urlmaker_funcoup( version = "4.1",
-                  species = "B.taurus")
+url_funcoup <- urlmaker_funcoup(version = "4.1",
+                                species = "B.taurus",
+                                type = "full")
+url_funcoup
 }

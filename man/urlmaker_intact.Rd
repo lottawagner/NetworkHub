@@ -2,7 +2,17 @@
 % Please edit documentation in R/02_urlmaker.R
 \name{urlmaker_intact}
 \alias{urlmaker_intact}
-\title{urlmaker_intact()}
+\title{#' urlmaker_corum()
+#'
+#' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
+#'
+#' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
+#' @export
+#'
+#' @examples
+#' url_corum <- urlmaker_corum()
+#' url_corum
+urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION}
 \usage{
 urlmaker_intact(version = "current")
 }
@@ -13,8 +23,13 @@ urlmaker_intact(version = "current")
 url returns the corresponding url set by params #SPECIESDEFINITION later on
 }
 \description{
-urlmaker_intact()
+stopifnot(is.character(version))                  # make sure to type in a version as character
+stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+}
+\details{
+
 }
 \examples{
-urlmaker_intact(version = "current")
+url_intact <- urlmaker_intact(version = "current")
+url_intact
 }

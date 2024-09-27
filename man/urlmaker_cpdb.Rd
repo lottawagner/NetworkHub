@@ -16,6 +16,6 @@ url returns the corresponding url set by params
 urlmaker_cpdb()
 }
 \examples{
-urlmaker_cpdb(species = "human")
-
+url_cpdb <- urlmaker_cpdb(species = "human")
+url_cpdb
 }

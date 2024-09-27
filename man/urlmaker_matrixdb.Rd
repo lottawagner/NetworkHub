@@ -16,6 +16,6 @@ url returns the corresponding url set by params
 urlmaker_matrixdb()
 }
 \examples{
-urlmaker_matrixdb()
-
+url_matrixdb <- urlmaker_matrixdb()
+url_matrixdb
 }

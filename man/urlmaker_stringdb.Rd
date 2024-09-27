@@ -20,7 +20,8 @@ url returns the corresponding url set by params
 urlmaker_stringdb()
 }
 \examples{
-urlmaker_stringdb(type = "PPI",
-                    species = "Homo sapiens",
-                    version = "12.0")
+url_stringdb <- urlmaker_stringdb(type = "PPI",
+                                  species = "Homo sapiens",
+                                  version = "12.0")
+url_stringdb
 }
