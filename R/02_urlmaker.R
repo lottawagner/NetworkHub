@@ -621,7 +621,7 @@ urlmaker_cpdb <- function (species = "human") { #default value = human because a
 }
 # HuRi - ONLY HUMAN ----------------
 
-#' urlmaker_huri
+#' urlmaker_huri()
 #'
 #' @param species default value = "human", because this database only provides human data
 #' @param type different datasets , more information on "http://www.interactome-atlas.org/about/"
@@ -635,7 +635,7 @@ urlmaker_cpdb <- function (species = "human") { #default value = human because a
 #'                           type = "HI-union")
 #' url_huri
 urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
-                           type = "HI-union") { #default value = "HI-union", because it contains nearly all data from HuRi
+                           type = c("HI-union", "Lit-BM")) { #recommended value = "HI-union", because it contains nearly all data from HuRi
 
 
 
@@ -655,8 +655,6 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
   # Yu-11
   # Yang-16
   # Test space screens-19
-
-  type <- c("HI-union", "Lit-BM")
 
   url <- sprintf("http://www.interactome-atlas.org/data/%s.tsv",
                  type)
