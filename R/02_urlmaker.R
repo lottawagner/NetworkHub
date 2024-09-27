@@ -24,9 +24,10 @@
 #' @export
 #'
 #' @examples
-#' urlmaker_stringdb(type = "PPI",
-#'                     species = "Homo sapiens",
-#'                     version = "12.0")
+#' url_stringdb <- urlmaker_stringdb(type = "PPI",
+#'                                   species = "Homo sapiens",
+#'                                   version = "12.0")
+#' url_stringdb
 urlmaker_stringdb <- function(type = "PPI",
                               species = "Homo sapiens",
                               version = "12.0") {
@@ -99,9 +100,10 @@ urlmaker_stringdb <- function(type = "PPI",
 #' @export
 #'
 #' @examples
-#' urlmaker_hint(type = "binary",
-#'               species = "HomoSapiens",
-#'               version = "2024-06")
+#' url_hint <- urlmaker_hint( type = "binary",
+#'                            species = "HomoSapiens",
+#'                            version = "2024-06")
+#'url_hint
 urlmaker_hint <- function(type = "binary", # default value for type = "binary"
                           species = "HomoSapiens", # default value for species #UPDATEVERSION
                           version) { # version is always written as year - month ( 2024-06, 2020-08, ...) #UPDATEVERSION
@@ -175,8 +177,10 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 #' @export
 #'
 #' @examples
-#' urlmaker_funcoup( version = "4.1",
-#'                   species = "B.taurus")
+#' url_funcoup <- urlmaker_funcoup(version = "4.1",
+#'                                 species = "B.taurus",
+#'                                 type = "full")
+#' url_funcoup
 urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as type "5.0"
                              species = "H.sapiens", # default value = "H.sapiens", value as type first letter (capital) of first name, full second name with small letters
                              type = c("compact", "full")) { #for current version compact recommended, for older versions only full possible
@@ -349,7 +353,8 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
 #' @export
 #'
 #' @examples
-#' urlmaker_iid(species = "mouse")
+#' url_iid <- urlmaker_iid(species = "mouse")
+#' url_iid
 urlmaker_iid <- function(species = "human", #
                          version = "2021-05") { # version of IID not updated since
 
@@ -409,9 +414,9 @@ urlmaker_iid <- function(species = "human", #
 #' @export
 #'
 #' @examples
-#' urlmaker_irefindex <- function(species = "Homo sapiens",
-#'                                 version = "08-28-2023")
-#'
+#' url_irefindex <- urlmaker_irefindex(species = "Homo sapiens",
+#'                                     version = "08-28-2023")
+#' url_irefindex
 urlmaker_irefindex <- function(species,
                                version = "08-28-2023"){ #default value for version = "08-28-2023" #UPDATEVERSION
 
@@ -461,8 +466,8 @@ urlmaker_irefindex <- function(species,
 #' @export
 #'
 #' @examples
-#' urlmaker_mint(species = "Homo Sapiens")
-#'
+#' url_mint <- urlmaker_mint(species = "Homo Sapiens")
+#' url_mint
 
 urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sapiens"
                            version = "current") { # default value = current , can not fetch previous versions #CURRENTVERSION
@@ -513,9 +518,9 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 #' @export
 #'
 #' @examples
-#' urlmaker_genemania( species = "Homo_sapiens",
-#'                      version = "current" )
-#'
+#' url_genemania <- urlmaker_genemania(species = "Homo_sapiens",
+#'                                     version = "current")
+#' url_genemania
 urlmaker_genemania <- function ( species = "Homo_sapiens",
                                  version = "current") { #default value = "current"
 
@@ -572,7 +577,8 @@ urlmaker_genemania <- function ( species = "Homo_sapiens",
 #' @export
 #'
 #' @examples
-#' urlmaker_reactome()
+#' url_reactome <- urlmaker_reactome()
+#' url_reactome
 
 urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
 
@@ -594,8 +600,8 @@ urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
 #' @export
 #'
 #' @examples
-#' urlmaker_cpdb(species = "human")
-#'
+#' url_cpdb <- urlmaker_cpdb(species = "human")
+#' url_cpdb
 urlmaker_cpdb <- function (species = "human") { #default value = human because at the moment (05.08.2024) only human
 
   list_species_cpdb <- c("human", "mouse", "yeast")
@@ -625,8 +631,9 @@ urlmaker_cpdb <- function (species = "human") { #default value = human because a
 #'
 #' @examples
 #'
-#' urlmaker_huri(species = "human",
-#'              type = "HI-union")
+#' url_huri <- urlmaker_huri(species = "human",
+#'                           type = "HI-union")
+#' url_huri
 urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
                            type = "HI-union") { #default value = "HI-union", because it contains nearly all data from HuRi
 
@@ -674,8 +681,8 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 #' @export
 #'
 #' @examples
-#' urlmaker_matrixdb()
-#'
+#' url_matrixdb <- urlmaker_matrixdb()
+#' url_matrixdb
 urlmaker_matrixdb <- function(species = "human"){ #UPDATEVERSION
 
   stopifnot(is.character(species))                  # make sure to type in a species name as character
@@ -708,8 +715,8 @@ return(url)
 #'
 #' @examples
 #'
-#' urlmaker_pc()
-#'
+#' url_pc <- urlmaker_pc()
+#' url_pc
 urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapiens", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
                          version = "v12") { # default value = "v12", because in "v14" not all datafiles are updated already #UPDATEVERSION
 
@@ -742,10 +749,23 @@ urlmaker_pc <- function( species = "Homo sapiens", #default value = "Homo sapien
 # Innate DB - SPECIESDEFINITION -------------------
 
 
+#' urlmaker_innatedb()
+#'
+#' @param url innatedb doesn't provide information about the version or the species in their url, that why the default value of url is url
+#' @param version parameter set to current version 5.4 #UPDATEVERSION
+#'
+#' @return url
+#' @export
+#'
+#' @examples
+#' url_innatedb <- urlmaker_innatedb()
+#' url_innatedb
 urlmaker_innatedb <- function(url = url,
                               version = "5.4"){ # default value = "5.4" #UPDATEVERSION
 
   url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
+
+  return(url)
 }  #SPECIESDEFINITION
 
 
@@ -791,7 +811,8 @@ info_species_innatedb <- list("Mus musculus" = "10090",
 #' @export
 #'
 #' @examples
-#' urlmaker_biogrid()
+#' url_biogrid <- urlmaker_biogrid()
+#' url_biogrid
 
 urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (August 2024) #SPECIESDEFINITION
 
@@ -820,7 +841,8 @@ urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" 
 #' @export
 #'
 #' @examples
-#' urlmaker_corum()
+#' url_corum <- urlmaker_corum()
+#' url_corum
 urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
 
   stopifnot(is.character(version))                  # make sure to type in a version as character
@@ -846,7 +868,8 @@ urlmaker_corum <- function (version = "current"){ #default value set to current,
 #' @export
 #'
 #' @examples
-#' urlmaker_intact(version = "current")
+#' url_intact <- urlmaker_intact(version = "current")
+#' url_intact
 
 urlmaker_intact <- function(version = "current") { # default value for version, because Intact provides this file only for current (August 2024 = 2024-05-23 18:09	6.6G)
 
