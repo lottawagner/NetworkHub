@@ -831,27 +831,29 @@ urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" 
 
 # CORUM - SPECIESDEFINITION ------------------------------
 
-#' urlmaker_corum()
+#' #' urlmaker_corum()
+#' #'
+#' #' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
+#' #'
+#' #' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
+#' #' @export
+#' #'
+#' #' @examples
+#' #' url_corum <- urlmaker_corum()
+#' #' url_corum
+#' urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
 #'
-#' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
+#'   stopifnot(is.character(version))                  # make sure to type in a version as character
+#'   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 #'
-#' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
-#' @export
 #'
-#' @examples
-#' url_corum <- urlmaker_corum()
-#' url_corum
-urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
-
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
-
-
-  url <- sprintf("https://mips.helmholtz-muenchen.de/corum/download/releases/%s/allComplexes.txt.zip",
-                 version)
-  return (url)
-
-}
+#'   url <- sprintf("https://mips.helmholtz-muenchen.de/corum/download/releases/%s/allComplexes.txt.zip",
+#'                  version)
+#'   return (url)
+#'
+#' }
+#'
+#' new corum :https://mips.helmholtz-muenchen.de/corum/download
 
 
 
