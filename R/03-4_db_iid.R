@@ -111,14 +111,6 @@ get_networkdata_iid <- function( species,
   }
 }
 
-
-
-
-
-
-
-
-
 # outside of function ----------
 
 list_species_iid <- c ("alpaca",
