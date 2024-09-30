@@ -21,7 +21,7 @@
 #' db_irefindex_df
 #'
 
-get_networkdata_irefindex <- function( species,
+get_networkdata_irefindex <- function(species,
                                  version = "08-28-2023",
                                  cache = TRUE,
                                  add_annotation = TRUE,
@@ -82,19 +82,20 @@ get_networkdata_irefindex <- function( species,
   colnames(ppis_irefindex)[colnames(ppis_irefindex) == "#uidA"] <- "Uniprot_A"
   colnames(ppis_irefindex)[colnames(ppis_irefindex) == "uidB"] <- "Uniprot_B"
 
-  # annotation_db <-
-  #   irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
-  #
-  # if (add_annotation) {
-  #   ppi_irefindex_df_annotated <- annotation_irefindex(ppi_irefindex = ppis_irefindex,
-  #                                          species = species,
-  #                                          version = version)
-  #   return(ppi_irefindex_df_annotated)
-  # }
-  #
-  # if (!add_annotation) {
+  annotation_db <-
+    irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
+
+  if (add_annotation) {
+    ppi_irefindex_df_annotated <- annotation_irefindex(ppi_irefindex = ppis_irefindex,
+                                           species = species,
+                                           version = version)
+    return(ppi_irefindex_df_annotated)
+  }
+
+  if (!add_annotation) {
     return(ppis_irefindex)
   #}
+  }
 }
 
 
@@ -170,56 +171,56 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #' @examples
 #'
 #' # annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "2023-08-28", type = "binary")
-#' #TODO: what can I do here as ppi_funcoup is not defined in annotation_irefindex()?
+#' #TODO: what can I do here as ppi_irefindex is not defined in annotation_irefindex()?
 
 
-# annotation_irefindex <- function(ppi_irefindex,
-#                            species,
-#                            version) {
-#   # find database on corresponding species
-#
-#   if (!(species %in% list_species_irefindex)) { # if species is not in the list
-#     stop("Species not found as specified by irefindex,",
-#          "please check some valid entries by running `list_species_irefindex`") # stop function and print
-#   }
-#
-#   annotation_db <-
-#     irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
-#
-#   if (!is.na(annotation_db)) {
-#     all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
-#     anno_df <- data.frame(
-#       uniprot_id = all_prot_ids,
-#       ensembl_id = mapIds(
-#         get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
-#       entrez_id = mapIds(
-#         get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
-#       row.names = all_prot_ids
-#     )
-#
-#
-#     ppis_irefindex_annotated <- ppi_irefindex
-#
-#     #adding Ensembl
-#     ppis_irefindex_annotated$Ensembl_A <-
-#       anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-#     ppis_irefindex_annotated$Ensembl_B <-
-#       anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
-#
-#     #adding Entrez
-#     ppis_irefindex_annotated$Entrez_A <-
-#       anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-#     ppis_irefindex_annotated$Entrez_B <-
-#       anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
-#
-#     return(ppis_irefindex_annotated)
-#   }
-#
-#
-#   if (is.na(annotation_db)) {
-#     return(ppi_irefindex)
-#   }
-# }
+annotation_irefindex <- function(ppi_irefindex,
+                           species,
+                           version) {
+  # find database on corresponding species
+
+  if (!(species %in% list_species_irefindex)) { # if species is not in the list
+    stop("Species not found as specified by irefindex,",
+         "please check some valid entries by running `list_species_irefindex`") # stop function and print
+  }
+
+  annotation_db <-
+    irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
+
+  if (!is.na(annotation_db)) {
+    all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
+    anno_df <- data.frame(
+      uniprot_id = all_prot_ids,
+      ensembl_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+      entrez_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+      row.names = all_prot_ids
+    )
+
+
+    ppis_irefindex_annotated <- ppi_irefindex
+
+    #adding Ensembl
+    ppis_irefindex_annotated$Ensembl_A <-
+      anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
+    ppis_irefindex_annotated$Ensembl_B <-
+      anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+
+    #adding Entrez
+    ppis_irefindex_annotated$Entrez_A <-
+      anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
+    ppis_irefindex_annotated$Entrez_B <-
+      anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+
+    return(ppis_irefindex_annotated)
+  }
+
+
+  if (is.na(annotation_db)) {
+    return(ppi_irefindex)
+  }
+}
 
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
