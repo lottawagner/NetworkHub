@@ -37,7 +37,8 @@ Imports:
   org.Mm.eg.db,
   org.Rn.eg.db,
   org.Sc.sgd.db,
-  org.Ss.eg.db
+  org.Ss.eg.db,
+  stringr
 Suggests: 
   knitr,
   rmarkdown

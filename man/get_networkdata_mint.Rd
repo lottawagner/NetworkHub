@@ -19,6 +19,8 @@ get_networkdata_mint(
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
+\item{add_annotation}{defult value set to TRUE (MINT annotation dataframe contains Uniprot, GeneSymbol and Ensembl)}
+
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
