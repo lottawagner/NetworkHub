@@ -80,17 +80,22 @@ get_networkdata_mint <- function(species,
   message(dim(ppis_mint))
 
   colnames(ppis_mint) <- c("Identifier_A", "Identifier_B", "Alternative identifier for interactor A", "Alternative identifier for interactor B", "Aliases for A", "Aliases for B", "method", "First author", "pubmed", "NCBI Taxonomy identifier for interactor A","NCBI Taxonomy identifier for interactor B", "interaction_type", "Source databases and identifiers", "Interaction identifier(s) in the corresponding source database", "Confidence score")
-  ppis_mint$Uniprot_A <- sub("uniprotkb:", "", ppis_mint$Identifier_A)
-  ppis_mint$Uniprot_A [grepl("intact:", ppis_mint$Identifier_A)] <- NA
-  ppis_mint$Uniprot_A [grepl("ensembl", ppis_mint$Identifier_A)] <- NA
-  ppis_mint$Uniprot_A [grepl("chebi:", ppis_mint$Identifier_A)] <- NA
-  ppis_mint$Uniprot_B <- sub("uniprotkb:", "", ppis_mint$Identifier_B)
-  ppis_mint$Uniprot_B [grepl("intact:", ppis_mint$Identifier_B)] <- NA
-  ppis_mint$Uniprot_B [grepl("ensembl", ppis_mint$Identifier_B)] <- NA
-  ppis_mint$Uniprot_B [grepl("chebi:", ppis_mint$Identifier_B)] <- NA
+  # ppis_mint$Uniprot_A <- sub("uniprotkb:", "", ppis_mint$Identifier_A)
+  # ppis_mint$Uniprot_A [grepl("intact:", ppis_mint$Identifier_A)] <- NA
+  # ppis_mint$Uniprot_A [grepl("ensembl", ppis_mint$Identifier_A)] <- NA
+  # ppis_mint$Uniprot_A [grepl("chebi:", ppis_mint$Identifier_A)] <- NA
+  # ppis_mint$Uniprot_B <- sub("uniprotkb:", "", ppis_mint$Identifier_B)
+  # ppis_mint$Uniprot_B [grepl("intact:", ppis_mint$Identifier_B)] <- NA
+  # ppis_mint$Uniprot_B [grepl("ensembl", ppis_mint$Identifier_B)] <- NA
+  # ppis_mint$Uniprot_B [grepl("chebi:", ppis_mint$Identifier_B)] <- NA
+  #
+  # annotation_db <-
+  #   mint_db_annotations$anno_db_mint[match(species, mint_db_annotations$species)]
 
-  annotation_db <-
-    mint_db_annotations$anno_db_mint[match(species, mint_db_annotations$species)]
+
+  ppis_mint$GeneSymbol_A <- sub("...:", "","(gene..." ppis_mint$`Aliases for A`)
+  ppis_mint_annotated$Ensembl_A <-
+    anno_df$ensembl_id[match(ppis_mint_annotated$Uniprot_A, anno_df$uniprot_id)]
 
   if (add_annotation) {
     ppi_mint_df_annotated <- annotation_mint(ppi_mint = ppis_mint,
@@ -151,6 +156,21 @@ mint_db_annotations <- data.frame(species = list_species_mint,
 #' # annotation_mint(ppi_mint, species = "HomoSapiens", version = "2024-06", type = "binary")
 #' #TODO: what can I do here as ppi_funcoup is not defined in annotation_mint()?
 
+
+# extract_annotation <- function(gene_symbol,
+#                                ensembl,
+#                                entrez,
+#                                uniprot) {
+#
+#   if (gene_symbol == ){
+#     parts <- strsplit(gene_symbol, "\\|")[[1]]
+#     for (part in parts) {
+#       if (grepl("uniprotkb:", part) && grepl("\\(gene name\\)", part)) {
+#         return(sub(".*uniprotkb:([^\\(]+).*", "\\1", part))
+#       }
+#     }
+#     return(NA)
+# }
 
 annotation_mint <- function(ppi_mint,
                            species,
