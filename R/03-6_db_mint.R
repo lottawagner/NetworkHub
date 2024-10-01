@@ -12,9 +12,6 @@
 #'
 #' @importFrom vroom vroom
 #' @importFrom stringr str_extract
-#' @importFrom stringr gsub
-#' @importFrom stringr grep
-#' @importFrom stringr lapply
 #'
 #' @export
 #'
