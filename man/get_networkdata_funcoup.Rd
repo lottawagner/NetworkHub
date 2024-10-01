@@ -18,6 +18,8 @@ get_networkdata_funcoup(
 
 \item{version}{version of the data files in funcoup}
 
+\item{type}{TODO}
+
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
 \item{add_annotation}{expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)}
@@ -34,7 +36,7 @@ get_networkdata_funcoup()
 }
 \examples{
 
-db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
-db_funcoup_df
+# db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
+# db_funcoup_df
 
 }

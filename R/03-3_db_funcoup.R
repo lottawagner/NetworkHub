@@ -4,6 +4,7 @@
 #'
 #' @param species  from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
+#' @param type TODO
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
 #' @param ... 	further arguments passed to or from other methods
@@ -17,8 +18,8 @@
 #'
 #' @examples
 #'
-#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
-#' db_funcoup_df
+#' # db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
+#' # db_funcoup_df
 #'
 
 get_networkdata_funcoup <- function(species = "H.sapiens",

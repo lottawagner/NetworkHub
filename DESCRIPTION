@@ -23,7 +23,6 @@ RoxygenNote: 7.3.2
 Imports:
   BiocFileCache,
   vroom,
-  dbplyr,
   AnnotationDbi,
   org.At.tair.db,
   org.Bt.eg.db,
