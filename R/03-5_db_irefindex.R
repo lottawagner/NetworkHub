@@ -49,6 +49,8 @@ get_networkdata_irefindex <- function(species,
     version
   ) # definition of the resource name
 
+  species_id <- irefindex_db_annotations[species, "species_id"]
+
   if (cache) {
     # tries to fetch from the cache
     message("Trying to fetch from cache...")
@@ -61,7 +63,7 @@ get_networkdata_irefindex <- function(species,
     # buildup from "base" irefindex url
     irefindex_url <-
       urlmaker_irefindex(
-        species = species,
+        species = species_id,
         version = version
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_irefindex
 
@@ -86,9 +88,35 @@ get_networkdata_irefindex <- function(species,
     irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
 
   if (add_annotation) {
-    ppi_irefindex_df_annotated <- annotation_irefindex(ppi_irefindex = ppis_irefindex,
-                                           species = species,
-                                           version = version)
+    # ppi_irefindex_df_annotated <- annotation_irefindex(ppi_irefindex = ppis_irefindex,
+    #                                        species = species,
+    #                                        version = version)
+
+    ppi_irefindex_df_annotated <- ppis_irefindex
+
+    #GeneSymbol
+    ppi_irefindex_df_annotated$GeneSymbol_A <- str_extract(ppi_irefindex_df_annotated$`Aliases for A`, "uniprotkb:([^\\(]+)\\(gene name\\)")
+    ppi_irefindex_df_annotated$GeneSymbol_A <- gsub("uniprotkb:", "", ppi_irefindex_df_annotated$GeneSymbol_A)
+    ppi_irefindex_df_annotated$GeneSymbol_A <- gsub("\\(gene name\\)", "", ppi_irefindex_df_annotated$GeneSymbol_A)
+
+    ppi_irefindex_df_annotated$GeneSymbol_B <- str_extract(ppi_irefindex_df_annotated$`Aliases for B`, "uniprotkb:([^\\(]+)\\(gene name\\)")
+    ppi_irefindex_df_annotated$GeneSymbol_B <- gsub("uniprotkb:", "", ppi_irefindex_df_annotated$GeneSymbol_B)
+    ppi_irefindex_df_annotated$GeneSymbol_B <- gsub("\\(gene name\\)", "", ppi_irefindex_df_annotated$GeneSymbol_B)
+
+    #Ensembl
+    ppi_irefindex_df_annotated$Ensembl_A <- strsplit(ppi_irefindex_df_annotated$`Alternative identifier for interactor A`, "\\|") # split entry by "|" -> you get a list for each row
+    ppi_irefindex_df_annotated$Ensembl_A <- lapply(ppi_irefindex_df_annotated$Ensembl_A, function(x) { # with lapply you can iterate through every entry in a list by using an anonymous function(x), x is each element of a list
+      ensembl_entry <- grep("^ensembl:", x, value = TRUE) #search for the entry (x) in every list that starts (^) with "ensembl"
+      ensembl_entry <- gsub("ensembl:", "", ensembl_entry) #remove prefix "ensembl" by using gsub()
+      return(ensembl_entry)
+    })
+
+    ppi_irefindex_df_annotated$Ensembl_B <- strsplit(ppi_irefindex_df_annotated$`Alternative identifier for interactor B`, "\\|") # split entry by "|" -> you get a list for each row
+    ppi_irefindex_df_annotated$Ensembl_B <- lapply(ppi_irefindex_df_annotated$Ensembl_B, function(x) { # with lapply you can iterate through every entry in a list by using an anonymous function(x), x is each element of a list
+      ensembl_entry <- grep("^ensembl:", x, value = TRUE) #search for the entry (x) in every list that starts (^) with "ensembl"
+      ensembl_entry <- gsub("ensembl:", "", ensembl_entry) #remove prefix "ensembl" by using gsub()
+      return(ensembl_entry)
+    })
     return(ppi_irefindex_df_annotated)
   }
 
@@ -174,55 +202,47 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #' #TODO: what can I do here as ppi_irefindex is not defined in annotation_irefindex()?
 
 
-annotation_irefindex <- function(ppi_irefindex,
-                           species,
-                           version) {
-  # find database on corresponding species
-
-  if (!(species %in% list_species_irefindex)) { # if species is not in the list
-    stop("Species not found as specified by irefindex,",
-         "please check some valid entries by running `list_species_irefindex`") # stop function and print
-  }
-
-  annotation_db <-
-    irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
-
-  if (!is.na(annotation_db)) {
-    all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
-    anno_df <- data.frame(
-      uniprot_id = all_prot_ids,
-      ensembl_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
-      entrez_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
-      row.names = all_prot_ids
-    )
-
-
-    ppis_irefindex_annotated <- ppi_irefindex
-
-    #adding Ensembl
-    ppis_irefindex_annotated$Ensembl_A <-
-      anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_irefindex_annotated$Ensembl_B <-
-      anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    #adding Entrez
-    ppis_irefindex_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_irefindex_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    return(ppis_irefindex_annotated)
-  }
-
-
-  if (is.na(annotation_db)) {
-    return(ppi_irefindex)
-  }
-}
-
-#output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
+# annotation_irefindex <- function(ppi_irefindex,
+#                            species,
+#                            version) {
+#   # find database on corresponding species
+#
+#   if (!(species %in% list_species_irefindex)) { # if species is not in the list
+#     stop("Species not found as specified by irefindex,",
+#          "please check some valid entries by running `list_species_irefindex`") # stop function and print
+#   }
+#
+#   annotation_db <-
+#     irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
+#
+#
+#   all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
+#   anno_df <- data.frame(
+#     uniprot_id = all_prot_ids,
+#     ensembl_id = mapIds(
+#       get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+#     entrez_id = mapIds(
+#       get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+#     row.names = all_prot_ids
+#   )
+#
+#
+#   ppis_irefindex_annotated <- ppi_irefindex
+#
+#   #adding Ensembl
+#   ppis_irefindex_annotated$Ensembl_A <-
+#     anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
+#   ppis_irefindex_annotated$Ensembl_B <-
+#     anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+#
+#   #adding Entrez
+#   ppis_irefindex_annotated$Entrez_A <-
+#     anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
+#   ppis_irefindex_annotated$Entrez_B <-
+#     anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+#
+#   return(ppis_irefindex_annotated)
+# }
 
 
 
