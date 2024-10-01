@@ -77,7 +77,7 @@ get_networkdata_mint <- function(species,
   }
 
   # read in the resource, whether cached or freshly downloaded
-  ppis_mint <- vroom::vroom(network_file)
+  ppis_mint <- vroom::vroom(network_file, col_names = FALSE)
   #ppis_mint <- head(read.delim(network_file, sep = " "))
   #
   message(dim(ppis_mint))
@@ -87,6 +87,14 @@ get_networkdata_mint <- function(species,
   if (add_annotation) {
 
     ppi_mint_df_annotated <- ppis_mint
+
+    #UniProt
+    ppi_mint_df_annotated$Uniprot_A <- str_extract(ppi_mint_df_annotated$Identifier_A, "uniprotkb:([A-Z0-9]+)")
+    ppi_mint_df_annotated$Uniprot_A <- gsub("uniprotkb:", "", ppi_mint_df_annotated$Identifier_A)
+
+    ppi_mint_df_annotated$Uniprot_B <- str_extract(ppi_mint_df_annotated$Identifier_B, "uniprotkb:([A-Z0-9]+)")
+    ppi_mint_df_annotated$Uniprot_B <- gsub("uniprotkb:", "", ppi_mint_df_annotated$Identifier_B)
+
 
     #GeneSymbol
     ppi_mint_df_annotated$GeneSymbol_A <- str_extract(ppi_mint_df_annotated$`Aliases for A`, "uniprotkb:([^\\(]+)\\(gene name\\)")
