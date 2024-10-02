@@ -7,7 +7,7 @@
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param ... 	further arguments passed to or from other methods
 #'
-#' @return ppis_irefindex
+#' @return ppi_irefindex
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -93,6 +93,7 @@ get_networkdata_irefindex <- function(species,
   ppis_irefindex$Uniprot_A <- gsub("uniprotkb:", "", ppis_irefindex$Uniprot_A)
   ppis_irefindex$Uniprot_B <- str_extract(ppis_irefindex$Uniprot_B, "uniprotkb:([A-Z0-9]+)")
   ppis_irefindex$Uniprot_B <- gsub("uniprotkb:", "", ppis_irefindex$Uniprot_B)
+  ppis_irefindex <- ppis_irefindex[!is.na(ppis_irefindex$Uniprot_A) & !is.na(ppis_irefindex$Uniprot_B), ]
 
   # match the annotation db with the corresponding species
   annotation_db <-
@@ -163,7 +164,6 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in irefindex
-#' @param type different interaction files provided by irefindex (all high-quality)
 #' @param ppi_irefindex variable defined by ppis_irefindex in get_networkdata_irefindex()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -188,21 +188,16 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #' #TODO: what can I do here as ppi_irefindex is not defined in annotation_irefindex()?
 
 
-annotation_irefindex <- function(ppi_irefindex,
-                           species,
-                           version) {
-  # find database on corresponding species
-
-  if (!(species %in% list_species_irefindex)) { # if species is not in the list
-    stop("Species not found as specified by irefindex,",
-         "please check some valid entries by running `list_species_irefindex`") # stop function and print
-  }
-
-  annotation_db <-
-    irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
+annotation_irefindex <- function(ppi_irefindex, species, version) {
 
 
+  # find database for corresponding species
+
+  annotation_db <- irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
+
+  ppis_irefindex_annotated <- ppi_irefindex
   all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
+
   anno_df <- data.frame(
     uniprot_id = all_prot_ids,
     ensembl_id = mapIds(
@@ -211,9 +206,6 @@ annotation_irefindex <- function(ppi_irefindex,
       get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
     row.names = all_prot_ids
   )
-
-
-  ppis_irefindex_annotated <- ppi_irefindex
 
   #adding Ensembl
   ppis_irefindex_annotated$Ensembl_A <-
@@ -228,11 +220,8 @@ annotation_irefindex <- function(ppi_irefindex,
     anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
 
   return(ppis_irefindex_annotated)
+
+
 }
-
-
-
-
-
 
 
