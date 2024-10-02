@@ -22,7 +22,7 @@ get_networkdata_irefindex(
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
-ppis_irefindex
+ppi_irefindex
 }
 \description{
 get_networkdata_irefindex()
