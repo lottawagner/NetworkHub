@@ -185,7 +185,7 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'
 #' @examples
 #'
-#' annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
+#' # annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
 
 
 
