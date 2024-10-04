@@ -171,7 +171,7 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 #'
 #' @param version version of FunCoup , default value = "5.0", value as type "5.0" #UPDATEVERSION
 #' @param species types listed in list_species_funcoup depending on current version, default value = "H.sapiens" #UPDATEVERSION
-#'
+#' @param type interaction types in FunCoup (for current version compact recommended, for older versions only full possible)
 #'
 #' @return url returns the corresponding url set by params
 #' @export
@@ -568,27 +568,6 @@ urlmaker_genemania <- function ( species = "Homo_sapiens",
 
 
 
-# Reactome ---------------
-#' urlmaker_reactome()
-#'
-#' @param version default value = "current" #UPDATEVERSION
-#'
-#' @return url returns the corresponding url set by params
-#' @export
-#'
-#' @examples
-#' url_reactome <- urlmaker_reactome()
-#' url_reactome
-
-urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
-
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
-
-  url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.tab-delimited.txt"
-  return(url)
-}
-
 # CPDB - ONLY HUMAN -----------------------------
 
 
@@ -742,6 +721,28 @@ urlmaker_pathwaycommons<- function( species = "Homo sapiens", #default value = "
 
 
 
+
+
+# Reactome - SPECIESDEFINITION ---------------
+#' urlmaker_reactome()
+#'
+#' @param version default value = "current" #UPDATEVERSION
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#' url_reactome <- urlmaker_reactome()
+#' url_reactome
+
+urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
+
+  stopifnot(is.character(version))                  # make sure to type in a version as character
+  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+
+  url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.tab-delimited.txt"
+  return(url)
+}
 
 
 # Innate DB - SPECIESDEFINITION -------------------
