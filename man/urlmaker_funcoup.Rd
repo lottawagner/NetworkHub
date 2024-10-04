@@ -14,6 +14,8 @@ urlmaker_funcoup(
 \item{version}{version of FunCoup , default value = "5.0", value as type "5.0" #UPDATEVERSION}
 
 \item{species}{types listed in list_species_funcoup depending on current version, default value = "H.sapiens" #UPDATEVERSION}
+
+\item{type}{interaction types in FunCoup (for current version compact recommended, for older versions only full possible)}
 }
 \value{
 url returns the corresponding url set by params

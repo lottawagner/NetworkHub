@@ -12,8 +12,6 @@ annotation_iid(ppi_iid, species, version)
 \item{species}{from which species does the data come from}
 
 \item{version}{version of the data files in iid}
-
-\item{type}{different interaction files provided by iid (all high-quality)}
 }
 \value{
 ppis_iid_annotated
