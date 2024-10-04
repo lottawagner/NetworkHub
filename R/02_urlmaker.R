@@ -698,7 +698,7 @@ return(url)
 #'
 #' url_pc <- urlmaker_pathwaycommons()
 #' url_pc
-urlmaker_pathwaycommons<- function( species = "Homo sapiens", #default value = "Homo sapiens", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
+urlmaker_pathwaycommons<- function( species = "human", #default value = "human", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
                                     version = "v12") { # default value = "v12", because in "v14" not all datafiles are updated already #UPDATEVERSION
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
@@ -706,7 +706,7 @@ urlmaker_pathwaycommons<- function( species = "Homo sapiens", #default value = "
   stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
 
   # check that the value for species is listed in PathwayCommons
-  if (species != "Homo sapiens") { # if species is not in the list
+  if (species != "human") { # if species is not in the list
     stop("Species not found as specified by PathwayCommons,",
          " PathwayCommons only contains data for 'Homo sapiens'") # stop function and print
   }
