@@ -11,7 +11,9 @@ annotation_matrixdb(ppi_matrixdb, species, type, ...)
 
 \item{species}{from which species does the data come from}
 
-\item{type}{datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset}
+\item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \value{
 ppis_matrixdb_annotated
@@ -21,6 +23,6 @@ annotation_matrixdb ()
 }
 \examples{
 
-# annotation_matrixdb(ppi_matrixdb, species = "human", type = "HI-union")
+# annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
 
 }

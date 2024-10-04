@@ -15,7 +15,7 @@ get_networkdata_matrixdb(
 \arguments{
 \item{species}{from which species does the data come from (default human because currently only human data provided from matrixdb)}
 
-\item{type}{datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset}
+\item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
@@ -33,7 +33,7 @@ get_networkdata_matrixdb()
 
 db_matrixdb_df <- get_networkdata_matrixdb(
   species = "human",
-  type = "all"
+  type = "CORE"
 )
 
 db_matrixdb_df

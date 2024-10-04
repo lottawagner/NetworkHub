@@ -14,6 +14,8 @@ annotation_huri(ppi_huri, species, type, add_annotation = TRUE, ...)
 \item{type}{different datasets , more information on "http://www.interactome-atlas.org/about/"}
 
 \item{add_annotation}{expanding the dataframe with six columns (GeneSymbol, Uniprot ID and Entrez_ID)}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \value{
 ppis_huri_annotated

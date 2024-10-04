@@ -4,7 +4,7 @@
 \alias{urlmaker_pathwaycommons}
 \title{urlmaker_pathwaycommons()}
 \usage{
-urlmaker_pathwaycommons(species = "Homo sapiens", version = "v12")
+urlmaker_pathwaycommons(species = "human", version = "v12")
 }
 \arguments{
 \item{species}{default value = "Homo sapiens", because only one species}

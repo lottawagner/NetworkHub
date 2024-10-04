@@ -9,7 +9,7 @@ urlmaker_matrixdb(species = "human", type = c("all", "CORE"))
 \arguments{
 \item{species}{default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION}
 
-\item{type}{datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset}
+\item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
 }
 \value{
 url returns the corresponding url set by params
