@@ -87,18 +87,11 @@ get_networkdata_genemania <- function( species = "Homo_sapiens",
   annotation_db <-
     genemania_db_annotations$anno_db_genemania[match(species, genemania_db_annotations$species)]
 
-  if (add_annotation && !is.na(annotation_db)) {
+  if (add_annotation) {
     ppi_genemania_df_annotated <- annotation_genemania(ppi_genemania = ppis_genemania,
                                            species = species,
                                            version = version)
     return(ppi_genemania_df_annotated)
-  }
-
-  if (add_annotation && is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_genemania only containing annotation columns for Uniprot_A/B & GeneSymbol_A/B.")
-    return(ppis_genemania)
   }
 
   if (!add_annotation) {
