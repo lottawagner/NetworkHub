@@ -32,7 +32,7 @@ get_networkdata_genemania()
 \examples{
 
 db_genemania_df <- get_networkdata_genemania(
-  species = "Arabidopsis_thalia",
+  species = "Homo_sapiens",
   version = "current"
 )
 

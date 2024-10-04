@@ -20,7 +20,5 @@ ppis_genemania_annotated
 annotation_genemania ()
 }
 \examples{
-
-# annotation_genemania(ppi_genemania, species = "HomoSapiens", version = "2024-06", type = "binary")
-#TODO: what can I do here as ppi_genemania is not defined in annotation_genemania()?
+annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
 }

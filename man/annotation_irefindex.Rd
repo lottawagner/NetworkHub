@@ -21,6 +21,5 @@ annotation_irefindex ()
 }
 \examples{
 
-# annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "2023-08-28", type = "binary")
-#TODO: what can I do here as ppi_irefindex is not defined in annotation_irefindex()?
+annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
 }
