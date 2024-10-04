@@ -124,6 +124,7 @@ huri_db_annotations <- data.frame(species = list_species_huri,
 #' @param type different datasets , more information on "http://www.interactome-atlas.org/about/"
 #' @param ppi_huri variable defined by ppis_huri in get_networkdata_huri()
 #' @param add_annotation expanding the dataframe with six columns (GeneSymbol, Uniprot ID and Entrez_ID)
+#' @param ... further arguments passed to or from other methods
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db

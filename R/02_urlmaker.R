@@ -654,7 +654,7 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 #' urlmaker_matrixdb()
 #'
 #' @param species default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION
-#' @param type datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset
+#' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
 #'
 #' @return url returns the corresponding url set by params
 #' @export

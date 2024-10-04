@@ -3,7 +3,7 @@
 #' get_networkdata_matrixdb()
 #'
 #' @param species  from which species does the data come from (default human because currently only human data provided from matrixdb)
-#' @param type datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset
+#' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param add_annotation expanding the dataframe with (GeneSymbol, Uniprot ID and Entrez_ID)
 #' @param ... 	further arguments passed to or from other methods
@@ -24,14 +24,11 @@
 #'
 
 get_networkdata_matrixdb <- function( species = "human",
-                                  type = "CORE",
-                                  cache = TRUE,
-                                  add_annotation = TRUE,
-                                  ...) {
-
-
-
-  # list species is actualized for version matrixdb "2021-05"
+                                      type = "CORE",
+                                      cache = TRUE,
+                                      add_annotation = TRUE,
+                                      ...) {
+  # MatrixDB 4.0 (2024-09-01)
   # UPDATEVERSION
 
   # check that the value for species is listed in matrixdb
@@ -133,7 +130,8 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #'
 #' @param ppi_matrixdb variable defined by ppis_matrixdb in get_networkdata_matrixdb()
 #' @param species  from which species does the data come from
-#' @param type datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset
+#' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
+#' @param ... further arguments passed to or from other methods
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
@@ -163,7 +161,7 @@ annotation_matrixdb <- function(ppi_matrixdb,
     matrixdb_db_annotations$anno_db_matrixdb[match(species, matrixdb_db_annotations$species)]
 
 
-  all_prot_ids <- unique(na.omit(c(ppi_matrixdb$Uniprot_A, ppi_matrixdb$Uniprot_B)))
+  all_prot_ids <- unique(c(ppi_matrixdb$Uniprot_A, ppi_matrixdb$Uniprot_B) [!is.na(c(ppi_matrixdb$Uniprot_A, ppi_matrixdb$Uniprot_B))])
   anno_df <- data.frame(
     uniprot_id = all_prot_ids,
     genesymbol = mapIds(
@@ -197,7 +195,6 @@ annotation_matrixdb <- function(ppi_matrixdb,
     anno_df$entrez_id[match(ppis_matrixdb_annotated$Uniprot_B, anno_df$uniprot_id)]
 
   return(ppis_matrixdb_annotated)
-
 
 }
 
