@@ -638,6 +638,7 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
   url <- sprintf("http://www.interactome-atlas.org/data/%s.tsv",
                  type)
 
+
   return(url)
 
 }
@@ -653,14 +654,16 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 #' urlmaker_matrixdb()
 #'
 #' @param species default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION
+#' @param type datasets provided by MatrixDB: "all" = Interaction dataset including interactions imported from IMEX databases, "CORE" = MatrixDB manually curated interaction dataset
 #'
 #' @return url returns the corresponding url set by params
 #' @export
 #'
 #' @examples
-#' url_matrixdb <- urlmaker_matrixdb()
+#' url_matrixdb <- urlmaker_matrixdb(type = "all")
 #' url_matrixdb
-urlmaker_matrixdb <- function(species = "human"){ #UPDATEVERSION
+urlmaker_matrixdb <- function(species = "human",
+                              type = c("all", "CORE")){ #UPDATEVERSION
 
   stopifnot(is.character(species))                  # make sure to type in a species name as character
 
@@ -670,7 +673,8 @@ urlmaker_matrixdb <- function(species = "human"){ #UPDATEVERSION
          MatrixDB only provide data for 'human'")
   }
 
-  url <- "http://matrixdb.univ-lyon1.fr/download/matrixdb_FULL.tab.gz"
+  url <- sprintf("https://matrixdb.univ-lyon1.fr/downloads/matrixdb_%s.tab.zip",
+                 type)
 
 return(url)
 
