@@ -139,9 +139,9 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 
 #' annotation_genemania ()
 #'
+#' @param ppi_genemania variable defined by ppis_genemania in get_networkdata_genemania()
 #' @param species  from which species does the data come from
 #' @param version version of the data files in genemania
-#' @param ppi_genemania variable defined by ppis_genemania in get_networkdata_genemania()
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.At.tair.db
@@ -154,15 +154,13 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #' @import org.Rn.eg.db
 #' @import org.Sc.sgd.db
 #'
-#'@return ppis_genemania_annotated
+#' @return ppis_genemania_annotated
 #'
-#'@export
-#'
+#' @export
 #'
 #' @examples
-#'
-#' # annotation_genemania(ppi_genemania, species = "HomoSapiens", version = "2024-06", type = "binary")
-#' #TODO: what can I do here as ppi_genemania is not defined in annotation_genemania()?
+#' #TODO annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+
 
 
 annotation_genemania <- function(ppi_genemania,
