@@ -7,6 +7,7 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in iid
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
+#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_iid
@@ -165,7 +166,6 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in iid
-#' @param type different interaction files provided by iid (all high-quality)
 #' @param ppi_iid variable defined by ppis_iid in get_networkdata_iid()
 #'
 #' @importFrom AnnotationDbi mapIds
