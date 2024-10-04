@@ -5,6 +5,7 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in irefindex
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
+#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppi_irefindex
@@ -188,7 +189,9 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 
 
 
-annotation_irefindex <- function(ppi_irefindex, species, version) {
+annotation_irefindex <- function(ppi_irefindex,
+                                 species,
+                                 version) {
 
 
   # find database for corresponding species
