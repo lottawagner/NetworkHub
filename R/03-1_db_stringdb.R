@@ -236,12 +236,12 @@ get_networkdata_stringdb <- function(species,
   accessory_info_df <-
     create_annotation_from_stringdbaccessory(accessory_info)
 
-  ppis_stringdb$ensemblid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["ensembl_id"]]
-  ppis_stringdb$ensemblid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["ensembl_id"]]
-  ppis_stringdb$gene_1 <- accessory_info_df[ppis_stringdb$protein1, ][["gene_symbol"]]
-  ppis_stringdb$gene_2 <- accessory_info_df[ppis_stringdb$protein2, ][["gene_symbol"]]
-  #ppis_stringdb$entrezid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["entrez_id"]]
-  #ppis_stringdb$entrezid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["entrez_id"]]
+  ppis_stringdb$ensemblid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["Ensembl_A"]]
+  ppis_stringdb$ensemblid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["Ensembl_B"]]
+  ppis_stringdb$gene_1 <- accessory_info_df[ppis_stringdb$protein1, ][["GeneSymbol_A"]]
+  ppis_stringdb$gene_2 <- accessory_info_df[ppis_stringdb$protein2, ][["GeneSymbol_B"]]
+  #ppis_stringdb$entrezid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["Entrez_A"]]
+  #ppis_stringdb$entrezid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["Entrez_B"]]
   }
 
   # return ppis-stringdb containing remaped identifiers
