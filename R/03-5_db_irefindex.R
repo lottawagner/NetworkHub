@@ -168,14 +168,14 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #' @param ppi_irefindex variable defined by ppis_irefindex in get_networkdata_irefindex()
 #'
 #' @importFrom AnnotationDbi mapIds
-#' @import "org.Hs.eg.db"
-#' @import "org.Mm.eg.db"
-#' @import "org.Sc.sgd.db"
-#' @import "org.EcK12.eg.db"
-#' @import "org.Rn.eg.db"
-#' @import "org.Sc.sgd.db"
-#' @import "org.Dm.eg.db"
-#' @import "org.Ce.eg.db"
+#' @import org.Hs.eg.db
+#' @import org.Mm.eg.db
+#' @import org.Sc.sgd.db
+#' @import org.EcK12.eg.db
+#' @import org.Rn.eg.db
+#' @import org.Sc.sgd.db
+#' @import org.Dm.eg.db
+#' @import org.Ce.eg.db
 #'
 #'
 #' @return ppis_irefindex_annotated
