@@ -45,6 +45,6 @@ URL: https://github.com/lottawagner/NetworkHub
 BugReports: https://github.com/lottawagner/NetworkHub/issues
 VignetteBuilder: knitr
 biocViews:
-    GeneExpression, Software, Transcriptomics, Visualization,
-    DifferentialExpression, Pathways, DataImport, 
-    Annotation, Network, GraphAndNetwork
+  GeneExpression, Software, Transcriptomics, Visualization,
+  DifferentialExpression, Pathways, DataImport, 
+  Annotation, Network, GraphAndNetwork
