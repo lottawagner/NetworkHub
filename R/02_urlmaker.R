@@ -744,7 +744,7 @@ urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
-  url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.tab-delimited.txt"
+  url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.psi-mitab.txt"
   return(url)
 }
 
