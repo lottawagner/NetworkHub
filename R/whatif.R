@@ -92,3 +92,39 @@
 #   return(ppis_reactome_filtered)
 # }
 # }
+
+
+
+# species NCBI listed in ncbi_taxid_host_organism --------------
+
+#just a list that connects names with numbers , we only get mouse and human ppi data from innatedb
+
+# #info_species_innatedb <- list("Mus musculus" = "10090",
+#                               "Homo sapiens" = "9606",
+#                               "Saccharomyces cerevisiae" ="4932",
+#                               "taxid:0",
+#                               "Canis lupus familiaris" = "9615",
+#                               "Spodoptera frugiperda" = "7108",
+#                               "Rattus norvegicus" = "10116",
+#                               "Chlorocebus aethiops" = "9534",
+#                               "Cricetulus griseus" = "10029",
+#                               "Gallus gallus" = "9031",
+#                               "Platyrrhini" = "9479",
+#                               "Oryctolagus cuniculus" = "9986",
+#                               "Cricetinae" = "10026",
+#                               "Coturnix japonica" = "93934",
+#                               "Bos taurus" = "9913",
+#                               "Escherichia phage T7" = "10760",
+#                               "Yeast two-hybrid vector pC-ACT.2" = "111296",
+#                               "unidentified baculovirus" = "10469",
+#                               "Chlorocebus aethiops aethiops" = "101841",
+#                               "Escherichia coli"  ="562",
+#                               "Neogale vison" = "452646",
+#                               "Drosophila melanogaster" = "7227",
+#                               "Hylobates lar" = "9580",
+#                               "Spodoptera frugiperda multiple nucleopolyhedrovirus" = "10455",
+#                               "Mesocricetus auratus" = "10036",
+#                               "taxid:-1",
+#                               "Cercopithecidae" = "9527",
+#                               "Mustela lutreola" =  "9666",
+#                               "Lepidoptera" = "7088")
