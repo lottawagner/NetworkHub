@@ -12,6 +12,14 @@ NetworkHub
 \details{
 This package provides functionality to ... TODO
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lottawagner/NetworkHub}
+  \item Report bugs at \url{https://github.com/lottawagner/NetworkHub/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Lotta Wagner \email{wagnerlo@uni-mainz.de} (\href{https://orcid.org/0009-0009-7545-0173}{ORCID})
 
