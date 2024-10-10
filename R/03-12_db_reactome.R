@@ -84,7 +84,7 @@ get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
 
   ppis_reactome_filtered <- ppis_reactome[(ppis_reactome$`Taxid interactor A` == species ) &
                                             (ppis_reactome$`Taxid interactor B` == species ),
-  ]
+                                         ]
 
   # rename columns
 
