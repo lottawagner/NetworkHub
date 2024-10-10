@@ -14,8 +14,8 @@
 #' @export
 #'
 #' @examples
-#' db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Homo sapiens)",
-#'                                            version = "current"
+#' db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human),
+#'                                            version = "5.4"
 #'                                            )
 #' db_innatedb_df
 #'
@@ -140,6 +140,7 @@ innatedb_db_annotations <- data.frame(species = list_species_innatedb,
 #' @param ppi_innatedb variable defined by ppis_innatedb in get_networkdata_innatedb()
 #'
 #' @importFrom AnnotationDbi mapIds
+#' @importFrom stats na.omit
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
 

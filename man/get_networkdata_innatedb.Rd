@@ -5,8 +5,8 @@
 \title{get_networkdata_innatedb()}
 \usage{
 get_networkdata_innatedb(
-  species = "taxid:9606(Homo sapiens)",
-  version = "current",
+  species,
+  version = "5.4",
   cache = TRUE,
   add_annotation = TRUE,
   ...
@@ -28,11 +28,4 @@ ppis_innatedb
 }
 \description{
 get_networkdata_innatedb()
-}
-\examples{
-db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Homo sapiens)",
-                                           version = "current"
-                                           )
-db_innatedb_df
-
 }

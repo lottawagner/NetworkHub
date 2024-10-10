@@ -83,8 +83,7 @@ get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
   #Filter for species
 
   ppis_reactome_filtered <- ppis_reactome[(ppis_reactome$`Taxid interactor A` == species ) &
-                                            (ppis_reactome$`Taxid interactor B` == species ),
-                                         ]
+                                          (ppis_reactome$`Taxid interactor B` == species ),]
 
   # rename columns
 
@@ -162,6 +161,7 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #' @param ppi_reactome variable defined by ppis_reactome in get_networkdata_reactome()
 #'
 #' @importFrom AnnotationDbi mapIds
+#' @importFrom stats na.omit
 #' @import org.Bt.eg.db
 #' @import org.Ce.eg.db
 #' @import org.Cf.eg.db
