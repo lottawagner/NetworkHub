@@ -14,11 +14,12 @@
 #' @export
 #'
 #' @examples
-#' db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human),
+#' \donttest{
+#' db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human)",
 #'                                            version = "5.4"
 #'                                            )
 #' db_innatedb_df
-#'
+#' }
 
 get_networkdata_innatedb <- function(species,
                                      version = "5.4",
@@ -151,8 +152,9 @@ innatedb_db_annotations <- data.frame(species = list_species_innatedb,
 #'
 #'
 #' @examples
-#'
-#' # annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
+#' #\donttest{
+#' #annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
+#' #}
 
 annotation_innatedb <- function(ppi_innatedb,
                                 species,
@@ -212,13 +214,5 @@ annotation_innatedb <- function(ppi_innatedb,
 
   return(ppis_innatedb_annotated)
 }
-
-
-
-
-
-
-
-
 
 

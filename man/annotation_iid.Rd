@@ -20,7 +20,9 @@ ppis_iid_annotated
 annotation_iid ()
 }
 \examples{
-
-# annotation_iid(ppi_iid, species = "HomoSapiens", version = "2024-06", type = "binary")
-#TODO: what can I do here as ppi_funcoup is not defined in annotation_iid()?
+#\donttest{
+# annotation_iid(ppi_iid,
+#               species = "human",
+#               version = "2021-05")
+#}
 }

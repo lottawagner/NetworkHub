@@ -20,5 +20,7 @@ ppis_pathwaycommons_annotated
 annotation_pathwaycommons ()
 }
 \examples{
-#TODO annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
+#\donttest{
+#annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
+#}
 }

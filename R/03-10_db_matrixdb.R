@@ -14,14 +14,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_matrixdb_df <- get_networkdata_matrixdb(
 #'   species = "human",
 #'   type = "CORE"
 #' )
 #'
 #' db_matrixdb_df
-#'
+#' }
 
 get_networkdata_matrixdb <- function( species = "human",
                                       type = "CORE",
@@ -142,9 +142,9 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #'
 #'
 #' @examples
-#'
-#' # annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
-#'
+#' #\donttest{
+#' #annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
+#' #}
 
 annotation_matrixdb <- function(ppi_matrixdb,
                                 species,
@@ -197,14 +197,3 @@ annotation_matrixdb <- function(ppi_matrixdb,
   return(ppis_matrixdb_annotated)
 
 }
-
-
-
-
-
-
-
-
-
-
-#

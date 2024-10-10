@@ -16,14 +16,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_mint_df <- get_networkdata_mint(
 #'   species = "Homo Sapiens",
 #'   version = "current"
 #' )
 #'
 #' db_mint_df
-#'
+#' }
 
 get_networkdata_mint <- function(species,
                                  version = "current",

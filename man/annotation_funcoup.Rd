@@ -20,8 +20,7 @@ ppis_funcoup_annotated
 annotation_funcoup ()
 }
 \examples{
-
-# annotation_funcoup(ppi_funcoup, species = "H.sapiens", version = "5.0")
-#TODO: what can I do here as ppi_funcoup is not defined in annotation_funcoup()
-
+# annotation_funcoup(ppi_funcoup,
+#                    species = "H.sapiens",
+#                    version = "5.0")
 }

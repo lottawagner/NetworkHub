@@ -20,5 +20,7 @@ ppis_genemania_annotated
 annotation_genemania ()
 }
 \examples{
-#TODO annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+#\donttest{
+# annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+#}
 }

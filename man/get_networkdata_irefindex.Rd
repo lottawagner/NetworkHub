@@ -5,7 +5,7 @@
 \title{get_networkdata_irefindex()}
 \usage{
 get_networkdata_irefindex(
-  species,
+  species = "Homo sapiens",
   version = "08-28-2023",
   cache = TRUE,
   add_annotation = TRUE,
@@ -30,11 +30,11 @@ ppi_irefindex
 get_networkdata_irefindex()
 }
 \examples{
-
+\donttest{
 db_irefindex_df <- get_networkdata_irefindex(
   species = "Homo sapiens",
   version = "08-28-2023")
 
 db_irefindex_df
-
+}
 }

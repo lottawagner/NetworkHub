@@ -20,6 +20,7 @@ ppis_innatedb_annotated
 annotation_innatedb ()
 }
 \examples{
-
-# annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
+#\donttest{
+#annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
+#}
 }

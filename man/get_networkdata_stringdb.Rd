@@ -33,12 +33,11 @@ ppis_stringdb
 get_networkdata_stringdb()
 }
 \examples{
-
-db_string_df <- get_networkdata_stringdb(
-  species = "Homo sapiens",
-  version = "12.0"
-)
-
+\donttest{
+db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
+                                         version = "12.0"
+                                        )
 db_string_df
+}
 
 }

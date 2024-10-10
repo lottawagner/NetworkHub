@@ -30,12 +30,12 @@ ppis_matrixdb
 get_networkdata_matrixdb()
 }
 \examples{
-
+\donttest{
 db_matrixdb_df <- get_networkdata_matrixdb(
   species = "human",
   type = "CORE"
 )
 
 db_matrixdb_df
-
+}
 }

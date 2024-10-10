@@ -29,3 +29,11 @@ ppis_innatedb
 \description{
 get_networkdata_innatedb()
 }
+\examples{
+\donttest{
+db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human)",
+                                           version = "5.4"
+                                           )
+db_innatedb_df
+}
+}

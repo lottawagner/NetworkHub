@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_hint_df <- get_networkdata_hint(
 #'   species = "HomoSapiens",
 #'   version = "2024-06",
@@ -24,7 +24,7 @@
 #' )
 #'
 #' db_hint_df
-#'
+#' }
 
 get_networkdata_hint <- function(species,
                                  version,
@@ -173,9 +173,10 @@ hint_db_annotations <- data.frame(species = list_species_hint,
 #'
 #'
 #' @examples
-#'
+#' #\donttest{
 #' # annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
-#' #TODO: what can I do here as ppi_funcoup is not defined in annotation_hint()?
+#' #}
+#'
 
 
 annotation_hint <- function(ppi_hint,

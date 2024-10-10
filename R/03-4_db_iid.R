@@ -1,5 +1,4 @@
 
-
 # get_networkdata_iid() -----------
 
 #' get_networkdata_iid()
@@ -16,14 +15,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_iid_df <- get_networkdata_iid(
 #'   species = "human",
 #'   version = "2021-05"
 #' )
 #'
 #' db_iid_df
-#'
+#' }
 
 get_networkdata_iid <- function( species,
                                  version = "2021-05",
@@ -187,14 +186,16 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #'
 #'
 #' @examples
-#'
-#' # annotation_iid(ppi_iid, species = "HomoSapiens", version = "2024-06", type = "binary")
-#' #TODO: what can I do here as ppi_funcoup is not defined in annotation_iid()?
+#' #\donttest{
+#' # annotation_iid(ppi_iid,
+#' #               species = "human",
+#' #               version = "2021-05")
+#' #}
 
 
 annotation_iid <- function(ppi_iid,
-                            species,
-                            version) {
+                           species,
+                           version) {
   # find database on corresponding species
 
   if (!(species %in% list_species_iid)) { # if species is not in the list

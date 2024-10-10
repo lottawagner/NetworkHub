@@ -16,11 +16,12 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' db_reactome_df <- get_networkdata_reactome(species = "taxid:9606(Homo sapiens)",
 #'                                            version = "current"
 #'                                            )
 #' db_reactome_df
-#'
+#' }
 
 get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
                                      version = "current",
@@ -180,7 +181,9 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #'
 #'
 #' @examples
-#' # annotation_reactome(ppi_reactome, species = "taxid:9606(Homo sapiens)", version = "current")
+#' #\donttest{
+#' #annotation_reactome(ppi_reactome, species = "taxid:9606(Homo sapiens)", version = "current")
+#' #}
 
 annotation_reactome <- function(ppi_reactome,
                                 species,

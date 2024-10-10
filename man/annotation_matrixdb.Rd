@@ -22,7 +22,7 @@ ppis_matrixdb_annotated
 annotation_matrixdb ()
 }
 \examples{
-
-# annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
-
+#\donttest{
+#annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
+#}
 }

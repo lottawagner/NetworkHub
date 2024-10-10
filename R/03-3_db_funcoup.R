@@ -17,9 +17,10 @@
 #' @export
 #'
 #' @examples
-#'
-#' # db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
-#' # db_funcoup_df
+#' \donttest{
+#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
+#' db_funcoup_df
+#' }
 #'
 
 get_networkdata_funcoup <- function(species = "H.sapiens",
@@ -190,10 +191,9 @@ funcoup_db_annotations <- data.frame(
 #' @export
 #'
 #' @examples
-#'
-#' # annotation_funcoup(ppi_funcoup, species = "H.sapiens", version = "5.0")
-#' #TODO: what can I do here as ppi_funcoup is not defined in annotation_funcoup()
-#'
+#' # annotation_funcoup(ppi_funcoup,
+#' #                    species = "H.sapiens",
+#' #                    version = "5.0")
 
 
 annotation_funcoup <- function(ppi_funcoup,

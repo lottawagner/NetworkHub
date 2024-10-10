@@ -14,15 +14,15 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_irefindex_df <- get_networkdata_irefindex(
 #'   species = "Homo sapiens",
 #'   version = "08-28-2023")
 #'
 #' db_irefindex_df
-#'
+#' }
 
-get_networkdata_irefindex <- function(species,
+get_networkdata_irefindex <- function(species = "Homo sapiens",
                                  version = "08-28-2023",
                                  cache = TRUE,
                                  add_annotation = TRUE,
@@ -184,8 +184,9 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'
 #'
 #' @examples
-#'
+#' #\donttest{
 #' # annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
+#' #}
 
 
 

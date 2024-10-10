@@ -30,12 +30,12 @@ ppis_huri
 get_networkdata_huri()
 }
 \examples{
-
+\donttest{
 db_huri_df <- get_networkdata_huri(
   species = "human",
   type = "HI-union"
 )
 
 db_huri_df
-
+}
 }

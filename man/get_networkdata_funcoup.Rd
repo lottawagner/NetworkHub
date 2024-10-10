@@ -35,8 +35,9 @@ ppis_annotated_funcoup
 get_networkdata_funcoup()
 }
 \examples{
-
-# db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
-# db_funcoup_df
+\donttest{
+db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
+db_funcoup_df
+}
 
 }

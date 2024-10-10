@@ -14,14 +14,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_pathwaycommons_df <- get_networkdata_pathwaycommons(
 #'   species = "human",
 #'   version = "v12"
 #' )
 #'
 #' db_pathwaycommons_df
-#'
+#' }
 
 get_networkdata_pathwaycommons <- function( species = "human",
                                        version = "v12",
@@ -128,13 +128,15 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 #' @export
 #'
 #' @examples
-#' #TODO annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
+#' #\donttest{
+#' #annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
+#' #}
 
 
 
 annotation_pathwaycommons <- function(ppi_pathwaycommons,
-                                 species,
-                                 version) {
+                                      species,
+                                      version) {
   # find database on corresponding species
 
   if (!(species %in% list_species_pathwaycommons)) { # if species is not in the list

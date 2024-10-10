@@ -22,7 +22,8 @@ ppis_hint_annotated
 annotation_hint ()
 }
 \examples{
-
+#\donttest{
 # annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
-#TODO: what can I do here as ppi_funcoup is not defined in annotation_hint()?
+#}
+
 }

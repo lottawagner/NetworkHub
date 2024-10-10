@@ -12,8 +12,9 @@
 #' @export
 #'
 #' @examples
-#' info_species_stringdb()
-#'
+#' #\donttest{
+#' #info_species_stringdb()
+#' #}
 info_species_stringdb <- function(version = "12.0"){
 
   # use sprintf function to insert current version into the url
@@ -42,8 +43,11 @@ info_species_stringdb <- function(version = "12.0"){
 #' @export
 #'
 #' @examples
-#' human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
-#'                                         version = "12.0")
+#' #\donttest{
+#' #human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
+#' #                                       version = "12.0")
+#' #}
+
 get_accessoryinfo_stringdb <- function(species,
                                        version,
                                        cache = TRUE) {
@@ -107,9 +111,10 @@ get_accessoryinfo_stringdb <- function(species,
 #' @export
 #'
 #' @examples
-#' # create_annotation_from_stringdbaccessory(accessory_info)
-#' #TODO: what can I do here as ppi_funcoup is not defined?
-#'
+#' #\donttest{
+#' #create_annotation_from_stringdbaccessory(accessory_info)
+#' #}
+
 create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION - where does accessory_info comes from?
 
   # create a dataframe that contains the unique string_protein_ids as protein_id and rname
@@ -157,13 +162,12 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
 #' @export
 #'
 #' @examples
-#'
-#' db_string_df <- get_networkdata_stringdb(
-#'   species = "Homo sapiens",
-#'   version = "12.0"
-#' )
-#'
+#' \donttest{
+#' db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
+#'                                          version = "12.0"
+#'                                         )
 #' db_string_df
+#' }
 #'
 get_networkdata_stringdb <- function(species,
                                      version,

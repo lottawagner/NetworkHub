@@ -14,14 +14,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' db_genemania_df <- get_networkdata_genemania(
 #'   species = "Homo_sapiens",
 #'   version = "current"
 #' )
 #'
 #' db_genemania_df
-#'
+#' }
 
 get_networkdata_genemania <- function( species = "Homo_sapiens",
                                        version = "current",
@@ -152,7 +152,9 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #' @export
 #'
 #' @examples
-#' #TODO annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+#' #\donttest{
+#' # annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+#' #}
 
 
 

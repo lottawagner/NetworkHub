@@ -30,12 +30,12 @@ ppis_iid
 get_networkdata_iid()
 }
 \examples{
-
+\donttest{
 db_iid_df <- get_networkdata_iid(
   species = "human",
   version = "2021-05"
 )
 
 db_iid_df
-
+}
 }
