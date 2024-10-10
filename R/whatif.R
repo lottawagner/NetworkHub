@@ -24,3 +24,71 @@
 #   ensembl_entry <- gsub("ensembl:", "", ensembl_entry) #remove prefix "ensembl" by using gsub()
 #   return(ensembl_entry)
 # })
+
+
+#Handling MITAB files annotation (Reactome) --------------
+
+# if (add_annotation) {
+#
+#
+#   url_reactome_annotation_info <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.tab-delimited.txt"
+#
+#   rname <- paste0(
+#     "reactome_",
+#     version,
+#     "_",
+#     species,
+#     "_annotation_info"
+#   )
+#
+#   if (cache) {
+#     # tries to fetch from the cache
+#     message("Trying to fetch from cache...")
+#     network_file_annotation <- fetch_NetworkHub(rname)
+#   }
+#
+#   if (!cache | is.null(network_file_annotation)) {
+#     # retrieves the file for the first time
+#     message("Downloading to cache...")
+#     network_file_annotation <- cache_NetworkHub(
+#       rname = rname,
+#       fpath = url_reactome_annotation_info
+#     )
+#   }
+#
+#   reactome_annotation_info <- vroom::vroom(network_file_annotation)
+#
+#   #rename columns Uniprot
+#   colnames(reactome_annotation_info)[colnames(reactome_annotation_info) == "# Interactor 1 uniprot id"] <- "Uniprot_A"
+#   colnames(reactome_annotation_info)[colnames(reactome_annotation_info) == "Interactor 2 uniprot id"] <- "Uniprot_B"
+#
+#   #merge dataframes into new dataframe
+#   ppis_reactome_filtered_annotated <- merge(ppis_reactome_filtered, reactome_annotation_info, by = c("Uniprot_A", "Uniprot_B"), all.x = TRUE)
+#   ppis_reactome_filtered_annotated <- ppis_reactome_filtered_annotated[
+#     !(ppis_reactome_filtered_annotated$`Taxid interactor A` == "-" &
+#         ppis_reactome_filtered_annotated$`Taxid interactor B` == "-"),
+#   ]
+#
+#   #rename columns Entrez
+#   colnames(ppis_reactome_filtered_annotated)[colnames(ppis_reactome_filtered_annotated) == "Interactor 1 Entrez Gene id"] <- "Entrez_A"
+#   colnames(ppis_reactome_filtered_annotated)[colnames(ppis_reactome_filtered_annotated) == "Interactor 2 Entrez Gene id"] <- "Entrez_B"
+#
+#   #rename columns Ensembl
+#   colnames(ppis_reactome_filtered_annotated)[colnames(ppis_reactome_filtered_annotated) == "Interactor 1 Ensembl gene id"] <- "Ensembl_A"
+#   colnames(ppis_reactome_filtered_annotated)[colnames(ppis_reactome_filtered_annotated) == "Interactor 2 Ensembl gene id"] <- "Ensembl_B"
+#
+#   #extract UniProt_id
+#   ppis_reactome_filtered_annotated$Uniprot_A <- str_extract(ppis_reactome_filtered_annotated$Uniprot_A, "uniprotkb:([A-Z0-9]+)")
+#   ppis_reactome_filtered_annotated$Uniprot_A <- gsub("uniprotkb:", "", ppis_reactome_filtered_annotated$Uniprot_A)
+#
+#   ppis_reactome_filtered_annotated$Uniprot_B <- str_extract(ppis_reactome_filtered_annotated$Uniprot_B, "uniprotkb:([A-Z0-9]+)")
+#   ppis_reactome_filtered_annotated$Uniprot_B <- gsub("uniprotkb:", "", ppis_reactome_filtered_annotated$Uniprot_B)
+#
+#
+#   return(ppis_reactome_filtered_annotated)
+# }
+#
+# if (!add_annotation) {
+#   return(ppis_reactome_filtered)
+# }
+# }
