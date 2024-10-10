@@ -7,7 +7,7 @@
 #' @param species  default value = "taxid:9606(Homo sapiens)" - from which species does the data come from
 #' @param version version of the data files in reactome
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param add_annotation expanding the dataframe with six columns (GeneSymbol,Entrez_ID and Ensembl_ID)
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_reactome
@@ -44,10 +44,9 @@ get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
 
   rname <- paste0(
     "reactome_v_",
-    version,
-    "_",
-    species
+    version
     )
+  #UPDATEVERSION
 
   if (cache) {
     # tries to fetch from the cache
@@ -181,7 +180,6 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #'
 #'
 #' @examples
-#'
 #' # annotation_reactome(ppi_reactome, species = "taxid:9606(Homo sapiens)", version = "current")
 
 annotation_reactome <- function(ppi_reactome,
