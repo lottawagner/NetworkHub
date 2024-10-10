@@ -37,6 +37,7 @@ Imports:
   org.Rn.eg.db,
   org.Sc.sgd.db,
   org.Ss.eg.db,
+  org.Xl.eg.db,
   stringr
 Suggests: 
   knitr,
