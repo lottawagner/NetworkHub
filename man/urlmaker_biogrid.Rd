@@ -4,7 +4,7 @@
 \alias{urlmaker_biogrid}
 \title{urlmaker_biogrid()}
 \usage{
-urlmaker_biogrid(version = "4.4.236")
+urlmaker_biogrid(version = "4.4.238")
 }
 \arguments{
 \item{version}{version of the data files in BioGRID}

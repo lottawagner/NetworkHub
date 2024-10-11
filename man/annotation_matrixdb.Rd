@@ -23,6 +23,7 @@ annotation_matrixdb ()
 }
 \examples{
 #\donttest{
-#annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
+#annotation_matrixdb <- annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
+#annotation_matrixdb
 #}
 }

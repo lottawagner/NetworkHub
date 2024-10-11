@@ -23,7 +23,8 @@ annotation_hint ()
 }
 \examples{
 #\donttest{
-# annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
+# annotation_hint <- annotation_hint(ppi_hint, species = "HomoSapiens", version = "2024-06", type = "binary")
+# annotation_hint
 #}
 
 }

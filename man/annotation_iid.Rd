@@ -21,8 +21,9 @@ annotation_iid ()
 }
 \examples{
 #\donttest{
-# annotation_iid(ppi_iid,
+# annotation_iid<- annotation_iid(ppi_iid,
 #               species = "human",
 #               version = "2021-05")
+#annotation_iid
 #}
 }

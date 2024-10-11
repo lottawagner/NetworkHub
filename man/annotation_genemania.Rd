@@ -21,6 +21,7 @@ annotation_genemania ()
 }
 \examples{
 #\donttest{
-# annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+# annotation_genemania <- annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+#annotation_genemania
 #}
 }

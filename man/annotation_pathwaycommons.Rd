@@ -21,6 +21,7 @@ annotation_pathwaycommons ()
 }
 \examples{
 #\donttest{
-#annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
+#annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
+#annotation_pathwaycommons
 #}
 }

@@ -21,6 +21,7 @@ annotation_irefindex ()
 }
 \examples{
 #\donttest{
-# annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
+# annotation_irefindex <- annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
+# annotation_irefindex
 #}
 }

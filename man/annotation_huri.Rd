@@ -25,6 +25,7 @@ annotation_huri ()
 }
 \examples{
 # \donttest{
-# annotation_huri(ppi_huri, species = "human", type = "HI-union")
+# annotation_huri <- annotation_huri(ppi_huri, species = "human", type = "HI-union")
+# annotation_huri
 #}
 }

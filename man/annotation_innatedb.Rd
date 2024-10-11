@@ -21,6 +21,7 @@ annotation_innatedb ()
 }
 \examples{
 #\donttest{
-#annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
+#annotation_innatedb <- annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
+#annotation_innatedb
 #}
 }
