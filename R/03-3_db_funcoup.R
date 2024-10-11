@@ -191,9 +191,12 @@ funcoup_db_annotations <- data.frame(
 #' @export
 #'
 #' @examples
-#' # annotation_funcoup(ppi_funcoup,
+#' #\donttest{
+#' # annotation_funcoup <- annotation_funcoup(ppi_funcoup,
 #' #                    species = "H.sapiens",
 #' #                    version = "5.0")
+#' #annotation_funcoup
+#' #}
 
 
 annotation_funcoup <- function(ppi_funcoup,

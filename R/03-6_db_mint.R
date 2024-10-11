@@ -5,7 +5,7 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in mint
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation defult value set to TRUE (MINT annotation dataframe contains Uniprot, GeneSymbol and Ensembl)
+#' @param add_annotation default value set to TRUE (MINT annotation dataframe contains Uniprot, GeneSymbol and Ensembl)
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_mint

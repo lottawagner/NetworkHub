@@ -136,7 +136,8 @@ huri_db_annotations <- data.frame(species = list_species_huri,
 #'
 #' @examples
 #' # \donttest{
-#' # annotation_huri(ppi_huri, species = "human", type = "HI-union")
+#' # annotation_huri <- annotation_huri(ppi_huri, species = "human", type = "HI-union")
+#' # annotation_huri
 #' #}
 
 annotation_huri <- function(ppi_huri,
