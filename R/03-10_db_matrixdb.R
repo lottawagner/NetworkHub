@@ -143,7 +143,8 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #'
 #' @examples
 #' #\donttest{
-#' #annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
+#' #annotation_matrixdb <- annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
+#' #annotation_matrixdb
 #' #}
 
 annotation_matrixdb <- function(ppi_matrixdb,
