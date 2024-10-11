@@ -854,7 +854,7 @@ urlmaker_intact <- function(version = "current") { # default value for version, 
     stop("make sure that you use the current version of the intact.txt file, as there is only one url")
 
   # create url depending on version
-  url <- sprintf("https://ftp.ebi.ac.uk/pub/databases/intact/%s/psimitab/intact.txt",
+  url <- sprintf("https://ftp.ebi.ac.uk/pub/databases/intact/%s/psimitab/intact.zip",
                  version)
 
   #return the url
