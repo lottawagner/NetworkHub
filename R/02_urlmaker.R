@@ -785,13 +785,13 @@ urlmaker_innatedb <- function(url = url,
 #' url_biogrid <- urlmaker_biogrid()
 #' url_biogrid
 
-urlmaker_biogrid <- function(version = "4.4.236") { # default value = "4.4.236" (August 2024) #SPECIESDEFINITION
+urlmaker_biogrid <- function(version = "4.4.238") { # default value = "4.4.238" (October 2024) #SPECIESDEFINITION
 
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
   #create the url to download a zip file for ALL species depending on the version
-  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ORGANISM-%s.tab3.zip",
+  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ALL-%s.tab3.zip",
                  version,
                  version)
 
