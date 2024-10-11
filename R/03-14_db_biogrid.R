@@ -15,7 +15,7 @@
 #' @examples
 #' \donttest{
 #' db_biogrid_df <- get_networkdata_biogrid(species = "9606",
-#'                                            version = "5.4"
+#'                                            version = "4.4.238"
 #'                                            )
 #' db_biogrid_df
 #' }
