@@ -245,6 +245,12 @@ annotation_iid <- function(ppi_iid,
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
 
+
+
+
+
+
+
 # build_graph_iid() -----
 
 #' build_graph_iid()
@@ -266,7 +272,7 @@ annotation_iid <- function(ppi_iid,
 #'
 #' db_iid_graph <- build_graph_iid(graph_data = db_iid_df,
 #'                                 output_format = "igraph")
-#' db_iid_graph #list of 19552
+#' db_iid_graph #list of
 #' }
 #'
 #'

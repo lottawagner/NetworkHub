@@ -23,7 +23,7 @@ db_iid_df <- get_networkdata_iid(species = "human",
 
 db_iid_graph <- build_graph_iid(graph_data = db_iid_df,
                                 output_format = "igraph")
-db_iid_graph #list of 19552
+db_iid_graph #list of
 }
 
 
