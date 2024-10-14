@@ -2,7 +2,7 @@
 % Please edit documentation in R/03-2_db_hint.R
 \name{build_graph_hint}
 \alias{build_graph_hint}
-\title{Title}
+\title{build_graph_hint()}
 \usage{
 build_graph_hint(
   graph_data,
@@ -18,7 +18,7 @@ build_graph_hint(
 \item{min_score_treshold}{select ppis that are "confident" depending on the scoretype/value}
 }
 \description{
-Title
+build_graph_hint()
 }
 \examples{
 \dontrun{
@@ -31,7 +31,7 @@ db_hint_df <- get_networkdata_hint(
 db_hint_graph <- build_graph_hint(graph_data = db_hint_df,
                                  output_format = "igraph",
                                  min_score_treshold = TRUE)
-db_hint_graph
+db_hint_graph #list of 15446
 }
 
 
