@@ -265,7 +265,7 @@ annotation_hint <- function(ppi_hint,
 #'                                  min_score_treshold = TRUE)
 #' db_hint_graph
 #' }
-#' db_hint_graph_plot <- ggplot(db_hint_graph)
+#'
 #'
 
 

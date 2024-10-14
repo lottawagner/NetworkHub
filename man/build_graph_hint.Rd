@@ -33,6 +33,6 @@ db_hint_graph <- build_graph_hint(graph_data = db_hint_df,
                                  min_score_treshold = TRUE)
 db_hint_graph
 }
-db_hint_graph_plot <- ggplot(db_hint_graph)
+
 
 }
