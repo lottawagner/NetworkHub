@@ -126,9 +126,9 @@ fetch_NetworkHub <- function(rname, # resourcename
     message("Using cached version from ", nh_query$create_time) # tells you from which date this version is
     res_nh <- BiocFileCache::bfcrpath(bfc_nh, rname) # rpath of updated entry is saved in variable res_nh
   }
-if (is.null(res_nh)) {
-  message("No record found in NetworkHub!") # if res_nh is NULL (no file in cache) -> tells you nothing found
-}
+  if (is.null(res_nh)) {
+    message("No record found in NetworkHub!") # if res_nh is NULL (no file in cache) -> tells you nothing found
+  }
   return(res_nh) # returns rpath to res_nh or NULL if no entry
 }
 
