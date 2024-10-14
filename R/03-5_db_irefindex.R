@@ -205,12 +205,21 @@ annotation_irefindex <- function(ppi_irefindex,
 
   anno_df <- data.frame(
     uniprot_id = all_prot_ids,
+    genesymbol = mapIds(
+      get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"),
     ensembl_id = mapIds(
       get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
     entrez_id = mapIds(
       get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
     row.names = all_prot_ids
   )
+
+  #adding GeneSymbol
+  ppis_irefindex_annotated$GeneSymbol_A <-
+    anno_df$genesymbol[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
+  ppis_irefindex_annotated$GeneSymbol_B <-
+    anno_df$genesymbol[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+
 
   #adding Ensembl
   ppis_irefindex_annotated$Ensembl_A <-
@@ -228,5 +237,64 @@ annotation_irefindex <- function(ppi_irefindex,
 
 
 }
+
+
+
+# build_graph_irefindex() -----
+
+#' build_graph_irefindex()
+#'
+#' @param graph_data ppi data from irefindex
+#' @param output_format selection of different graph functions that can be used
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
+#'                                              version = "08-28-2023")
+#'
+#' db_irefindex_graph <- build_graph_irefindex(graph_data = db_irefindex_df,
+#'                                             output_format = "igraph")
+#'
+#' db_irefindex_graph #list of 17125
+#' }
+#'
+#'
+
+
+build_graph_irefindex <- function (graph_data,
+                                   output_format = "igraph" ){
+
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+
+  edges <- data.frame(from = graph_data$GeneSymbol_A,
+                      to = graph_data$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data$GeneSymbol_A,
+                                    graph_data$GeneSymbol_B)),
+                      label = unique(c(graph_data$GeneSymbol_A,
+                                       graph_data$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
+
 
 
