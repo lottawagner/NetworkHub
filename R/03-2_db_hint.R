@@ -241,7 +241,7 @@ annotation_hint <- function(ppi_hint,
 
 # build_graph_hint() -----
 
-#' Title
+#' build_graph_hint()
 #'
 #' @param graph_data ppi data from HINT
 #' @param output_format selection of different graph functions that can be used
