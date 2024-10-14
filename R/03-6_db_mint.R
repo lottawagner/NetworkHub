@@ -120,6 +120,10 @@ get_networkdata_mint <- function(species,
       return(ensembl_entry)
     })
 
+    #Confidence score
+    ppi_mint_df_annotated$`Confidence score` <- str_extract(ppi_mint_df_annotated$`Confidence score`, "intact-miscore:([0-9\\.]+)")
+    ppi_mint_df_annotated$`Confidence score`<- gsub("intact-miscore:", "", ppi_mint_df_annotated$`Confidence score`)
+
     #Entrez - MINT doesn't provide info about entrez number
 
     return(ppi_mint_df_annotated)
@@ -145,5 +149,81 @@ list_species_mint <- c ("Homo Sapiens",
 
 
 
+
+
+
+
+# build_graph_mint() -----
+
+#' build_graph_mint()
+#'
+#' @param graph_data ppi data from mint
+#' @param output_format selection of different graph functions that can be used
+#' @param min_score_treshold select ppis that are "confident" depending on the scoretype/value
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_mint_df <- get_networkdata_mint(
+#'   species = "Homo Sapiens",
+#'   version = "current"
+#' )
+#'
+#' db_mint_graph <- build_graph_mint(graph_data = db_mint_df,
+#'                                         output_format = "igraph",
+#'                                         min_score_threshold = "0.35")
+#' db_mint_graph #list of 12010
+#' }
+#'
+#'
+
+
+build_graph_mint <- function (graph_data,
+                                 output_format = "igraph",
+                                 min_score_threshold = NULL ){
+
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  graph_data$`Confidence score` <- as.numeric(graph_data$`Confidence score`)
+
+  # Erstelle das Histogramm mit 50 bins (breaks)
+  hist(graph_data$`Confidence score`, breaks = 50)
+
+  #select ppi data >= minimal score
+  if (!is.null(min_score_threshold)){
+    graph_data_processed <- graph_data[graph_data$`Confidence score` >= min_score_threshold, ]
+  } else {
+    graph_data_processed <- graph_data
+  }
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+  dim(graph_data_processed)
+
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
 
 
