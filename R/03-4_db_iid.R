@@ -245,8 +245,60 @@ annotation_iid <- function(ppi_iid,
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
 
+# build_graph_iid() -----
+
+#' build_graph_iid()
+#'
+#' @param graph_data ppi data from iid
+#' @param output_format selection of different graph functions that can be used
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_iid_df <- get_networkdata_iid(species = "human",
+#'                                  version = "2021-05"
+#'                                  )
+#'
+#' db_iid_graph <- build_graph_iid(graph_data = db_iid_df,
+#'                                 output_format = "igraph")
+#' db_iid_graph #list of 19552
+#' }
+#'
+#'
 
 
+build_graph_iid <- function (graph_data,
+                             output_format = "igraph"){
 
+  #check on the columns in your ppi data file
+  colnames(graph_data)
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+
+  edges <- data.frame(from = graph_data$GeneSymbol_A,
+                      to = graph_data$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data$GeneSymbol_A,
+                                    graph_data$GeneSymbol_B)),
+                      label = unique(c(graph_data$GeneSymbol_A,
+                                       graph_data$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
 
 
