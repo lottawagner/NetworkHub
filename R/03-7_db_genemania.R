@@ -218,8 +218,78 @@ annotation_genemania <- function(ppi_genemania,
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
 
+# build_graph_genemania() -----
+
+#' build_graph_genemania()
+#'
+#' @param graph_data ppi data from genemania
+#' @param output_format selection of different graph functions that can be used
+#' @param min_score_treshold select ppis that are "confident" depending on the scoretype/value
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_genemania_df <- get_networkdata_genemania(
+#'   species = "Homo_sapiens",
+#'   version = "current"
+#' )
+#'
+#' db_genemania_graph <- build_graph_genemania(graph_data = db_genemania_df,
+#'                                         output_format = "igraph",
+#'                                         min_score_threshold = "0.00005")
+#' db_genemania_graph #list of 18644
+#' }
+#'
+#'
 
 
+build_graph_genemania <- function (graph_data,
+                              output_format = "igraph",
+                              min_score_threshold = NULL ){
 
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  graph_data$Weight <- as.numeric(graph_data$Weight)
+
+  # Erstelle das Histogramm mit 50 bins (breaks)
+
+  hist(graph_data$Weight, breaks = 5000, xlim = c(0, 0.0003))
+
+  #select ppi data >= minimal score
+  if (!is.null(min_score_threshold)){
+    graph_data_processed <- graph_data[graph_data$Weight >= min_score_threshold, ]
+  } else {
+    graph_data_processed <- graph_data
+  }
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+  dim(graph_data_processed)
+
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
 
 
