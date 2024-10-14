@@ -20,7 +20,7 @@ ppis_funcoup_annotated
 annotation_funcoup ()
 }
 \examples{
-#\donttest{
+#\dontrun{
 # annotation_funcoup <- annotation_funcoup(ppi_funcoup,
 #                    species = "H.sapiens",
 #                    version = "5.0")

@@ -20,7 +20,7 @@ ppis_intact_annotated
 annotation_intact ()
 }
 \examples{
-#\donttest{
+#\dontrun{
 #annotation_intact <- annotation_intact(ppi_intact, species = "taxid:9606(Homo sapiens)", version = "current")
 #annotation_intact
 #}

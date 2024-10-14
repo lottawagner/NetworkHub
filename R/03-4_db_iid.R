@@ -15,7 +15,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_iid_df <- get_networkdata_iid(
 #'   species = "human",
 #'   version = "2021-05"
@@ -186,7 +186,7 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #'
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' # annotation_iid<- annotation_iid(ppi_iid,
 #' #               species = "human",
 #' #               version = "2021-05")

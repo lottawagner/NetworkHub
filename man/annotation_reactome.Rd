@@ -20,7 +20,7 @@ ppis_reactome_annotated
 annotation_reactome ()
 }
 \examples{
-#\donttest{
+#\dontrun{
 #annotation_reactome <- annotation_reactome(ppi_reactome, species = "taxid:9606(Homo sapiens)", version = "current")
 #annotation_reactome
 #}

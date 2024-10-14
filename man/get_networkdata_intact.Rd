@@ -30,7 +30,7 @@ ppis_intact
 get_networkdata_intact()
 }
 \examples{
-\donttest{
+\dontrun{
 db_intact_df <- get_networkdata_intact(species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
                                            version =  "current"
                                            )

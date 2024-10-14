@@ -22,7 +22,7 @@ ppis_matrixdb_annotated
 annotation_matrixdb ()
 }
 \examples{
-#\donttest{
+#\dontrun{
 #annotation_matrixdb <- annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
 #annotation_matrixdb
 #}

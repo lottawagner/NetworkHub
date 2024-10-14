@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_matrixdb_df <- get_networkdata_matrixdb(
 #'   species = "human",
 #'   type = "CORE"
@@ -142,7 +142,7 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #'
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #annotation_matrixdb <- annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
 #' #annotation_matrixdb
 #' #}

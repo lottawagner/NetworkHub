@@ -30,7 +30,7 @@ ppis_pathwaycommons
 get_networkdata_pathwaycommons()
 }
 \examples{
-\donttest{
+\dontrun{
 db_pathwaycommons_df <- get_networkdata_pathwaycommons(
   species = "human",
   version = "v12"

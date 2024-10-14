@@ -30,7 +30,7 @@ ppis_mint
 get_networkdata_mint()
 }
 \examples{
-\donttest{
+\dontrun{
 db_mint_df <- get_networkdata_mint(
   species = "Homo Sapiens",
   version = "current"

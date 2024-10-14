@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_mint_df <- get_networkdata_mint(
 #'   species = "Homo Sapiens",
 #'   version = "current"

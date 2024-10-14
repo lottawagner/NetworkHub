@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_intact_df <- get_networkdata_intact(species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
 #'                                            version =  "current"
 #'                                            )
@@ -177,7 +177,7 @@ intact_db_annotations <- data.frame(species = list_common_species_intact,
 #'
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #annotation_intact <- annotation_intact(ppi_intact, species = "taxid:9606(Homo sapiens)", version = "current")
 #' #annotation_intact
 #' #}

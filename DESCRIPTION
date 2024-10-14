@@ -25,6 +25,7 @@ Imports:
   vroom,
   AnnotationDbi,
   stats,
+  igraph,
   org.At.tair.db,
   org.Bt.eg.db,
   org.Ce.eg.db,

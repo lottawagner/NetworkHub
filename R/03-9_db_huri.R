@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_huri_df <- get_networkdata_huri(
 #'   species = "human",
 #'   type = "HI-union"
@@ -135,7 +135,7 @@ huri_db_annotations <- data.frame(species = list_species_huri,
 #'
 #'
 #' @examples
-#' # \donttest{
+#' # \dontrun{
 #' # annotation_huri <- annotation_huri(ppi_huri, species = "human", type = "HI-union")
 #' # annotation_huri
 #' #}

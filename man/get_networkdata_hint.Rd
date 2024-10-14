@@ -33,7 +33,7 @@ ppis_hint
 get_networkdata_hint()
 }
 \examples{
-\donttest{
+\dontrun{
 db_hint_df <- get_networkdata_hint(
   species = "HomoSapiens",
   version = "2024-06",

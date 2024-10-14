@@ -30,7 +30,7 @@ ppis_innatedb
 get_networkdata_innatedb()
 }
 \examples{
-\donttest{
+\dontrun{
 db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human)",
                                            version = "5.4"
                                            )

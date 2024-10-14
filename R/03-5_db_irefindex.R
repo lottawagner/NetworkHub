@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_irefindex_df <- get_networkdata_irefindex(
 #'   species = "Homo sapiens",
 #'   version = "08-28-2023")
@@ -184,7 +184,7 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' # annotation_irefindex <- annotation_irefindex(ppi_irefindex, species = "Homo sapiens", version = "08-28-2023")
 #' # annotation_irefindex
 #' #}

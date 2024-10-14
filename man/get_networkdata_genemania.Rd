@@ -30,7 +30,7 @@ ppis_genemania
 get_networkdata_genemania()
 }
 \examples{
-\donttest{
+\dontrun{
 db_genemania_df <- get_networkdata_genemania(
   species = "Homo_sapiens",
   version = "current"

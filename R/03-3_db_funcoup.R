@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
 #' db_funcoup_df
 #' }
@@ -191,7 +191,7 @@ funcoup_db_annotations <- data.frame(
 #' @export
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' # annotation_funcoup <- annotation_funcoup(ppi_funcoup,
 #' #                    species = "H.sapiens",
 #' #                    version = "5.0")

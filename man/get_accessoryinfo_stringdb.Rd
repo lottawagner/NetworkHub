@@ -20,7 +20,7 @@ proteininfo_stringdb variable assigned to the datafile that contains info about 
 Get accessory info from STRINGDB
 }
 \examples{
-#\donttest{
+#\dontrun{
 #human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
 #                                       version = "12.0")
 #}

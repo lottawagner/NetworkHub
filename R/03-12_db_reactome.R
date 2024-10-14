@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_reactome_df <- get_networkdata_reactome(species = "taxid:9606(Homo sapiens)",
 #'                                            version = "current"
 #'                                            )
@@ -181,7 +181,7 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #'
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #annotation_reactome <- annotation_reactome(ppi_reactome, species = "taxid:9606(Homo sapiens)", version = "current")
 #' #annotation_reactome
 #' #}

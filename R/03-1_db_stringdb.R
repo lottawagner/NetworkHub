@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #info_species_stringdb()
 #' #}
 info_species_stringdb <- function(version = "12.0"){
@@ -43,7 +43,7 @@ info_species_stringdb <- function(version = "12.0"){
 #' @export
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
 #' #                                       version = "12.0")
 #' #}
@@ -111,7 +111,7 @@ get_accessoryinfo_stringdb <- function(species,
 #' @export
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #create_annotation_from_stringdbaccessory(accessory_info)
 #' #}
 
@@ -162,7 +162,7 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
 #'                                          version = "12.0"
 #'                                         )

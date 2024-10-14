@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_pathwaycommons_df <- get_networkdata_pathwaycommons(
 #'   species = "human",
 #'   version = "v12"
@@ -128,7 +128,7 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 #' @export
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
 #' #annotation_pathwaycommons
 #' #}

@@ -20,7 +20,7 @@ ppis_iid_annotated
 annotation_iid ()
 }
 \examples{
-#\donttest{
+#\dontrun{
 # annotation_iid<- annotation_iid(ppi_iid,
 #               species = "human",
 #               version = "2021-05")

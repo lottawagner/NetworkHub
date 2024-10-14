@@ -30,7 +30,7 @@ ppis_reactome
 get_networkdata_reactome()
 }
 \examples{
-\donttest{
+\dontrun{
 db_reactome_df <- get_networkdata_reactome(species = "taxid:9606(Homo sapiens)",
                                            version = "current"
                                            )

@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_genemania_df <- get_networkdata_genemania(
 #'   species = "Homo_sapiens",
 #'   version = "current"
@@ -152,7 +152,7 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #' @export
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' # annotation_genemania <- annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
 #' #annotation_genemania
 #' #}

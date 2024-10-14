@@ -16,7 +16,7 @@ df_species returns the file containing info about the species annotation
 info_species_stringdb()
 }
 \examples{
-#\donttest{
+#\dontrun{
 #info_species_stringdb()
 #}
 }

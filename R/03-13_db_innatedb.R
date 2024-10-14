@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human)",
 #'                                            version = "5.4"
 #'                                            )
@@ -152,7 +152,7 @@ innatedb_db_annotations <- data.frame(species = list_species_innatedb,
 #'
 #'
 #' @examples
-#' #\donttest{
+#' #\dontrun{
 #' #annotation_innatedb <- annotation_innatedb(ppi_innatedb, species = "taxid:9606(Homo sapiens)", version = "current")
 #' #annotation_innatedb
 #' #}

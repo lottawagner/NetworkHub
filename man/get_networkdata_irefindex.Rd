@@ -30,7 +30,7 @@ ppi_irefindex
 get_networkdata_irefindex()
 }
 \examples{
-\donttest{
+\dontrun{
 db_irefindex_df <- get_networkdata_irefindex(
   species = "Homo sapiens",
   version = "08-28-2023")

@@ -20,7 +20,7 @@ ppis_pathwaycommons_annotated
 annotation_pathwaycommons ()
 }
 \examples{
-#\donttest{
+#\dontrun{
 #annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons, species = "human", version = "v12")
 #annotation_pathwaycommons
 #}

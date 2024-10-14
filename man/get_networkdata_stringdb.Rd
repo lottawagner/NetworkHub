@@ -33,7 +33,7 @@ ppis_stringdb
 get_networkdata_stringdb()
 }
 \examples{
-\donttest{
+\dontrun{
 db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
                                          version = "12.0"
                                         )

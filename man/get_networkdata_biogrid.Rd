@@ -27,7 +27,7 @@ ppis_biogrid
 get_networkdata_biogrid()
 }
 \examples{
-\donttest{
+\dontrun{
 db_biogrid_df <- get_networkdata_biogrid(species = "9606",
                                            version = "4.4.238"
                                            )

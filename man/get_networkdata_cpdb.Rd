@@ -20,7 +20,7 @@ ppis_cpdb
 get_networkdata_cpdb()
 }
 \examples{
-\donttest{
+\dontrun{
 db_cpdb_df <- get_networkdata_cpdb(
   species = "human"
 )

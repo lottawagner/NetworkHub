@@ -16,7 +16,7 @@ accessory_info_df dataframe that assignes each protein_id to ensemble or gene_sy
 create_annotation_from_stringdbaccessory()
 }
 \examples{
-#\donttest{
+#\dontrun{
 #create_annotation_from_stringdbaccessory(accessory_info)
 #}
 }
