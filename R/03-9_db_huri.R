@@ -208,3 +208,67 @@ annotation_huri <- function(ppi_huri,
 
 
 #
+
+
+# build_graph_huri() -----
+
+#' build_graph_huri()
+#'
+#' @param graph_data ppi data from huri
+#' @param output_format selection of different graph functions that can be used
+#' @param min_score_treshold select ppis that are "confident" depending on the scoretype/value
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_huri_df <- get_networkdata_huri(
+#'   species = "human",
+#'   type = "HI-union"
+#' )
+#'
+#' db_huri_graph <- build_graph_huri(graph_data = db_huri_df,
+#'                                         output_format = "igraph")
+#' db_huri_graph #list of 9024
+#' }
+#'
+#'
+
+
+build_graph_huri <- function (graph_data,
+                              output_format = "igraph"){
+
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  graph_data_processed <- graph_data
+
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+  dim(graph_data_processed)
+
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+}
+
+
