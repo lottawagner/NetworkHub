@@ -245,7 +245,7 @@ annotation_innatedb <- function(ppi_innatedb,
 #' db_innatedb_graph <- build_graph_innatedb(graph_data = db_innatedb_df,
 #'                                           output_format = "igraph",
 #'                                           min_score_threshold = "20" )
-#' db_innatedb_graph #list of 690 (score = 10) 1835(20)
+#' db_innatedb_graph #list of 690 (score = 10) 1835 (score = 20)
 #' }
 #'
 #'
