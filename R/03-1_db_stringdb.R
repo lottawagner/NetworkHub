@@ -292,7 +292,7 @@ get_networkdata_stringdb <- function(species,
 #'   score_threshold <- 200
 #'
 #'
-#'   # if there is a min_score_treshold #filter and only store edges that have a higher/same value as the threshold
+#'   # if there is a min_score_threshold #filter and only store edges that have a higher/same value as the threshold
 #'   if (!is.null(min_score_threshold)){
 #'     graph_data_processed <- graph_data[graph_data$combined_score >= min_score_threshold, ]
 #'

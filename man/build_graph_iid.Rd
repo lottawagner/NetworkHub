@@ -4,12 +4,18 @@
 \alias{build_graph_iid}
 \title{build_graph_iid()}
 \usage{
-build_graph_iid(graph_data, output_format = "igraph")
+build_graph_iid(
+  graph_data,
+  output_format = "igraph",
+  min_score_threshold = NULL
+)
 }
 \arguments{
 \item{graph_data}{ppi data from iid}
 
 \item{output_format}{selection of different graph functions that can be used}
+
+\item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
 \description{
 build_graph_iid()
@@ -23,7 +29,7 @@ db_iid_df <- get_networkdata_iid(species = "human",
 
 db_iid_graph <- build_graph_iid(graph_data = db_iid_df,
                                 output_format = "igraph")
-db_iid_graph #list of
+db_iid_graph #list of 19552
 }
 
 

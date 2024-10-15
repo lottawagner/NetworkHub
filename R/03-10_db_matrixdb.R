@@ -205,7 +205,7 @@ annotation_matrixdb <- function(ppi_matrixdb,
 #'
 #' @param graph_data ppi data from matrixdb
 #' @param output_format selection of different graph functions that can be used
-#' @param min_score_treshold select ppis that are "confident" depending on the scoretype/value
+#' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
 #' @import igraph
 #'
@@ -229,7 +229,8 @@ annotation_matrixdb <- function(ppi_matrixdb,
 
 
 build_graph_matrixdb <- function (graph_data,
-                                   output_format = "igraph"){
+                                  output_format = "igraph",
+                                  min_score_threshold = NULL){
 
   #check on the clumns in your ppi data file
   colnames(graph_data)

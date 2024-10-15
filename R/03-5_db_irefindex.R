@@ -250,7 +250,7 @@ annotation_irefindex <- function(ppi_irefindex,
 #'
 #' @param graph_data ppi data from irefindex
 #' @param output_format selection of different graph functions that can be used
-#' @param min_score_treshold select ppis that are "confident": lpr score (lowest PMID re-use)
+#' @param min_score_threshold select ppis that are "confident": lpr score (lowest PMID re-use)
 
 #' @import igraph
 #'

@@ -15,7 +15,7 @@ build_graph_irefindex(
 
 \item{output_format}{selection of different graph functions that can be used}
 
-\item{min_score_treshold}{select ppis that are "confident": lpr score (lowest PMID re-use)}
+\item{min_score_threshold}{select ppis that are "confident": lpr score (lowest PMID re-use)}
 }
 \description{
 build_graph_irefindex()

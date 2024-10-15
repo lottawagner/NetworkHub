@@ -4,12 +4,18 @@
 \alias{build_graph_biogrid}
 \title{build_graph_biogrid()}
 \usage{
-build_graph_biogrid(graph_data, output_format = "igraph")
+build_graph_biogrid(
+  graph_data,
+  output_format = "igraph",
+  min_score_threshold = NULL
+)
 }
 \arguments{
 \item{graph_data}{ppi data from biogrid}
 
 \item{output_format}{selection of different graph functions that can be used}
+
+\item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
 \description{
 build_graph_biogrid()

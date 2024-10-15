@@ -258,7 +258,7 @@ annotation_reactome <- function(ppi_reactome,
 #'
 #' @param graph_data ppi data from reactome
 #' @param output_format selection of different graph functions that can be used
-#' @param min_score_treshold select ppis that are "confident" depending on the scoretype/value
+#' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
 #' @import igraph
 #'

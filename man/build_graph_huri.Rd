@@ -4,14 +4,18 @@
 \alias{build_graph_huri}
 \title{build_graph_huri()}
 \usage{
-build_graph_huri(graph_data, output_format = "igraph")
+build_graph_huri(
+  graph_data,
+  output_format = "igraph",
+  min_score_threshold = NULL
+)
 }
 \arguments{
 \item{graph_data}{ppi data from huri}
 
 \item{output_format}{selection of different graph functions that can be used}
 
-\item{min_score_treshold}{select ppis that are "confident" depending on the scoretype/value}
+\item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
 \description{
 build_graph_huri()

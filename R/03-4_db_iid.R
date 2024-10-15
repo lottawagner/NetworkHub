@@ -257,6 +257,7 @@ annotation_iid <- function(ppi_iid,
 #'
 #' @param graph_data ppi data from iid
 #' @param output_format selection of different graph functions that can be used
+#' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
 #' @import igraph
 #'
@@ -272,14 +273,15 @@ annotation_iid <- function(ppi_iid,
 #'
 #' db_iid_graph <- build_graph_iid(graph_data = db_iid_df,
 #'                                 output_format = "igraph")
-#' db_iid_graph #list of
+#' db_iid_graph #list of 19552
 #' }
 #'
 #'
 
 
 build_graph_iid <- function (graph_data,
-                             output_format = "igraph"){
+                             output_format = "igraph",
+                             min_score_threshold = NULL){
 
   #check on the columns in your ppi data file
   colnames(graph_data)

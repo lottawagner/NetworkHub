@@ -100,6 +100,7 @@ get_networkdata_biogrid <- function(species = "9606",
 #'
 #' @param graph_data ppi data from biogrid
 #' @param output_format selection of different graph functions that can be used
+#' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
 #' @import igraph
 #'
@@ -122,7 +123,8 @@ get_networkdata_biogrid <- function(species = "9606",
 
 
 build_graph_biogrid <- function (graph_data,
-                                  output_format = "igraph"){
+                                 output_format = "igraph",
+                                 min_score_threshold = NULL){
 
   #check on the clumns in your ppi data file
   colnames(graph_data)

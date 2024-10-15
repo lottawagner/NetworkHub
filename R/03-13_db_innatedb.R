@@ -228,7 +228,7 @@ annotation_innatedb <- function(ppi_innatedb,
 #'
 #' @param graph_data ppi data from innatedb
 #' @param output_format selection of different graph functions that can be used
-#' @param min_score_treshold select ppis that are "confident": lpr score (lowest PMID re-use)
+#' @param min_score_threshold select ppis that are "confident": lpr score (lowest PMID re-use)
 #'
 #' @import igraph
 #'

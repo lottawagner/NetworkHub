@@ -7,7 +7,7 @@
 build_graph_hint(
   graph_data,
   output_format = "igraph",
-  min_score_treshold = TRUE
+  min_score_threshold = NULL
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ build_graph_hint(
 
 \item{output_format}{selection of different graph functions that can be used}
 
-\item{min_score_treshold}{select ppis that are "confident" depending on the scoretype/value}
+\item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
 \description{
 build_graph_hint()
@@ -30,7 +30,7 @@ db_hint_df <- get_networkdata_hint(
 
 db_hint_graph <- build_graph_hint(graph_data = db_hint_df,
                                  output_format = "igraph",
-                                 min_score_treshold = TRUE)
+                                 min_score_threshold = NULL)
 db_hint_graph #list of 15446
 }
 
