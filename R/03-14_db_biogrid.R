@@ -94,4 +94,70 @@ get_networkdata_biogrid <- function(species = "9606",
 
 }
 
+# build_graph_biogrid() -----
+
+#' build_graph_biogrid()
+#'
+#' @param graph_data ppi data from biogrid
+#' @param output_format selection of different graph functions that can be used
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_biogrid_df <- get_networkdata_biogrid(species = "9606",
+#'                                            version = "4.4.238"
+#'                                            )
+#'
+#' db_biogrid_graph <- build_graph_biogrid(graph_data = db_biogrid_df,
+#'                                         output_format = "igraph")
+#' db_biogrid_graph #list of 20124
+#' }
+#'
+#'
+
+
+build_graph_biogrid <- function (graph_data,
+                                  output_format = "igraph"){
+
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  graph_data_processed <- graph_data
+
+  #check on dimension (amount of rows)
+
+  dim(graph_data_processed)
+
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
+
+
+
+
+
+
+
+
 
