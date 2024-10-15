@@ -433,8 +433,21 @@ urlmaker_irefindex <- function(species,
                                 "Rattus norvegicus",
                                 "Saccharomyces cerevisiae",
                                 "Drosophila melanogaster",
-                                "Caenorhabditis elegans"
-  )
+                                "Caenorhabditis elegans")
+
+  species_id_irefindex <- c(  "9606",
+                              "10090",
+                              "559292",
+                              "562",
+                              "10116",
+                              "4932",
+                              "7227",
+                              "6239")
+
+
+  irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefindex,
+                                         species_id = species_id_irefindex,
+                                         row.names = list_species_irefindex)
 
   # check that the value for species is listed in iRefIndex
   if (!species %in% list_species_irefindex) {
