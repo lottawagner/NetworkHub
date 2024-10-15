@@ -88,6 +88,9 @@ get_networkdata_intact <- function(species = "taxid:9606(human)|taxid:9606(Homo 
   ppis_intact_filtered$Uniprot_B <- str_extract(ppis_intact_filtered$Uniprot_B, "uniprotkb:([A-Z0-9]+)")
   ppis_intact_filtered$Uniprot_B <- gsub("uniprotkb:", "", ppis_intact_filtered$Uniprot_B)
 
+  #Confidence score
+  ppis_intact_filtered$`Confidence value(s)` <- str_extract(ppis_intact_filtered$`Confidence value(s)`, "intact-miscore:([0-9\\.]+)")
+  ppis_intact_filtered$`Confidence value(s)`<- gsub("intact-miscore:", "", ppis_intact_filtered$`Confidence value(s)`)
   if (add_annotation) {
 
     if (!(species %in% list_common_species_intact)) { # if species is not in the list
@@ -233,5 +236,81 @@ annotation_intact <- function(ppi_intact,
 
   return(ppis_intact_annotated)
 }
+
+
+
+
+# build_graph_intact() -----
+
+#' build_graph_intact()
+#'
+#' @param graph_data ppi data from intact
+#' @param output_format selection of different graph functions that can be used
+#' @param min_score_treshold select ppis that are "confident" depending on the scoretype/value
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_intact_df <- get_networkdata_intact(species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
+#'                                        version =  "current")
+#'
+#' db_intact_graph <- build_graph_intact(graph_data = db_intact_df,
+#'                                         output_format = "igraph",
+#'                                         min_score_threshold = "0.35")
+#' db_intact_graph #list of 17490
+#' }
+#'
+#'
+
+
+build_graph_intact <- function (graph_data,
+                              output_format = "igraph",
+                              min_score_threshold = NULL ){
+
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  graph_data$`Confidence value(s)` <- as.numeric(graph_data$`Confidence value(s)`)
+
+  # Erstelle das Histogramm mit 50 bins (breaks)
+  hist(graph_data$`Confidence value(s)`, breaks = 50)
+
+  #select ppi data >= minimal score
+  if (!is.null(min_score_threshold)){
+    graph_data_processed <- graph_data[graph_data$`Confidence value(s)` >= min_score_threshold, ]
+  } else {
+    graph_data_processed <- graph_data
+  }
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+  dim(graph_data_processed)
+
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
+
+
 
 
