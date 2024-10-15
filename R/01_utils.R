@@ -172,7 +172,7 @@ build_graph <- function(graph_data,
   function_name <- paste0("build_graph_", data_source)
 
   # Get the function by its name
-  build_function <- get(function_name, envir = .asNamespace("NetworkHub"))
+  build_function <- get(function_name, envir = environment())
 
   # Call the specific function using the arguments
   my_graph <- build_function(graph_data = graph_data,

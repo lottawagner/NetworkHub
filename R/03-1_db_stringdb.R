@@ -1,33 +1,33 @@
 
-## info_species_stringdb() --------------------------------------------------------
-
-#' info_species_stringdb()
+#' ## info_species_stringdb() --------------------------------------------------------
 #'
-#' @param version version of the data files in stringdb
+#' #' info_species_stringdb()
+#' #'
+#' #' @param version version of the data files in stringdb
+#' #'
+#' #' @return df_species returns the file containing info about the species annotation
+#' #'
+#' #' @importFrom utils read.delim
+#' #'
+#' #' @export
+#' #'
+#' #' @examples
+#' #' \dontrun{
+#' #' info_species_stringdb()
+#' #' }
+#' info_species_stringdb <- function(version = "12.0"){
 #'
-#' @return df_species returns the file containing info about the species annotation
+#'   # use sprintf function to insert current version into the url
 #'
-#' @importFrom utils read.delim
+#'   url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
+#'                                   version)
 #'
-#' @export
+#'   # read.delim the data from the species text file (columns separated using a delimiter)
+#'   df_species <- read.delim(url(url_species_stringdb))
 #'
-#' @examples
-#' #\dontrun{
-#' #info_species_stringdb()
-#' #}
-info_species_stringdb <- function(version = "12.0"){
-
-  # use sprintf function to insert current version into the url
-
-  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
-                                  version)
-
-  # read.delim the data from the species text file (columns separated using a delimiter)
-  df_species <- read.delim(url(url_species_stringdb))
-
-  # returns the datafile df_species
-  return(df_species)
-}
+#'   # returns the datafile df_species
+#'   return(df_species)
+#' }
 
 ## get_accessoryinfo_stringdb()  -------------
 
@@ -36,6 +36,7 @@ info_species_stringdb <- function(version = "12.0"){
 #' @param species from which species does the data come from
 #' @param version version of the data files in stringdb
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
+#' @param ... 	further arguments passed to or from other methods
 #'
 #' @return proteininfo_stringdb variable assigned to the datafile that contains info about protein annotation
 #' @importFrom vroom vroom
@@ -43,20 +44,27 @@ info_species_stringdb <- function(version = "12.0"){
 #' @export
 #'
 #' @examples
-#' #\dontrun{
-#' #human_acc_stringdb <- get_accessoryinfo_stringdb(species = "Homo sapiens",
-#' #                                       version = "12.0")
-#' #}
+#' \dontrun{
+#' db_stringdb_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",
+#'                                        version = "12.0")
+#' }
 
-get_accessoryinfo_stringdb <- function(species,
-                                       version,
-                                       cache = TRUE) {
+get_accessoryinfo_stringdb <- function(species = "Homo sapiens",
+                                       version = "12.0",
+                                       cache = TRUE,
+                                       ...) {
 
   # species is matched to the id in the info file
 
   species_id <- NULL
 
-  info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
+  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
+                                  version)
+
+  # read.delim the data from the species text file (columns separated using a delimiter)
+  df_species <- read.delim(url(url_species_stringdb))
+
+  info_species <- df_species # we find the information about species_name and species_id in the file info_species_stringdb
   species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
    match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
   ]
@@ -112,10 +120,13 @@ get_accessoryinfo_stringdb <- function(species,
 #'
 #' @examples
 #' #\dontrun{
-#' #create_annotation_from_stringdbaccessory(accessory_info)
-#' #}
+#' db_stringdb_acc <- get_accessoryinfo_stringdb(species = "Homo sapiens",
+#'                                        version = "12.0")
+#'
+#' create_annotation_from_stringdbaccessory(accessory_info = db_stringdb_acc)
+#' }
 
-create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION - where does accessory_info comes from?
+create_annotation_from_stringdbaccessory <- function(accessory_info) {
 
   # create a dataframe that contains the unique string_protein_ids as protein_id and rname
   accessory_info_df <- data.frame(
@@ -123,25 +134,11 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
     row.names = unique(accessory_info$`#string_protein_id`)
   )
 
-  # use NA to assign a previous "value" to the variables
-  accessory_info_df$ensemble_id <- NA
-  accessory_info_df$gene_symbol <- NA
-  #accessory_info_df$entrez_id <- NA
+  #rename columns
 
-  # filter dataframe to look up rows that contain Ensemble_gene or Ensembl_EntrezGene as source
-  df_ensembl <- accessory_info[accessory_info$source == "Ensembl_gene", ]
-  df_genesymbol <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
-  #df_entrez <- accessory_info[accessory_info$source == "Ensembl_EntrezGene", ]
+  accessory_info_df$protein_id <- str_extract(accessory_info_df$protein_id, "ENSP[0-9]+")
+  #TODO fix ensp for all species
 
-  # assign IDs into dataframe
-  accessory_info_df$ensembl_id <-
-    df_ensembl$alias[match(accessory_info_df$protein_id, df_ensembl$`#string_protein_id`)]
-  accessory_info_df$gene_symbol <-
-    df_genesymbol$alias[match(accessory_info_df$protein_id, df_genesymbol$`#string_protein_id`)]
-  #accessory_info_df$entrez_id <-
-  #  df_genesymbol$alias[match(accessory_info_df$protein_id, df_entrez_id$`#string_protein_id`)]
-
-  # return the dataframe accessory_info_df
   return(accessory_info_df)
   }
 
@@ -152,8 +149,7 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
 #' @param species  from which species does the data come from
 #' @param version version of the data files in stringdb
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param remap_identifiers default value set to TRUE (using accessory_info functions to map unique ids with common used (ensembl)
-#' @param remap_to type of remap ("ENSEMBL", "gene_symbol")
+#' @param add_annotation default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_stringdb
@@ -172,17 +168,19 @@ create_annotation_from_stringdbaccessory <- function(accessory_info) { #QUESTION
 get_networkdata_stringdb <- function(species,
                                      version,
                                      cache = TRUE,
-                                     remap_identifiers = TRUE,
-                                     remap_to = c(
-                                       "ENSEMBL", "gene_symbol"
-                                       # , "ENTREZ"
-                                     ),
+                                     add_annotation = TRUE,
                                      ...){
 
   # matching for the species...
   species_id <- NULL # looking for the corresponding id in the following
 
-  info_species <- info_species_stringdb(version = version) # we find the information about species_name and species_id in the file info_species_stringdb
+  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
+                                  version)
+
+  # read.delim the data from the species text file (columns separated using a delimiter)
+  df_species <- read.delim(url(url_species_stringdb))
+
+  info_species <- df_species # we find the information about species_name and species_id in the file info_species_stringdb
   species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
     match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
   ]
@@ -230,15 +228,18 @@ get_networkdata_stringdb <- function(species,
   ## ppis_stringdb <- read.delim(network_file, sep = " ")
 
   # id remap_identifiers = TRUE we use accessory functions to get ensemble id, gene_symbol and entrez
-  if (remap_identifiers){
+  if (add_annotation){
     accessory_info <- get_accessoryinfo_stringdb(
       species = species,
       version = version
     )
-
   # create a dataframe using the accessory functions
   accessory_info_df <-
     create_annotation_from_stringdbaccessory(accessory_info)
+
+
+
+  #accessory_info_df$protein_id <- str_extract(accessory_info_df$protein_id, "ENSP[0-9]+")
 
   ppis_stringdb$ensemblid_1 <- accessory_info_df[ppis_stringdb$protein1, ][["ensembl_id"]]
   ppis_stringdb$ensemblid_2 <- accessory_info_df[ppis_stringdb$protein2, ][["ensembl_id"]]
@@ -251,8 +252,6 @@ get_networkdata_stringdb <- function(species,
   # return ppis-stringdb containing remaped identifiers
   return(ppis_stringdb)
 }
-
-
 
 
 
