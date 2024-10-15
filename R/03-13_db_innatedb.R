@@ -97,6 +97,10 @@ get_networkdata_innatedb <- function(species,
   ppis_innatedb_filtered$Ensembl_B <- gsub("ensembl:", "", ppis_innatedb_filtered$Ensembl_B)
 
 
+  #Confidence score
+  ppis_innatedb_filtered$confidence_score <- str_extract(ppis_innatedb_filtered$confidence_score, "lpr:([0-9\\.]+)")
+  ppis_innatedb_filtered$confidence_score <- gsub("lpr:", "", ppis_innatedb_filtered$confidence_score)
+
 
   if (add_annotation) {
 
@@ -215,5 +219,84 @@ annotation_innatedb <- function(ppi_innatedb,
 
   return(ppis_innatedb_annotated)
 }
+
+
+
+# build_graph_innatedb() -----
+
+#' build_graph_innatedb()
+#'
+#' @param graph_data ppi data from innatedb
+#' @param output_format selection of different graph functions that can be used
+#' @param min_score_treshold select ppis that are "confident": lpr score (lowest PMID re-use)
+#'
+#' @import igraph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human)",
+#'                                            version = "5.4"
+#'                                            )
+#'
+#' db_innatedb_graph <- build_graph_innatedb(graph_data = db_innatedb_df,
+#'                                           output_format = "igraph",
+#'                                           min_score_threshold = "20" )
+#' db_innatedb_graph #list of 690 (score = 10) 1835(20)
+#' }
+#'
+#'
+
+build_graph_innatedb <- function (graph_data,
+                                  output_format = "igraph",
+                                  min_score_threshold = NULL){
+
+  #check on the clumns in your ppi data file
+  colnames(graph_data)
+
+  graph_data$confidence_score <- as.numeric(graph_data$confidence_score)
+
+  # Erstelle das Histogramm mit 50 bins (breaks)
+  hist(graph_data$confidence_score, breaks = 50)
+
+  #select ppi data >= minimal score
+  if (!is.null(min_score_threshold)){
+    graph_data_processed <- graph_data[graph_data$confidence_score <= min_score_threshold, ]
+  } else {
+    graph_data_processed <- graph_data
+  }
+
+  #check on dimension (amount of rows)
+  dim(graph_data)
+  dim(graph_data_processed)
+
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
+
+  # Create unique nodes (combine both GeneSymbol columns)
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
+
+  # If output format is igraph, return the igraph object
+  if (output_format == "igraph") {
+    whole_graph <- igraph::graph.data.frame(d = edges, directed = FALSE)
+    my_graph <- igraph::simplify(whole_graph)
+    return(my_graph)
+  }
+  # simplify by avoiding multiple entries?
+  ## could make it smaller and easier to handle, without losing too much/at all in info
+
+}
+
+
+
+
+
+
 
 
