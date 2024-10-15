@@ -64,7 +64,7 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
     # buildup from "base" irefindex url
     irefindex_url <-
       urlmaker_irefindex(
-        species = species_id,
+        species = species,
         version = version
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_irefindex
 
@@ -89,12 +89,18 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
   rows_to_remove_2 <- grep("^refseq:", ppis_irefindex$Uniprot_A)
   ppis_irefindex <- ppis_irefindex[-rows_to_remove_1, ]
   ppis_irefindex <- ppis_irefindex[-rows_to_remove_2, ]
+
   #remove "uniprotdb:" description for each entry
   ppis_irefindex$Uniprot_A <- str_extract(ppis_irefindex$Uniprot_A, "uniprotkb:([A-Z0-9]+)")
   ppis_irefindex$Uniprot_A <- gsub("uniprotkb:", "", ppis_irefindex$Uniprot_A)
   ppis_irefindex$Uniprot_B <- str_extract(ppis_irefindex$Uniprot_B, "uniprotkb:([A-Z0-9]+)")
   ppis_irefindex$Uniprot_B <- gsub("uniprotkb:", "", ppis_irefindex$Uniprot_B)
   ppis_irefindex <- ppis_irefindex[!is.na(ppis_irefindex$Uniprot_A) & !is.na(ppis_irefindex$Uniprot_B), ]
+
+  #Confidence score
+  ppis_irefindex$confidence <- str_extract(ppis_irefindex$confidence, "lpr:([0-9\\.]+)")
+  ppis_irefindex$confidence <- gsub("lpr:", "", ppis_irefindex$confidence)
+
 
   # match the annotation db with the corresponding species
   annotation_db <-
@@ -128,16 +134,16 @@ list_species_irefindex <- c ( "Homo sapiens",
                               "Caenorhabditis elegans"
                             )
 
-species_id_irefindex <- c(
-  "9606",
-  "10090",
-  "559292",
-  "562",
-  "10116",
-  "4932",
-  "7227",
-  "6239"
-)
+species_id_irefindex <- c(  "9606",
+                            "10090",
+                            "559292",
+                            "562",
+                            "10116",
+                            "4932",
+                            "7227",
+                            "6239")
+
+
 
 
 list_db_annotationdbi_irefindex <- c("org.Hs.eg.db",
@@ -149,8 +155,6 @@ list_db_annotationdbi_irefindex <- c("org.Hs.eg.db",
                                      "org.Dm.eg.db",
                                      "org.Ce.eg.db"
                                      )
-
-
 
 
 irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefindex,
@@ -246,7 +250,8 @@ annotation_irefindex <- function(ppi_irefindex,
 #'
 #' @param graph_data ppi data from irefindex
 #' @param output_format selection of different graph functions that can be used
-#'
+#' @param min_score_treshold select ppis that are "confident": lpr score (lowest PMID re-use)
+
 #' @import igraph
 #'
 #' @return
@@ -259,31 +264,46 @@ annotation_irefindex <- function(ppi_irefindex,
 #'                                              version = "08-28-2023")
 #'
 #' db_irefindex_graph <- build_graph_irefindex(graph_data = db_irefindex_df,
-#'                                             output_format = "igraph")
+#'                                             output_format = "igraph",
+#'                                             min_score_threshold = "100")
 #'
-#' db_irefindex_graph #list of 17125
+#' db_irefindex_graph #list of 5798 (score = 100)
 #' }
 #'
 #'
 
 
 build_graph_irefindex <- function (graph_data,
-                                   output_format = "igraph" ){
+                                  output_format = "igraph",
+                                  min_score_threshold = NULL){
 
   #check on the clumns in your ppi data file
   colnames(graph_data)
 
+  graph_data$confidence <- as.numeric(graph_data$confidence)
+
+  # Erstelle das Histogramm mit 50 bins (breaks)
+  hist(graph_data$confidence, breaks = 50)
+
+  #select ppi data >= minimal score
+  if (!is.null(min_score_threshold)){
+    graph_data_processed <- graph_data[graph_data$confidence <= min_score_threshold, ]
+  } else {
+    graph_data_processed <- graph_data
+  }
+
   #check on dimension (amount of rows)
   dim(graph_data)
+  dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data$GeneSymbol_A,
-                      to = graph_data$GeneSymbol_B)
+  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
+                      to = graph_data_processed$GeneSymbol_B)
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data$GeneSymbol_A,
-                                    graph_data$GeneSymbol_B)),
-                      label = unique(c(graph_data$GeneSymbol_A,
-                                       graph_data$GeneSymbol_B)))
+  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
+                                    graph_data_processed$GeneSymbol_B)),
+                      label = unique(c(graph_data_processed$GeneSymbol_A,
+                                       graph_data_processed$GeneSymbol_B)))
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {

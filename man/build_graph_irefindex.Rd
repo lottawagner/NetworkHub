@@ -4,12 +4,18 @@
 \alias{build_graph_irefindex}
 \title{build_graph_irefindex()}
 \usage{
-build_graph_irefindex(graph_data, output_format = "igraph")
+build_graph_irefindex(
+  graph_data,
+  output_format = "igraph",
+  min_score_threshold = NULL
+)
 }
 \arguments{
 \item{graph_data}{ppi data from irefindex}
 
 \item{output_format}{selection of different graph functions that can be used}
+
+\item{min_score_treshold}{select ppis that are "confident": lpr score (lowest PMID re-use)}
 }
 \description{
 build_graph_irefindex()
@@ -21,9 +27,10 @@ db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
                                              version = "08-28-2023")
 
 db_irefindex_graph <- build_graph_irefindex(graph_data = db_irefindex_df,
-                                            output_format = "igraph")
+                                            output_format = "igraph",
+                                            min_score_threshold = "100")
 
-db_irefindex_graph #list of 17125
+db_irefindex_graph #list of 5798 (score = 100)
 }
 
 
