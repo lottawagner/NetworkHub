@@ -134,6 +134,30 @@ fetch_NetworkHub <- function(rname, # resourcename
 
 ## build_graph() --------------------
 
+#' build_graph()
+#'
+#' @param graph_data ppi data
+#' @param data_source database
+#' @param output_format selection of different graph functions that can be used
+#' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
+
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' db_matrixdb_df <- get_networkdata_matrixdb(
+#'   species = "human",
+#'   type = "CORE"
+#' )
+#'
+#' igraph_object_matrixdb <- build_graph(graph_data = db_matrixdb_df,
+#'                                   data_source = "matrixdb",
+#'                                   output_format = "igraph",
+#'                                   min_score_threshold = NULL)
+#' igraph_object_matrixdb
+#'
 build_graph <- function(graph_data,
                         data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
                                         "genemania", "huri", "matrixdb",
@@ -148,7 +172,7 @@ build_graph <- function(graph_data,
   function_name <- paste0("build_graph_", data_source)
 
   # Get the function by its name
-  build_function <- get(function_name, envir = .GlobalEnv)
+  build_function <- get(function_name, envir = .asNamespace("NetworkHub"))
 
   # Call the specific function using the arguments
   my_graph <- build_function(graph_data = graph_data,
