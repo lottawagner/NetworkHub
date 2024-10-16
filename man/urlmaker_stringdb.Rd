@@ -4,11 +4,9 @@
 \alias{urlmaker_stringdb}
 \title{urlmaker_stringdb()}
 \usage{
-urlmaker_stringdb(type = "PPI", species = "Homo sapiens", version = "12.0")
+urlmaker_stringdb(species = "Homo sapiens", version = "12.0")
 }
 \arguments{
-\item{type}{type of information that is stored in the file}
-
 \item{species}{from which species does the data come from}
 
 \item{version}{version of the data files in stringdb}
@@ -20,8 +18,8 @@ url returns the corresponding url set by params
 urlmaker_stringdb()
 }
 \examples{
-url_stringdb <- urlmaker_stringdb(type = "PPI",
-                                  species = "Homo sapiens",
+url_stringdb <- urlmaker_stringdb(species = "Homo sapiens",
                                   version = "12.0")
+
 url_stringdb
 }
