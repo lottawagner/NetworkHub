@@ -16,7 +16,6 @@
 
 #' urlmaker_stringdb()
 #'
-#' @param type type of information that is stored in the file
 #' @param species from which species does the data come from
 #' @param version version of the data files in stringdb
 #'
@@ -24,20 +23,23 @@
 #' @export
 #'
 #' @examples
-#' url_stringdb <- urlmaker_stringdb(type = "PPI",
-#'                                   species = "Homo sapiens",
+#' url_stringdb <- urlmaker_stringdb(species = "Homo sapiens",
 #'                                   version = "12.0")
+#'
 #' url_stringdb
-urlmaker_stringdb <- function(type = "PPI",
-                              species = "Homo sapiens",
+urlmaker_stringdb <- function(species = "Homo sapiens",
                               version = "12.0") {
 
-  type <- match.arg(type, c("PPI", "protein_info")) # define the possible types in StringDB
   stopifnot(is.character(species))                  # make sure to type in a species name as character
   stopifnot(is.character(version))                  # make sure to type in a version as character
   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
 
-  info_species <- info_species_stringdb(version = version) # assign info_species to the info about stringdb species of the chosen version using function info_species_stringdb() defined in 03-01_db_stringdb.R
+  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
+                                 version)
+
+  # read.delim the data from the species text file (columns separated using a delimiter)
+  df_species <- read.delim(url(url_species_stringdb))
+  info_species <- df_species
 
   # check that the value for species is listed in StringDB
   if (!(species %in% info_species$official_name_NCBI)) {
@@ -55,21 +57,11 @@ urlmaker_stringdb <- function(type = "PPI",
   #QUESTION: my link is stringdb-downloads and yours is:
   #https://stringdb-static.org/download/protein.links.full.v%s/%s.protein.links.full.v%s.txt.gz
 
-  if (type == "PPI") {
-    url <- sprintf(
-      "https://stringdb-downloads.org/download/protein.links.v%s/%s.protein.links.v%s.txt.gz",
-      version,
-      species_id,
-      version
-    )
-  } else if (type == "protein_info") {
-    url <- sprintf(
-      "https://stringdb-downloads.org/download/protein.aliases.v%s/%s.protein.aliases.v%s.txt.gz",
-      version,
-      species_id,
-      version
-    )
-  }
+
+  url <- sprintf("https://stringdb-downloads.org/download/protein.links.v%s/%s.protein.links.v%s.txt.gz",
+                 version,
+                 species_id,
+                 version)
 
   # return value is "url"
   return(url)

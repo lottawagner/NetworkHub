@@ -8,8 +8,7 @@ get_networkdata_stringdb(
   species,
   version,
   cache = TRUE,
-  remap_identifiers = TRUE,
-  remap_to = c("ENSEMBL", "gene_symbol"),
+  add_annotation = TRUE,
   ...
 )
 }
@@ -20,9 +19,7 @@ get_networkdata_stringdb(
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
-\item{remap_identifiers}{default value set to TRUE (using accessory_info functions to map unique ids with common used (ensembl)}
-
-\item{remap_to}{type of remap ("ENSEMBL", "gene_symbol")}
+\item{add_annotation}{default value set to TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 }
