@@ -4,12 +4,14 @@
 \alias{urlmaker_matrixdb}
 \title{urlmaker_matrixdb()}
 \usage{
-urlmaker_matrixdb(species = "human", type = c("all", "CORE"))
+urlmaker_matrixdb(species = "human", type = c("all", "CORE"), version = "4_0")
 }
 \arguments{
 \item{species}{default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION}
 
 \item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
+
+\item{version}{TODO, 4.0 was recently added to the URL}
 }
 \value{
 url returns the corresponding url set by params
@@ -18,6 +20,10 @@ url returns the corresponding url set by params
 urlmaker_matrixdb()
 }
 \examples{
-url_matrixdb <- urlmaker_matrixdb(type = "all")
+url_matrixdb <- urlmaker_matrixdb(type = "CORE")
+
 url_matrixdb
+
+# https://matrixdb.univ-lyon1.fr/downloads/matrixdb_CORE_4_0.tab.zip
+# https://matrixdb.univ-lyon1.fr/downloads/matrixdb_all_4_0.tab.zip
 }

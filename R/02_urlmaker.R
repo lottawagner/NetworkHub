@@ -660,15 +660,21 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 #'
 #' @param species default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION
 #' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
+#' @param version TODO, 4.0 was recently added to the URL
 #'
 #' @return url returns the corresponding url set by params
 #' @export
 #'
 #' @examples
-#' url_matrixdb <- urlmaker_matrixdb(type = "all")
+#' url_matrixdb <- urlmaker_matrixdb(type = "CORE")
+#'
 #' url_matrixdb
+#'
+#' # https://matrixdb.univ-lyon1.fr/downloads/matrixdb_CORE_4_0.tab.zip
+#' # https://matrixdb.univ-lyon1.fr/downloads/matrixdb_all_4_0.tab.zip
 urlmaker_matrixdb <- function(species = "human",
-                              type = c("all", "CORE")){ #UPDATEVERSION
+                              type = c("all", "CORE"),
+                              version = "4_0"){ #UPDATEVERSION
 
   stopifnot(is.character(species))                  # make sure to type in a species name as character
 
@@ -678,10 +684,11 @@ urlmaker_matrixdb <- function(species = "human",
          MatrixDB only provide data for 'human'")
   }
 
-  url <- sprintf("https://matrixdb.univ-lyon1.fr/downloads/matrixdb_%s.tab.zip",
-                 type)
+  url <- sprintf("https://matrixdb.univ-lyon1.fr/downloads/matrixdb_%s_%s.tab.zip",
+                 type,
+                 version)
 
-return(url)
+  return(url)
 
 }
 

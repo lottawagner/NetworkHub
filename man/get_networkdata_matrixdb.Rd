@@ -7,6 +7,7 @@
 get_networkdata_matrixdb(
   species = "human",
   type = "CORE",
+  version = "4_0",
   cache = TRUE,
   add_annotation = TRUE,
   ...
@@ -16,6 +17,8 @@ get_networkdata_matrixdb(
 \item{species}{from which species does the data come from (default human because currently only human data provided from matrixdb)}
 
 \item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
+
+\item{version}{TODO: to reflect recent changes with \verb{4_0} in the url}
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
