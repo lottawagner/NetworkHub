@@ -22,6 +22,8 @@
 #' @return url returns the corresponding url set by params
 #' @export
 #'
+#' @importFrom utils read.delim
+#'
 #' @examples
 #' url_stringdb <- urlmaker_stringdb(species = "Homo sapiens",
 #'                                   version = "12.0")
