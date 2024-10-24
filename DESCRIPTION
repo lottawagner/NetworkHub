@@ -41,6 +41,7 @@ Imports:
   org.Ss.eg.db,
   org.Xl.eg.db,
   utils,
+  graphics,
   stringr
 Suggests: 
   knitr,

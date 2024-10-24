@@ -249,6 +249,7 @@ annotation_stringdb <- function(ppi_stringdb,
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
 #' @import igraph
+#' @importFrom graphics hist
 #'
 #' @return
 #' @export
