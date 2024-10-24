@@ -248,7 +248,7 @@ annotation_intact <- function(ppi_intact,
 #' @param output_format selection of different graph functions that can be used
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
-#' @import igraph
+#' @importFrom igraph graph.data.frame simplify
 #'
 #' @return
 #' @export

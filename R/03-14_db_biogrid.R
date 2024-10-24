@@ -102,7 +102,7 @@ get_networkdata_biogrid <- function(species = "9606",
 #' @param output_format selection of different graph functions that can be used
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 #'
-#' @import igraph
+#' @importFrom igraph graph.data.frame simplify
 #'
 #' @return
 #' @export
