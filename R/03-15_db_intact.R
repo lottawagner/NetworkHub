@@ -94,7 +94,7 @@ get_networkdata_intact <- function(species = "taxid:9606(human)|taxid:9606(Homo 
   if (add_annotation) {
 
     if (!(species %in% list_common_species_intact)) { # if species is not in the list
-      stop("Species not in `list_common_species_intact´!",
+      stop("Species not in `list_common_species_intact`!",
            "Annotation for this species is not provided") # stop function and print
     }
 

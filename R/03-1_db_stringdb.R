@@ -93,7 +93,7 @@ get_networkdata_stringdb <- function(species,
   if (add_annotation) {
 
     if (!(species %in% list_common_species_stringdb)) { # if species is not in the list
-      stop("Species not in `list_common_species_stringdb´!",
+      stop("Species not in `list_common_species_stringdb`!",
            "Annotation for this species is not provided") # stop function and print
     }
 
