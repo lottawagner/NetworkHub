@@ -196,19 +196,19 @@ annotation_stringdb <- function(ppi_stringdb,
   all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
 
   anno_df <- data.frame(ensembl_id = all_prot_ids,
-                        gene_symbol <- mapIds(get(annotation_db),
+                        gene_symbol = mapIds(get(annotation_db),
                                               keys = all_prot_ids,
-                                              keytype = "ENSEMBL",
+                                              keytype = "ENSEMBLPROT",
                                               column = "SYMBOL"
                         ),
-                        uniprot_id <- mapIds(get(annotation_db),
+                        uniprot_id = mapIds(get(annotation_db),
                                              keys = all_prot_ids,
-                                             keytype = "ENSEMBL",
+                                             keytype = "ENSEMBLPROT",
                                              column = "UNIPROT"
                         ),
-                        entrez_ids <- mapIds(get(annotation_db),
+                        entrez_ids = mapIds(get(annotation_db),
                                              keys = all_prot_ids,
-                                             keytype = "ENSEMBL",
+                                             keytype = "ENSEMBLPROT",
                                              column = "ENTREZID"
                         ),
                         row.names = all_prot_ids
