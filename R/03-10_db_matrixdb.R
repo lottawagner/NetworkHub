@@ -4,7 +4,7 @@
 #'
 #' @param species  from which species does the data come from (default human because currently only human data provided from matrixdb)
 #' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
-#' @param version TODO: to reflect recent changes with `4_0` in the url
+#' @param version version of the data files in MatrixDB
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param add_annotation expanding the dataframe with (GeneSymbol, Uniprot ID and Entrez_ID)
 #' @param ... 	further arguments passed to or from other methods
