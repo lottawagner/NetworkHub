@@ -308,3 +308,13 @@ build_graph_stringdb <- function (graph_data,
     return(my_graph)
   }
 }
+
+# map_SE_stringdb() -------
+
+# map_SE_stringdb <- function(graph,
+#                             se,
+#                             annotation_df,
+#                             rowdata_to_map = NULL,
+#                             assay_name){
+#
+# }
