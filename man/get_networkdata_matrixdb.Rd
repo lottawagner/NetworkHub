@@ -18,7 +18,7 @@ get_networkdata_matrixdb(
 
 \item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
 
-\item{version}{TODO: to reflect recent changes with \verb{4_0} in the url}
+\item{version}{version of the data files in MatrixDB}
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
@@ -36,7 +36,8 @@ get_networkdata_matrixdb()
 \dontrun{
 db_matrixdb_df <- get_networkdata_matrixdb(
   species = "human",
-  type = "CORE"
+  type = "CORE",
+  version = "4_0"
 )
 
 db_matrixdb_df
