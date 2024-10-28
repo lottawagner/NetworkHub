@@ -18,7 +18,8 @@
 #' \dontrun{
 #' db_matrixdb_df <- get_networkdata_matrixdb(
 #'   species = "human",
-#'   type = "CORE"
+#'   type = "CORE",
+#'   version = "4_0"
 #' )
 #'
 #' db_matrixdb_df
@@ -65,7 +66,8 @@ get_networkdata_matrixdb <- function( species = "human",
     matrixdb_url <-
       urlmaker_matrixdb(
         species = species,
-        type = type
+        type = type,
+        version = version
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_matrixdb
 
     # and cache_NetworkHub to cache the file from the url source
