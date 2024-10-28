@@ -132,7 +132,7 @@ fetch_NetworkHub <- function(rname, # resourcename
   return(res_nh) # returns rpath to res_nh or NULL if no entry
 }
 
-## build_graph() --------------------
+# build_graph() --------------------
 
 #' build_graph()
 #'
@@ -182,3 +182,5 @@ build_graph <- function(graph_data,
   # Return the graph
   return(my_graph)
 }
+
+# project_SE() -------------
