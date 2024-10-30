@@ -1,5 +1,5 @@
 ---
-title: "NetworkHub: working with network data, seamlessly"
+title: "NetworkHub: An R/Bioconductor package to streamline protein-protein interaction network analysis"
 author: 
 - name: Lotta Wagner
   affiliation: 
@@ -29,7 +29,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-# Installation 
+# What is NetworkHub?
+
+
+
+
+
+
+# Setting up NetworkHub
 
 ```{r eval = FALSE}
 if(!requireNamespace("NetworkHub", quietly = TRUE))
@@ -37,7 +44,8 @@ if(!requireNamespace("NetworkHub", quietly = TRUE))
 BiocManager::install("NetworkHub")
 ``` 
 
-# Graph fetching
+setup
+explain cache
 
 Initialization of the cache of "NetworkHub"
 
@@ -46,35 +54,19 @@ library("NetworkHub")
 initialize_NetworkHub(nh_cachedir = "NetworkHub")
 ```
 
-Extract the main core species of StringDB
+# What formats are available?
 
-```{r speciesinfo}
-main_core_species <- info_species_stringdb() |> 
-  dplyr::filter(STRING_type == "core") |> 
-  head()|> #be aware there are many more than just the head organisms
-  dplyr::pull(official_name_NCBI)
+At large
+..
+and what we use here
 
-main_core_species 
-```
-
-Bringing the content of one species into a table that later will be used to build a graph 
-
-```{r getstringdb}
-stringdb_human <- get_networkdata_stringdb("Homo sapiens",
-                                      version = "12.0")
-dim(stringdb_human)
-```
-
-The lengthy part is to read in the accessory info, could be sped up with clever ways of reading in things I guess... #TODO: takes really long
-
-```{r stringdbprint}
-head(stringdb_human)
-```
+What are our "output" formats?
 
 
-# Use case: DE on the graph!
 
-Load in for example the results from differential expression #TODO: there is no package called ‘DeeDee’ 
+# Using NetworHub
+
+## STRING
 
 Packages that are requiered:
 
@@ -85,37 +77,36 @@ if(!requireNamespace("GeneTonic", quietly = TRUE))
 BiocManager::install("GeneTonic")
 ```
 
+Load in for example the results from differential expression: 
 
 ```{r loadde}
+
 # res object
 data(res_de_macrophage, package = "GeneTonic") #get/take a differential expressed datafile
 res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
 first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #Generate a tidy table with the results of DESeq2 (GeneTonic::deseqresult2df) and extract the first 150 differential expressed genes out of the datafile and their id (first column) and remove rows with missing values (na.omit()) 
 
+# dds object
 library("macrophage") #demo dataset
 library("DESeq2") #package to perform differential expression analysis
 library("org.Hs.eg.db") #databank for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...  
 library("AnnotationDbi") #TODO why AnnotationDbi? not AnnotationHub?
 
-# dds object
 data("gse", package = "macrophage")
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
 dds_macrophage <- estimateSizeFactors(dds_macrophage)
 
+#SE object
+se_macrophage <-
+ DeeDee::DeeDeeExperiment(
+   dds_macrophage,
+   de_results = list(
+     macrores = res_de
+   )
+ )
 
-#se_macrophage <- rbind(dds_macrophage, res_de) #TODO
-    
-
-#se_macrophage <- 
-#  DeeDee::DeeDeeExperiment(
-#    dds_macrophage, 
-#    de_results = list(
-#      macrores = res_de
-#    )
-#  )
-
-#se_macrophage
+se_macrophage
 ```
 
 DeeDee is just to put into the same SE object all the info on DE contrasts. That's a work in progress, but adding rowData info would also simply do it. #TODO
@@ -127,7 +118,7 @@ Going from the DE genes to the proteins...
 ```{r auxinfo}
 aux_info_string <- get_accessoryinfo_stringdb(species = "Homo sapiens",
                                               version = "12.0")
-
+#abhier#TODO
 anno_df_string <- create_annotation_from_stringdbaccessory(aux_info_string)
 
 head(anno_df_string)
