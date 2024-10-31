@@ -179,8 +179,25 @@ build_graph <- function(graph_data,
                              output_format = output_format,
                              min_score_threshold = min_score_threshold)
 
+  # uncomment once you are done :*
+  # my_graph <- attach_info_to_graph(my_graph, graph_data)
+
   # Return the graph
   return(my_graph)
 }
 
 # project_SE() -------------
+
+map_SE_on_graph <- function(se,
+                            g,
+                            id_info_se,
+                            ) {
+
+
+}
+
+attach_info_to_graph <- function(g, df) {
+
+
+
+}
