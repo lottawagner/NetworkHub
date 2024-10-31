@@ -111,17 +111,30 @@ To compare the condition: IFNg vs naive you can use "res_macrophage_IFNg_vs_naiv
 # res object
 data(res_de_macrophage, package = "GeneTonic") #get/take a differential expressed datafile
 res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
-first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #Generate a tidy table with the results of DESeq2 (GeneTonic::deseqresult2df) and extract the first 150 differential expressed genes out of the datafile and their id (first column) and remove rows with missing values (na.omit()) 
 ```
  
- 
+To perform a differential expression anlaysis "on your own" you can run the following lines: 
+
+
+```{r DE}
+data(gse, package = "macrophage")
+dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
+#> using counts and average transcript lengths from tximeta
+rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
+keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
+dds_macrophage <- dds_macrophage[keep, ]
+
+dds_macrophage <- DESeq(dds_macrophage)
+res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
+                                        contrast = c("condition", "IFNg", "naive"),
+                                        lfcThreshold = 1, 
+                                        alpha = 0.05)
+```
+
 With these two objects ( dds_macrophage & res_de) we can create a SE object that contains all the dds info AND the results of a DEA and can be further used in NetworkHub :) 
 
-```{r}
+```{r SE}
 #SE object
-
-dds_macrophage
-res_de
 
 dds <- dds_macrophage
 de_res <- res_de
@@ -149,6 +162,8 @@ de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 
 se_macrophage
 ```
+
+#TODO1-11-2024
 
 Going from the DE genes to the proteins...
 

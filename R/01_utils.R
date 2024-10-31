@@ -186,6 +186,20 @@ build_graph <- function(graph_data,
   return(my_graph)
 }
 
+# add_info_from_dataframe_to_graph() ----------
+
+#TODO
+
+# add_info_from_dataframe_to_graph <- function(graph_data,
+#                                              data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
+#                                                              "genemania", "huri", "matrixdb",
+#                                                              "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
+#                                              output_format = "igraph",
+#                                              min_score_threshold = NULL)
+#
+#   if (Ensembl_A %in% colnames(graph_data) {
+#   }
+
 # project_SE() -------------
 
 map_SE_on_graph <- function(se,
