@@ -29,14 +29,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-# What is NetworkHub?
+# About NetworkHub#TODO
 
 
 
 
 
 
-# Setting up NetworkHub
+# Setting up NetworkHub#TODO
 
 ```{r eval = FALSE}
 if(!requireNamespace("NetworkHub", quietly = TRUE))
@@ -44,31 +44,39 @@ if(!requireNamespace("NetworkHub", quietly = TRUE))
 BiocManager::install("NetworkHub")
 ``` 
 
+If you want to install the development version from GitHub, you can alternatively run this command:
+
+```{r}
+#BiocManager::install("imbeimainz/NetworkHub")
+```
+
+
 setup
+
+After installation you can load and attach the NetworkHub package as follows:
+
+```{r}
+#library("NetworkHub")
+```
+
+
 explain cache
+
 
 Initialization of the cache of "NetworkHub"
 
 ```{r init}
-library("NetworkHub")
-initialize_NetworkHub(nh_cachedir = "NetworkHub")
+#initialize_NetworkHub(nh_cachedir = "NetworkHub")
 ```
-
-# What formats are available?
-
-At large
-..
-and what we use here
-
-What are our "output" formats?
-
-
 
 # Using NetworHub
 
-## STRING
+To demonstrate the benefits of NetworkHub, we will use the Macrophage dataset to simulate a scenario in which NetworkHub is useful. 
 
-Packages that are requiered:
+
+## Load the data
+
+Before we can start, we have to take a few more steps. This includes loading all the required packages:
 
 ```{r stringdb requiered packages for DE, eval = FALSE}
 
@@ -77,26 +85,39 @@ if(!requireNamespace("GeneTonic", quietly = TRUE))
 BiocManager::install("GeneTonic")
 ```
 
-Load in for example the results from differential expression: 
+Now we can load the SE experiment data object ("gse") from the Macrophage(<https://www.bioconductor.org/packages/release/data/experiment/html/macrophage.html>) datatset: 
 
-```{r loadde}
+```{r load from macrophage}
+
+# dds object
+library("macrophage") #demo dataset
+library("DESeq2") #package to perform differential expression analysis
+library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...  
+library("AnnotationDbi") #Annotation package 
+
+data("gse", package = "macrophage") #gse dataset in macrophage = summarized experiment object 
+dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition) #creation of the DESeq data object out of gse by taking corresponding design into account ( effect in condition by looking at one cell line)
+
+rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15) # make sure to only take the first 15 digits of the identifier (e.g "ENSG00000066322" and not "ENSG00000066322.14")
+dds_macrophage <- estimateSizeFactors(dds_macrophage) # normalizes data
+```
+
+Using GeneTonic we can retrieve a DE object from the macrophage dataset, which we can later integrate into a summerized experiment (SE) object together with the previously created dataframe <dds_macrophage> containing rows with the ENSEMBLE gene symbols and columns containing the colData for the different samples and conditions. 
+
+To compare the condition: IFNg vs naive you can use "res_macrophage_IFNg_vs_naive" DE object from GeneTonic containg rows with the ENSEMBL gene symbols and columns with the DE results ( baseMean, log2FoldChange, pvalue, ...).
+
+```{r loadde from GeneTonic}
 
 # res object
 data(res_de_macrophage, package = "GeneTonic") #get/take a differential expressed datafile
 res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
 first_degenes <- na.omit(GeneTonic::deseqresult2df(res_de)[1:150, "id"]) #Generate a tidy table with the results of DESeq2 (GeneTonic::deseqresult2df) and extract the first 150 differential expressed genes out of the datafile and their id (first column) and remove rows with missing values (na.omit()) 
+```
+ 
+ 
+With these two objects ( dds_macrophage & res_de) we can create a SE object that contains all the dds info AND the results of a DEA and can be further used in NetworkHub :) 
 
-# dds object
-library("macrophage") #demo dataset
-library("DESeq2") #package to perform differential expression analysis
-library("org.Hs.eg.db") #databank for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...  
-library("AnnotationDbi") #TODO why AnnotationDbi? not AnnotationHub?
-
-data("gse", package = "macrophage")
-dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
-rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
-dds_macrophage <- estimateSizeFactors(dds_macrophage)
-
+```{r}
 #SE object
 se_macrophage <-
  DeeDee::DeeDeeExperiment(
@@ -109,21 +130,18 @@ se_macrophage <-
 se_macrophage
 ```
 
-DeeDee is just to put into the same SE object all the info on DE contrasts. That's a work in progress, but adding rowData info would also simply do it. #TODO
-
 Going from the DE genes to the proteins...
 
+```{r get networkdata string}
 
+proteins_string <- get_networkdata_stringdb(species = "Homo sapiens",
+                                     version = "12.0",
+                                     cache = TRUE,
+                                     add_annotation = TRUE)
 
-```{r auxinfo}
-aux_info_string <- get_accessoryinfo_stringdb(species = "Homo sapiens",
-                                              version = "12.0")
-#abhier#TODO
-anno_df_string <- create_annotation_from_stringdbaccessory(aux_info_string)
+unique_proteins_string <- unique(proteins_string$Ensembl_A, proteins_string$Ensembl_B)
 
-head(anno_df_string)
-
-first_proteins <- anno_df_string$protein_id[match(first_degenes, anno_df_string$ensembl_id)] |> 
+first_proteins <- SE_dataframe_string$Ensembl[match(first_degenes, proteins_string)] |> 
   na.omit()
 
 first_proteins
