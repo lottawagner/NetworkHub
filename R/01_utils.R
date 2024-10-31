@@ -204,7 +204,7 @@ build_graph <- function(graph_data,
 
 map_SE_on_graph <- function(se,
                             g,
-                            id_info_se,
+                            id_info_se
                             ) {
 
 
