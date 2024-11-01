@@ -197,6 +197,8 @@ build_graph <- function(graph_data,
 #' @param g graph object created with build_graph()
 #'
 #' @return g
+#'
+#' @importFrom igraph set_vertex_attr V
 #' @export
 #'
 #' @examples
