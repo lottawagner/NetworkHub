@@ -142,7 +142,7 @@ fetch_NetworkHub <- function(rname, # resourcename
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
 
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
@@ -155,7 +155,8 @@ fetch_NetworkHub <- function(rname, # resourcename
 #' igraph_object_matrixdb <- build_graph(graph_data = db_matrixdb_df,
 #'                                   data_source = "matrixdb",
 #'                                   output_format = "igraph",
-#'                                   min_score_threshold = NULL)
+#'                                   min_score_threshold = NULL,
+#'                                   add_info_nodes = TRUE)
 #' igraph_object_matrixdb
 #'
 build_graph <- function(graph_data,
@@ -163,7 +164,8 @@ build_graph <- function(graph_data,
                                         "genemania", "huri", "matrixdb",
                                         "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
                         output_format = "igraph",
-                        min_score_threshold = NULL) {
+                        min_score_threshold = NULL,
+                        add_info_nodes = TRUE) {
 
   # Match the provided data_source to the available options
   data_source <- match.arg(data_source)
@@ -179,22 +181,60 @@ build_graph <- function(graph_data,
                              output_format = output_format,
                              min_score_threshold = min_score_threshold)
 
-  # Return the graph
+
+  if (add_info_nodes) {
+    my_graph_add_info <- add_info_from_dataframe_to_graph(graph_data = graph_data, g = my_graph)
+    }
+    return(my_graph_add_info)
+
   return(my_graph)
 }
 
 # add_info_from_dataframe_to_graph() ----------
 
-#TODO
 
-# add_info_from_dataframe_to_graph <- function(graph_data,
-#                                              data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
-#                                                              "genemania", "huri", "matrixdb",
-#                                                              "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
-#                                              output_format = "igraph",
-#                                              min_score_threshold = NULL)
-#
-#   if (Ensembl_A %in% colnames(graph_data) {
-#   }
+#' add_info_from_dataframe_to_graph()
+#'
+#' @param graph_data dataframe of ppi data from corresponding database
+#' @param g graph object created with build_graph()
+#'
+#' @return g
+#' @export
+#'
+#' @examples
+#'
+#' db_matrixdb_df <- get_networkdata_matrixdb(
+#'   species = "human",
+#'   type = "CORE"
+#' )
+#'
+#' igraph_object_matrixdb <- build_graph_matrixdb(graph_data = db_matrixdb_df,
+#'                                   output_format = "igraph",
+#'                                   min_score_threshold = NULL)
+#'
+#' igraph_object_matrixdb_info_added <- add_info_from_dataframe_to_graph(graph_data = db_matrixdb_df,
+#'                                                                      g = igraph_object_matrixdb)
+#'
+#' igraph_object_matrixdb_info_added
+#'
+#'
+add_info_from_dataframe_to_graph <- function(graph_data,
+                                             g){
+
+  node_names <- unique(c(graph_data$GeneSymbol_A, graph_data$GeneSymbol_B))
+
+  for (col_name in c("GeneSymbol_A", "GeneSymbol_B", "Entrez_A", "Entrez_B", "Uniprot_A", "Uniprot_B")) {
+
+    if (col_name %in% colnames(graph_data)) {
+      attr_name <- paste0("attr_", col_name)
+
+      matched_values <- graph_data[match(igraph::V(g)$name, graph_data[[col_name]]), col_name, drop = TRUE]
+
+      igraph::V(g)$attr_name <- matched_values
+    }
+  }
+  return(g)
+}
+
 
 # project_SE() -------------

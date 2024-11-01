@@ -9,7 +9,8 @@ build_graph(
   data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint", "genemania",
     "huri", "matrixdb", "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
   output_format = "igraph",
-  min_score_threshold = NULL
+  min_score_threshold = NULL,
+  add_info_nodes = TRUE
 )
 }
 \arguments{
@@ -20,6 +21,9 @@ build_graph(
 \item{output_format}{selection of different graph functions that can be used}
 
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
+}
+\value{
+my_graph
 }
 \description{
 build_graph()
@@ -34,7 +38,8 @@ db_matrixdb_df <- get_networkdata_matrixdb(
 igraph_object_matrixdb <- build_graph(graph_data = db_matrixdb_df,
                                   data_source = "matrixdb",
                                   output_format = "igraph",
-                                  min_score_threshold = NULL)
+                                  min_score_threshold = NULL,
+                                  add_info_nodes = TRUE)
 igraph_object_matrixdb
 
 }
