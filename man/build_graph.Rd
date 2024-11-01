@@ -21,6 +21,8 @@ build_graph(
 \item{output_format}{selection of different graph functions that can be used}
 
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
+
+\item{add_info_nodes}{TODO}
 }
 \value{
 my_graph

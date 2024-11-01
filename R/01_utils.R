@@ -140,7 +140,7 @@ fetch_NetworkHub <- function(rname, # resourcename
 #' @param data_source database
 #' @param output_format selection of different graph functions that can be used
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
-
+#' @param add_info_nodes TODO
 #'
 #' @return my_graph
 #' @export
@@ -217,12 +217,19 @@ build_graph <- function(graph_data,
 #'
 #' igraph_object_matrixdb_info_added
 #'
+#' # check that it worked:
+#' igraph::vertex_attr_names(graph = igraph_object_matrixdb_info_added)
+#' igraph::V(igraph_object_matrixdb_info_added)$attr_GeneSymbol_A
+#' # this should have much less NAs, see above - possible TODO to re-check
 #'
 add_info_from_dataframe_to_graph <- function(graph_data,
                                              g){
 
   node_names <- unique(c(graph_data$GeneSymbol_A, graph_data$GeneSymbol_B))
 
+  # TODO: we might need to do it only for the A or for the B. in theory that info should be the same
+  # right now it is not, so maybe this needs to be fixed upstream, i.e. in the
+  # original graph creation
   for (col_name in c("GeneSymbol_A", "GeneSymbol_B", "Entrez_A", "Entrez_B", "Uniprot_A", "Uniprot_B")) {
 
     if (col_name %in% colnames(graph_data)) {
@@ -230,7 +237,7 @@ add_info_from_dataframe_to_graph <- function(graph_data,
 
       matched_values <- graph_data[match(igraph::V(g)$name, graph_data[[col_name]]), col_name, drop = TRUE]
 
-      igraph::V(g)$attr_name <- matched_values
+      g <- set_vertex_attr(g, attr_name, value = matched_values)
     }
   }
   return(g)
