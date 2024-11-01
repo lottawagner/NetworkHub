@@ -33,5 +33,9 @@ igraph_object_matrixdb_info_added <- add_info_from_dataframe_to_graph(graph_data
 
 igraph_object_matrixdb_info_added
 
+# check that it worked:
+igraph::vertex_attr_names(graph = igraph_object_matrixdb_info_added)
+igraph::V(igraph_object_matrixdb_info_added)$attr_GeneSymbol_A
+# this should have much less NAs, see above - possible TODO to re-check
 
 }
