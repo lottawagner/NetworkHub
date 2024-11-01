@@ -181,11 +181,9 @@ build_graph <- function(graph_data,
                              output_format = output_format,
                              min_score_threshold = min_score_threshold)
 
-
   if (add_info_nodes) {
-    my_graph_add_info <- add_info_from_dataframe_to_graph(graph_data = graph_data, g = my_graph)
-    }
-    return(my_graph_add_info)
+    my_graph <- add_info_from_dataframe_to_graph(graph_data = graph_data, g = my_graph)
+  }
 
   return(my_graph)
 }
@@ -238,3 +236,17 @@ add_info_from_dataframe_to_graph <- function(graph_data,
 
 
 # project_SE() -------------
+
+map_SE_on_graph <- function(se,
+                            g,
+                            id_info_se
+                            ) {
+
+
+}
+
+attach_info_to_graph <- function(g, df) {
+
+
+
+}
