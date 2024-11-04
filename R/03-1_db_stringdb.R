@@ -206,7 +206,7 @@ annotation_stringdb <- function(ppi_stringdb,
                                              keytype = "ENSEMBLPROT",
                                              column = "UNIPROT"
                         ),
-                        entrez_ids = mapIds(get(annotation_db),
+                        entrez_id = mapIds(get(annotation_db),
                                              keys = all_prot_ids,
                                              keytype = "ENSEMBLPROT",
                                              column = "ENTREZID"
