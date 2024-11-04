@@ -206,6 +206,7 @@ annotation_stringdb <- function(ppi_stringdb,
   all_prot_ids <- unique(c(ppi_stringdb$Ensembl_A, ppi_stringdb$Ensembl_B))
   all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
 
+
   anno_df <- data.frame(ensembl_id = all_prot_ids,
                         gene_symbol = AnnotationDbi::mapIds(get(annotation_db),
                                               keys = all_prot_ids,
