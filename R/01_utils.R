@@ -226,7 +226,7 @@ build_graph <- function(graph_data,
 #' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
 #'                                             species = "Homo sapiens",
 #'                                             version = "12.0",
-#'                                             create_anno_df = FALSE
+#'                                             create_ppi_anno_df = FALSE
 #'                                             )
 #'
 #' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_annotated_df,
