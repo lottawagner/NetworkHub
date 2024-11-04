@@ -137,10 +137,11 @@ fetch_NetworkHub <- function(rname, # resourcename
 #' build_graph()
 #'
 #' @param graph_data ppi data
+#' @param graph_data_anno dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
 #' @param data_source database
 #' @param output_format selection of different graph functions that can be used
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
-#' @param add_info_nodes TODO
+#' @param add_info_nodes TRUE adding annotation infos to nodes
 #'
 #' @return my_graph
 #' @export

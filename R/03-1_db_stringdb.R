@@ -156,6 +156,8 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #' @param species  from which species does the data come from
 #' @param version version of the data files in stringdb
 #' @param ppi_stringdb variable defined by ppis_stringdb in get_networkdata_stringdb()
+#' @param create_ppi_anno_df TRUE=returning a dataframe that contains all annotations to interactor A & B in seperate columns, FALSE=returning the annotation datatframe (unique interactors (colnames = "uniprot_id", "gene_symbol", "entrez_id", "ensembl_id"))
+#'
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @importFrom stats na.omit
@@ -284,8 +286,8 @@ annotation_stringdb <- function(ppi_stringdb,
 
 
 build_graph_stringdb <- function (graph_data,
-                                output_format = "igraph",
-                                min_score_threshold = NULL ){
+                                  output_format = "igraph",
+                                  min_score_threshold = NULL ){
 
   #check on the clumns in your ppi data file
   colnames(graph_data)
