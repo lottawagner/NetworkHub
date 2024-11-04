@@ -147,21 +147,29 @@ fetch_NetworkHub <- function(rname, # resourcename
 #'
 #' @examples
 #'
-#' db_matrixdb_df <- get_networkdata_matrixdb(
-#'   species = "human",
-#'   type = "CORE"
-#' )
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+#'                                            version = "12.0"
+#'                                            )
 #'
-#' igraph_object_matrixdb <- build_graph(graph_data = db_matrixdb_df,
-#'                                   data_source = "matrixdb",
-#'                                   output_format = "igraph",
-#'                                   min_score_threshold = NULL,
-#'                                   add_info_nodes = TRUE)
-#' igraph_object_matrixdb
+#' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                             species = "Homo sapiens",
+#'                                             version = "12.0",
+#'                                             create_ppi_anno_df = FALSE)
+#'
+#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
+#'                                          graph_data_anno = db_stringdb_anno_df,
+#'                                          data_source = "stringdb",
+#'                                          output_format = "igraph",
+#'                                          min_score_threshold = "0.35",
+#'                                          add_info_nodes = TRUE)
+#'
+#'
+#'
 #'
 build_graph <- function(graph_data,
+                        graph_data_anno,
                         data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
-                                        "genemania", "huri", "matrixdb",
+                                        "genemania", "huri", "stringdb",
                                         "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
                         output_format = "igraph",
                         min_score_threshold = NULL,
@@ -182,7 +190,7 @@ build_graph <- function(graph_data,
                              min_score_threshold = min_score_threshold)
 
   if (add_info_nodes) {
-    my_graph <- add_info_from_dataframe_to_graph(graph_data = graph_data, g = my_graph)
+    my_graph <- add_info_from_dataframe_to_graph(graph_data_anno = graph_data_anno, g = my_graph)
   }
 
   return(my_graph)
@@ -193,7 +201,7 @@ build_graph <- function(graph_data,
 
 #' add_info_from_dataframe_to_graph()
 #'
-#' @param graph_data dataframe of ppi data from corresponding database
+#' @param graph_data_anno dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
 #' @param g graph object created with build_graph()
 #'
 #' @return g
@@ -203,46 +211,59 @@ build_graph <- function(graph_data,
 #'
 #' @examples
 #'
-#' db_matrixdb_df <- get_networkdata_matrixdb(
-#'   species = "human",
-#'   type = "CORE"
-#' )
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+#'                                            version = "12.0",
+#'                                            add_annotation = FALSE
+#'                                            )
 #'
-#' igraph_object_matrixdb <- build_graph_matrixdb(graph_data = db_matrixdb_df,
-#'                                   output_format = "igraph",
-#'                                   min_score_threshold = NULL)
+#' db_stringdb_annotated_df <- get_networkdata_stringdb(species = "Homo sapiens",
+#'                                            version = "12.0",
+#'                                            add_annotation = TRUE
+#'                                            )
 #'
-#' igraph_object_matrixdb_info_added <- add_info_from_dataframe_to_graph(graph_data = db_matrixdb_df,
-#'                                                                      g = igraph_object_matrixdb)
 #'
-#' igraph_object_matrixdb_info_added
+#' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                             species = "Homo sapiens",
+#'                                             version = "12.0",
+#'                                             create_anno_df = FALSE
+#'                                             )
+#'
+#' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_annotated_df,
+#'                                                   output_format = "igraph",
+#'                                                   min_score_threshold = "0.35"
+#'                                                   )
+#'
+#' db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(graph_data_anno = db_stringdb_anno_df,
+#'                                                                          g = db_stringdb_igraph_object
+#'                                                                          )
+#'
+#'
+#' db_stringdb_igraph_object_info_added
+#'
 #'
 #' # check that it worked:
-#' igraph::vertex_attr_names(graph = igraph_object_matrixdb_info_added)
-#' igraph::V(igraph_object_matrixdb_info_added)$attr_GeneSymbol_A
+#' igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
+#' igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
 #' # this should have much less NAs, see above - possible TODO to re-check
 #'
-add_info_from_dataframe_to_graph <- function(graph_data,
-                                             g){
+add_info_from_dataframe_to_graph <- function(graph_data_anno,
+                                             g) {
 
-  node_names <- unique(c(graph_data$GeneSymbol_A, graph_data$GeneSymbol_B))
+  for (col_name in c("entrez_id", "gene_symbol", "uniprot_id", "ensembl_id")) {
 
-  # TODO: we might need to do it only for the A or for the B. in theory that info should be the same
-  # right now it is not, so maybe this needs to be fixed upstream, i.e. in the
-  # original graph creation
-  for (col_name in c("GeneSymbol_A", "GeneSymbol_B", "Entrez_A", "Entrez_B", "Uniprot_A", "Uniprot_B")) {
 
-    if (col_name %in% colnames(graph_data)) {
+    if (col_name %in% colnames(graph_data_anno)) {
       attr_name <- paste0("attr_", col_name)
 
-      matched_values <- graph_data[match(igraph::V(g)$name, graph_data[[col_name]]), col_name, drop = TRUE]
+      matched_values <- graph_data_anno[match(igraph::V(g)$name, graph_data_anno$gene_symbol), col_name, drop = TRUE]
 
-      g <- set_vertex_attr(g, attr_name, value = matched_values)
+      # Setzt die Attribute für die Knoten im Graphen
+      g <- igraph::set_vertex_attr(g, name = attr_name, value = matched_values)
     }
   }
+
   return(g)
 }
-
 
 # project_SE() -------------
 
