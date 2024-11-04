@@ -4,7 +4,7 @@
 \alias{annotation_stringdb}
 \title{annotation_stringdb ()}
 \usage{
-annotation_stringdb(ppi_stringdb, species, version)
+annotation_stringdb(ppi_stringdb, species, version, create_ppi_anno_df = TRUE)
 }
 \arguments{
 \item{ppi_stringdb}{variable defined by ppis_stringdb in get_networkdata_stringdb()}
@@ -12,16 +12,12 @@ annotation_stringdb(ppi_stringdb, species, version)
 \item{species}{from which species does the data come from}
 
 \item{version}{version of the data files in stringdb}
+
+\item{create_ppi_anno_df}{TRUE=returning a dataframe that contains all annotations to interactor A & B in seperate columns, FALSE=returning the annotation datatframe (unique interactors (colnames = "uniprot_id", "gene_symbol", "entrez_id", "ensembl_id"))}
 }
 \value{
 ppis_stringdb_annotated
 }
 \description{
 annotation_stringdb ()
-}
-\examples{
-#\dontrun{
-#annotation_stringdb <- annotation_stringdb(ppi_stringdb, species = "taxid:9606(Homo sapiens)", version = "current")
-#annotation_stringdb
-#}
 }

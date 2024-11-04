@@ -24,11 +24,11 @@ build_graph_stringdb()
 \dontrun{
 
 db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                       version =  "12.0")
+                                           version =  "12.0")
 
-db_stringdb_graph <- build_graph_stringdb(graph_data = db_stringdb_df,
-                                        output_format = "igraph",
-                                        min_score_threshold = "0.35")
+db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_df,
+                                                  output_format = "igraph",
+                                                  min_score_threshold = "0.35")
 db_stringdb_graph #list of 17490
 }
 

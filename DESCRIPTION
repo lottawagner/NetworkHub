@@ -42,7 +42,8 @@ Imports:
   org.Xl.eg.db,
   utils,
   graphics,
-  stringr
+  stringr,
+  visNetwork
 Suggests: 
   knitr,
   rmarkdown

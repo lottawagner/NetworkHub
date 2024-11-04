@@ -4,10 +4,10 @@
 \alias{add_info_from_dataframe_to_graph}
 \title{add_info_from_dataframe_to_graph()}
 \usage{
-add_info_from_dataframe_to_graph(graph_data, g)
+add_info_from_dataframe_to_graph(graph_data_anno, g)
 }
 \arguments{
-\item{graph_data}{dataframe of ppi data from corresponding database}
+\item{graph_data_anno}{dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)}
 
 \item{g}{graph object created with build_graph()}
 }
@@ -19,23 +19,39 @@ add_info_from_dataframe_to_graph()
 }
 \examples{
 
-db_matrixdb_df <- get_networkdata_matrixdb(
-  species = "human",
-  type = "CORE"
-)
+db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+                                           version = "12.0",
+                                           add_annotation = FALSE
+                                           )
 
-igraph_object_matrixdb <- build_graph_matrixdb(graph_data = db_matrixdb_df,
-                                  output_format = "igraph",
-                                  min_score_threshold = NULL)
+db_stringdb_annotated_df <- get_networkdata_stringdb(species = "Homo sapiens",
+                                           version = "12.0",
+                                           add_annotation = TRUE
+                                           )
 
-igraph_object_matrixdb_info_added <- add_info_from_dataframe_to_graph(graph_data = db_matrixdb_df,
-                                                                     g = igraph_object_matrixdb)
 
-igraph_object_matrixdb_info_added
+db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                            species = "Homo sapiens",
+                                            version = "12.0",
+                                            create_anno_df = FALSE
+                                            )
+
+db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_annotated_df,
+                                                  output_format = "igraph",
+                                                  min_score_threshold = "0.35"
+                                                  )
+
+db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(graph_data_anno = db_stringdb_anno_df,
+                                                                         g = db_stringdb_igraph_object
+                                                                         )
+
+
+db_stringdb_igraph_object_info_added
+
 
 # check that it worked:
-igraph::vertex_attr_names(graph = igraph_object_matrixdb_info_added)
-igraph::V(igraph_object_matrixdb_info_added)$attr_GeneSymbol_A
+igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
+igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
 # this should have much less NAs, see above - possible TODO to re-check
 
 }
