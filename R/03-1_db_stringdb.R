@@ -180,13 +180,22 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #'
 #' @examples
 #' #\dontrun{
-#' #annotation_stringdb <- annotation_stringdb(ppi_stringdb, species = "taxid:9606(Homo sapiens)", version = "current")
-#' #annotation_stringdb
-#' #}
+#'
+#' db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
+#'                                          version = "12.0"
+#'                                         )
+#'
+#' db_string_anno_df <- annotation_stringdb(ppi_stringdb = db_string_df,
+#'                                          species = "Mus musculus",
+#'                                          version = "12.0",
+#'                                          create_ppi_anno_df = TRUE
+#'                                          )
+#' db_string_anno_df
 
 annotation_stringdb <- function(ppi_stringdb,
-                              species,
-                              version){
+                                species,
+                                version,
+                                create_ppi_anno_df = TRUE){
 
   annotation_db <-
     stringdb_db_annotations$anno_db_stringdb[match(species, stringdb_db_annotations$species)]
@@ -196,17 +205,17 @@ annotation_stringdb <- function(ppi_stringdb,
   all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
 
   anno_df <- data.frame(ensembl_id = all_prot_ids,
-                        gene_symbol = mapIds(get(annotation_db),
+                        gene_symbol = AnnotationDbi::mapIds(get(annotation_db),
                                               keys = all_prot_ids,
                                               keytype = "ENSEMBLPROT",
                                               column = "SYMBOL"
                         ),
-                        uniprot_id = mapIds(get(annotation_db),
+                        uniprot_id = AnnotationDbi::mapIds(get(annotation_db),
                                              keys = all_prot_ids,
                                              keytype = "ENSEMBLPROT",
                                              column = "UNIPROT"
                         ),
-                        entrez_id = mapIds(get(annotation_db),
+                        entrez_id = AnnotationDbi::mapIds(get(annotation_db),
                                              keys = all_prot_ids,
                                              keytype = "ENSEMBLPROT",
                                              column = "ENTREZID"
@@ -214,6 +223,7 @@ annotation_stringdb <- function(ppi_stringdb,
                         row.names = all_prot_ids
   )
 
+  if (create_ppi_anno_df) {
   ppis_stringdb_annotated <- ppi_stringdb
 
   #adding GeneSymbol
@@ -235,6 +245,10 @@ annotation_stringdb <- function(ppi_stringdb,
     anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_id)]
 
   return(ppis_stringdb_annotated)
+  }
+
+  return(anno_df)
+
 }
 
 
@@ -258,11 +272,11 @@ annotation_stringdb <- function(ppi_stringdb,
 #' \dontrun{
 #'
 #' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                        version =  "12.0")
+#'                                            version =  "12.0")
 #'
-#' db_stringdb_graph <- build_graph_stringdb(graph_data = db_stringdb_df,
-#'                                         output_format = "igraph",
-#'                                         min_score_threshold = "0.35")
+#' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_df,
+#'                                                   output_format = "igraph",
+#'                                                   min_score_threshold = "0.35")
 #' db_stringdb_graph #list of 17490
 #' }
 #'
