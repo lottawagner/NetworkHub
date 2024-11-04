@@ -249,16 +249,17 @@ build_graph <- function(graph_data,
 #'
 add_info_from_dataframe_to_graph <- function(graph_data_anno,
                                              g) {
-
+  #loop through annotation column names
   for (col_name in c("entrez_id", "gene_symbol", "uniprot_id", "ensembl_id")) {
-
-
+    # if column name is in dataframe
     if (col_name %in% colnames(graph_data_anno)) {
-      attr_name <- paste0("attr_", col_name)
 
+      #define attributin column names for igraph object
+      attr_name <- paste0("attr_", col_name)
+      #match values from graph and annotation dataframe
       matched_values <- graph_data_anno[match(igraph::V(g)$name, graph_data_anno$gene_symbol), col_name, drop = TRUE]
 
-      # Setzt die Attribute für die Knoten im Graphen
+      #add values to graph
       g <- igraph::set_vertex_attr(g, name = attr_name, value = matched_values)
     }
   }
@@ -268,16 +269,87 @@ add_info_from_dataframe_to_graph <- function(graph_data_anno,
 
 # project_SE() -------------
 
+#' map_SE_on_graph
+#'
+#' @param se summerized experiment object (e.g. DE analysis resluts)
+#' @param g igraph object (containing ppi interactions from corresponding database)
+#'
+#' @return
+#' @export
+#'
+#' @import visNetwork
+#' @import igraph
+#'
+#'
+#' @examples
+#'
+#' data(res_de_macrophage, package = "GeneTonic")
+#' res_de <- res_macrophage_IFNg_vs_naive
+#'
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+#'                                            version = "12.0"
+#'                                            )
+#'
+#' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                             species = "Homo sapiens",
+#'                                             version = "12.0",
+#'                                             create_ppi_anno_df = FALSE)
+#'
+#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
+#'                                          graph_data_anno = db_stringdb_anno_df,
+#'                                          data_source = "stringdb",
+#'                                          output_format = "igraph",
+#'                                          min_score_threshold = "0.35",
+#'                                          add_info_nodes = TRUE)
+#'
+#'
+#' map_SE_on_graph(se = res_de,
+#'                 g = db_stringdb_igraph_object
+#'                 )
+#'
 map_SE_on_graph <- function(se,
-                            g,
-                            id_info_se
+                            g
                             ) {
 
+    # Initialize a vector with `NA` for all nodes
+    log2FoldChange_values <- rep(NA, igraph::vcount(g))
+
+    igraph::V(g)$attr_ensembl_id <- gsub("^ENSP", "ENSG", igraph::V(g)$attr_ensembl_id)
+
+    #take the names of the nodes from the graph
+    node_names <- igraph::V(g)$attr_ensembl_id
+
+    #match
+    matched_names <- match(node_names, rownames(se))
+
+
+    # extract log2foldchange and save in vector
+    log2FoldChange_values[!is.na(matched_names)] <- se$log2FoldChange[matched_names[!is.na(matched_names)]]
+
+    # Füge die Werte als Attribut zum Graphen hinzu
+    g <- set_vertex_attr(g, "log2FoldChange", value = log2FoldChange_values)
+
+    # Legt eine Farbe fest: Grau für fehlende Werte, Farbskala für die log2FoldChange-Werte
+    colors <- ifelse(is.na(log2FoldChange_values), "grey",
+                     ifelse(log2FoldChange_values > 0, "red", "blue"))
+
+    # Füge die Farbe als Attribut hinzu
+    g <- set_vertex_attr(g, "color", value = colors)
+
+    # Umwandeln in ein visNetwork-kompatibles Objekt
+    vis_data <- visNetwork::toVisNetworkData(g)
+
+    # # Netzwerk visualisieren
+    # visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges)  %>%
+    #   visNetwork::visNodes(color = list(background = ~color)) "%>%
+    #   visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
+
+    return(vis_data)
 
 }
 
-attach_info_to_graph <- function(g, df) {
+#Error in visNetwork(nodes = vis_data$nodes, edges = vis_data$edges) %>%  :
+#could not find function "%>%"
 
+#TODO
 
-
-}
