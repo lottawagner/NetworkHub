@@ -137,7 +137,7 @@ With these two objects ( dds_macrophage & res_de) we can create a SE object that
 #SE object
 
 dds <- dds_macrophage
-de_res <- res_de
+de_res <- res_macrophage_IFNg_vs_naive
 de_name <- "ifngVSnaive"
 
 combine_dds_deres <- function(dds, de_res, de_name) {

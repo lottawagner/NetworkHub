@@ -273,6 +273,7 @@ add_info_from_dataframe_to_graph <- function(graph_data_anno,
 #'
 #' @param se summerized experiment object (e.g. DE analysis resluts)
 #' @param g igraph object (containing ppi interactions from corresponding database)
+#' @param value select the value of the results you want to compare
 #'
 #' @return
 #' @export
@@ -283,7 +284,19 @@ add_info_from_dataframe_to_graph <- function(graph_data_anno,
 #'
 #' @examples
 #'
-#' data(res_de_macrophage, package = "GeneTonic")
+#' data(gse, package = "macrophage")
+#' dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
+#' rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
+#' keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
+#' dds_macrophage <- dds_macrophage[keep, ]
+#'
+#' dds_macrophage <- DESeq(dds_macrophage)
+#'
+#' res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
+#'                                        contrast = c("condition", "IFNg", "naive"),
+#'                                        lfcThreshold = 1,
+#'                                        alpha = 0.05)
+#'
 #' res_de <- res_macrophage_IFNg_vs_naive
 #'
 #' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
@@ -302,17 +315,40 @@ add_info_from_dataframe_to_graph <- function(graph_data_anno,
 #'                                          min_score_threshold = "0.35",
 #'                                          add_info_nodes = TRUE)
 #'
+#' #SE object
+#' dds <- dds_macrophage
+#' de_res <- res_de
+#' de_name <- "ifngVSnaive"
+#' combine_dds_deres <- function(dds, de_res, de_name) {
+#'    matched_ids <- match(rownames(res_de), rownames(dds))
+#'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
+#'    rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
+#'    rowData(dds)[[paste0(de_name, "_padj")]] <- NA
+#'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
+#'    rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
+#'    rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
+#'  return(dds)
+#'  }
+#' se_macrophage <- combine_dds_deres(dds_macrophage, res_de, "ifng_vs_naive")
+#' de_res_scrambles <- de_res
+#' de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 #'
-#' map_SE_on_graph(se = res_de,
+#' se_macrophage
+#'
+#' map_SE_on_graph(se = se_macrophage,
+#'                 de_name = "ifng_vs_naive",
+#'                 value = "log2FoldChange",
 #'                 g = db_stringdb_igraph_object
 #'                 )
 #'
 map_SE_on_graph <- function(se,
+                            de_name = "ifng_vs_naive",
+                            value = c("log2FoldChange", "pvalue"),
                             g
                             ) {
 
     # Initialize a vector with `NA` for all nodes
-    log2FoldChange_values <- rep(NA, igraph::vcount(g))
+    values <- rep(NA, igraph::vcount(g))
 
     igraph::V(g)$attr_ensembl_id <- gsub("^ENSP", "ENSG", igraph::V(g)$attr_ensembl_id)
 
@@ -324,14 +360,15 @@ map_SE_on_graph <- function(se,
 
 
     # extract log2foldchange and save in vector
-    log2FoldChange_values[!is.na(matched_names)] <- se$log2FoldChange[matched_names[!is.na(matched_names)]]
+    column_name <- paste0(de_name, "_", value)
+    values[!is.na(matched_names)] <- rowData(se)[[column_name]][matched_names[!is.na(matched_names)]]
 
     # Füge die Werte als Attribut zum Graphen hinzu
-    g <- set_vertex_attr(g, "log2FoldChange", value = log2FoldChange_values)
+    g <- set_vertex_attr(g, value, value = values)
 
     # Legt eine Farbe fest: Grau für fehlende Werte, Farbskala für die log2FoldChange-Werte
-    colors <- ifelse(is.na(log2FoldChange_values), "grey",
-                     ifelse(log2FoldChange_values > 0, "red", "blue"))
+    colors <- ifelse(is.na(values), "grey",
+                     ifelse(values > 0, "red", "blue"))
 
     # Füge die Farbe als Attribut hinzu
     g <- set_vertex_attr(g, "color", value = colors)
@@ -339,12 +376,10 @@ map_SE_on_graph <- function(se,
     # Umwandeln in ein visNetwork-kompatibles Objekt
     vis_data <- visNetwork::toVisNetworkData(g)
 
-    # # Netzwerk visualisieren
-    # visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges)  %>%
-    #   visNetwork::visNodes(color = list(background = ~color)) "%>%
-    #   visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
-
-    return(vis_data)
+    # Network visualization
+    visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges)  %>%
+      visNetwork::visNodes(color = list(background = ~color)) %>%
+      visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
 
 }
 
