@@ -358,29 +358,24 @@ map_SE_on_graph <- function(se,
     #match
     matched_names <- match(node_names, rownames(se))
 
-
-    # extract log2foldchange and save in vector
+    # extract value (e.g. log2foldchange) and save in vector
     column_name <- paste0(de_name, "_", value)
     values[!is.na(matched_names)] <- rowData(se)[[column_name]][matched_names[!is.na(matched_names)]]
 
-    # Füge die Werte als Attribut zum Graphen hinzu
-    g <- set_vertex_attr(g, value, value = values)
-
-    # Legt eine Farbe fest: Grau für fehlende Werte, Farbskala für die log2FoldChange-Werte
     colors <- ifelse(is.na(values), "grey",
                      ifelse(values > 0, "red", "blue"))
 
-    # Füge die Farbe als Attribut hinzu
-    g <- set_vertex_attr(g, "color", value = colors)
+    # add the color as an attribute
+    g <- igraph::set_vertex_attr(g,value, value = values)
 
-    # Umwandeln in ein visNetwork-kompatibles Objekt
+    # Convert to a visNetwork-compatible object
     vis_data <- visNetwork::toVisNetworkData(g)
+    vis_data$nodes$color <- colors
 
     # Network visualization
-    visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges)  %>%
-      visNetwork::visNodes(color = list(background = ~color)) %>%
+    visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges) %>%
+      visNetwork::visNodes(color = list(background = vis_data$nodes$color)) %>%
       visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
-
 }
 
 #Error in visNetwork(nodes = vis_data$nodes, edges = vis_data$edges) %>%  :
