@@ -204,8 +204,10 @@ build_graph <- function(graph_data,
 #'
 #' @param graph_data_anno dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
 #' @param g graph object created with build_graph()
+#' @param idtype_anno Character, specifies which identifier type is used in the
+#' `graph_data_anno`. Defaults to "gene_symbol"
 #'
-#' @return g
+#' @return An igraph object
 #'
 #' @importFrom igraph set_vertex_attr V
 #' @export
@@ -248,7 +250,8 @@ build_graph <- function(graph_data,
 #' # this should have much less NAs, see above - possible TODO to re-check
 #'
 add_info_from_dataframe_to_graph <- function(graph_data_anno,
-                                             g) {
+                                             g,
+                                             idtype_anno = "gene_symbol") {
   #loop through annotation column names
   for (col_name in c("entrez_id", "gene_symbol", "uniprot_id", "ensembl_id")) {
     # if column name is in dataframe
@@ -257,7 +260,7 @@ add_info_from_dataframe_to_graph <- function(graph_data_anno,
       #define attributin column names for igraph object
       attr_name <- paste0("attr_", col_name)
       #match values from graph and annotation dataframe
-      matched_values <- graph_data_anno[match(igraph::V(g)$name, graph_data_anno$gene_symbol), col_name, drop = TRUE]
+      matched_values <- graph_data_anno[match(igraph::V(g)$name, graph_data_anno[[idtype_anno]]), col_name, drop = TRUE]
 
       #add values to graph
       g <- igraph::set_vertex_attr(g, name = attr_name, value = matched_values)
