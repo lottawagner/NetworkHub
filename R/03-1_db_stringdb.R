@@ -85,10 +85,10 @@ get_networkdata_stringdb <- function(species,
 
   # rename columns
   #Uniprot
-  colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein1"] <- "Ensembl_A"
-  colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein2"] <- "Ensembl_B"
-  ppis_stringdb$Ensembl_A <- str_extract(ppis_stringdb$Ensembl_A, "(EN[S][A-Z0-9]+)")
-  ppis_stringdb$Ensembl_B <- str_extract(ppis_stringdb$Ensembl_B, "(EN[S][A-Z0-9]+)")
+  colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein1"] <- "Ensembl_Prot_A"
+  colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein2"] <- "Ensembl_Prot_B"
+  ppis_stringdb$Ensembl_Prot_A <- str_extract(ppis_stringdb$Ensembl_Prot_A, "(EN[S][A-Z0-9]+)")
+  ppis_stringdb$Ensembl_Prot_B <- str_extract(ppis_stringdb$Ensembl_Prot_B, "(EN[S][A-Z0-9]+)")
 
   if (add_annotation) {
 
@@ -203,11 +203,16 @@ annotation_stringdb <- function(ppi_stringdb,
     stringdb_db_annotations$anno_db_stringdb[match(species, stringdb_db_annotations$species)]
 
   #create a list that contains all uniprot ids (but not NA)
-  all_prot_ids <- unique(c(ppi_stringdb$Ensembl_A, ppi_stringdb$Ensembl_B))
+  all_prot_ids <- unique(c(ppi_stringdb$Ensembl_Prot_A, ppi_stringdb$Ensembl_Prot_B))
   all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
 
 
-  anno_df <- data.frame(ensembl_id = all_prot_ids,
+  anno_df <- data.frame(ensembl_prot_id = all_prot_ids,
+                        ensembl_id = AnnotationDbi::mapIds(get(annotation_db),
+                                                           keys = all_prot_ids,
+                                                           keytype = "ENSEMBLPROT",
+                                                           column = "ENSEMBL"
+                        ),
                         gene_symbol = AnnotationDbi::mapIds(get(annotation_db),
                                               keys = all_prot_ids,
                                               keytype = "ENSEMBLPROT",
@@ -229,23 +234,31 @@ annotation_stringdb <- function(ppi_stringdb,
   if (create_ppi_anno_df) {
   ppis_stringdb_annotated <- ppi_stringdb
 
+  #adding Ensembl
+  ppis_stringdb_annotated$Ensembl_A <-
+    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
+  ppis_stringdb_annotated$Ensembl_B <-
+    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
+
+
   #adding GeneSymbol
   ppis_stringdb_annotated$GeneSymbol_A <-
-    anno_df$gene_symbol[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_id)]
+    anno_df$gene_symbol[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
   ppis_stringdb_annotated$GeneSymbol_B <-
-    anno_df$gene_symbol[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_id)]
+    anno_df$gene_symbol[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
 
   #adding Uniprot
   ppis_stringdb_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_id)]
+    anno_df$ensembl_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
   ppis_stringdb_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_id)]
+    anno_df$ensembl_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
 
   #adding Entrez
   ppis_stringdb_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_id)]
+    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
   ppis_stringdb_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_id)]
+    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
+
 
   return(ppis_stringdb_annotated)
   }
