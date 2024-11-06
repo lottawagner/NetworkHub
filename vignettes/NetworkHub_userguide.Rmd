@@ -154,6 +154,8 @@ combine_dds_deres <- function(dds, de_res, de_name) {
 
 }
 
+
+
 se_macrophage <- combine_dds_deres(dds_macrophage, res_de, "ifng_vs_naive")
 
 de_res_scrambles <- de_res
@@ -163,18 +165,34 @@ de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 se_macrophage
 ```
 
-#TODO1-11-2024
-
 Going from the DE genes to the proteins...
 
 ```{r get networkdata string}
 
-proteins_string <- get_networkdata_stringdb(species = "Homo sapiens",
-                                     version = "12.0",
-                                     cache = TRUE,
-                                     add_annotation = TRUE)
+ db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+                                            version = "12.0",
+                                            cache = TRUE,
+                                            get_annotation = FALSE,
+                                            add_annotation = FALSE
+                                           )
 
-unique_proteins_string <- unique(proteins_string$Ensembl_A, proteins_string$Ensembl_B)
+ db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                                species = "Homo sapiens"
+                                               )
+
+ db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                                    anno_df = db_stringdb_anno_df,
+                                                    species = "Homo sapiens")
+
+
+ db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
+                                          anno_df = db_stringdb_anno_df,
+                                          idtype_anno = "gene_symbol",
+                                          data_source = "stringdb",
+                                          output_format = "igraph",
+                                          min_score_threshold = "0.35",
+                                          add_info_nodes = TRUE
+                                         )
 
 first_proteins <- SE_dataframe_string$Ensembl[match(first_degenes, proteins_string)] |> 
   na.omit()
