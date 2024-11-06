@@ -1,13 +1,14 @@
 
 
-## get_networkdata_stringdb() ---------
+# get_networkdata_stringdb() ---------
 
 #' get_networkdata_stringdb()
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in stringdb
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation default value set to TRUE
+#' @param get_annotation creation of an annotation dataframe , default value set to TRUE
+#' @param add_annotation adding annotation to ppi datatframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_stringdb
@@ -18,7 +19,10 @@
 #' @examples
 #' \dontrun{
 #' db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
-#'                                          version = "12.0"
+#'                                          version = "12.0",
+#'                                          cache = TRUE,
+#'                                          get_annotation = FALSE,
+#'                                          add_annotation = FALSE
 #'                                         )
 #' db_string_df
 #' }
@@ -26,6 +30,7 @@
 get_networkdata_stringdb <- function(species,
                                      version,
                                      cache = TRUE,
+                                     get_annotation = TRUE,
                                      add_annotation = TRUE,
                                      ...){
 
@@ -90,23 +95,44 @@ get_networkdata_stringdb <- function(species,
   ppis_stringdb$Ensembl_Prot_A <- str_extract(ppis_stringdb$Ensembl_Prot_A, "(EN[S][A-Z0-9]+)")
   ppis_stringdb$Ensembl_Prot_B <- str_extract(ppis_stringdb$Ensembl_Prot_B, "(EN[S][A-Z0-9]+)")
 
-  if (add_annotation) {
+  if (get_annotation) {
 
     if (!(species %in% list_common_species_stringdb)) { # if species is not in the list
       stop("Species not in `list_common_species_stringdb`!",
            "Annotation for this species is not provided") # stop function and print
     }
 
-    ppis_stringdb_annotated <- annotation_stringdb(ppi_stringdb = ppis_stringdb,
-                                                        species = species,
-                                                        version = version)
-    message("...added annotation :)")
-    return(ppis_stringdb_annotated)
+    db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = ppis_stringdb,
+                                                   species = species
+                                                   )
+    message("...created annotation dataframe")
+
+
+    if (add_annotation) {
+
+      db_stringdb_ppi_anno_df <- add_annotation_stringdb(anno_df = db_stringdb_anno_df,
+                                                         ppi_stringdb = ppis_stringdb,
+                                                         species = species
+      )
+      message("...added annotation from *db_stringdb_anno_df* to *db_stringdb_ppi_anno_df*")
+
+      return(db_stringdb_ppi_anno_df)
+
+    }
+
+    if (!add_annotation){
+      return(db_stringdb_anno_df)
+    }
+
   }
 
-  if (!add_annotation){
-    return(ppis_stringdb)
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
   }
+
+  return(ppis_stringdb)
 
 }
 
@@ -149,33 +175,27 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 )
 
 
-# annotation_stringdb() --------
+# get_annotation_stringdb() --------
 
-#' annotation_stringdb ()
+#' get_annotation_stringdb ()
 #'
-#' @param species  from which species does the data come from
-#' @param version version of the data files in stringdb
 #' @param ppi_stringdb variable defined by ppis_stringdb in get_networkdata_stringdb()
-#' @param create_ppi_anno_df TRUE=returning a dataframe that contains all annotations to interactor A & B in seperate columns, FALSE=returning the annotation datatframe (unique interactors (colnames = "uniprot_id", "gene_symbol", "entrez_id", "ensembl_id"))
+#' @param species  from which species does the data come from
 #'
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @importFrom stats na.omit
-#' @import org.At.tair.db
 #' @import org.Bt.eg.db
 #' @import org.Ce.eg.db
 #' @import org.Cf.eg.db
 #' @import org.Dm.eg.db
-#' @import org.EcK12.eg.db
 #' @import org.Gg.eg.db
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
 #' @import org.Rn.eg.db
 #' @import org.Sc.sgd.db
-#' @import org.Ss.eg.db
-#' @import org.Xl.eg.db
 #'
-#'@return ppis_stringdb_annotated
+#'@return anno_df (for corresponding species in stringdb)
 #'
 #'@export
 #'
@@ -183,21 +203,21 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #' @examples
 #' #\dontrun{
 #'
-#' db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
-#'                                          version = "12.0"
-#'                                         )
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+#'                                            version = "12.0",
+#'                                            cache = TRUE,
+#'                                            get_annotation = FALSE,
+#'                                            add_annotation = FALSE
+#'                                           )
 #'
-#' db_string_anno_df <- annotation_stringdb(ppi_stringdb = db_string_df,
-#'                                          species = "Mus musculus",
-#'                                          version = "12.0",
-#'                                          create_ppi_anno_df = TRUE
-#'                                          )
-#' db_string_anno_df
+#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                 species = "Mus musculus"
+#'                                               )
+#'}
 
-annotation_stringdb <- function(ppi_stringdb,
-                                species,
-                                version,
-                                create_ppi_anno_df = TRUE){
+
+get_annotation_stringdb <- function(ppi_stringdb,
+                                    species) {
 
   annotation_db <-
     stringdb_db_annotations$anno_db_stringdb[match(species, stringdb_db_annotations$species)]
@@ -231,39 +251,77 @@ annotation_stringdb <- function(ppi_stringdb,
                         row.names = all_prot_ids
   )
 
-  if (create_ppi_anno_df) {
-  ppis_stringdb_annotated <- ppi_stringdb
+  return (anno_df)
+}
+
+# add_annotation_stringdb() --------
+
+#' add_annotation_stringdb ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in stringdb)
+#' @param ppi_stringdb variable defined by ppis_stringdb in get_networkdata_stringdb()
+#' @param species  from which species does the data come from
+#'
+#'
+#'@return ppi_stringdb with annotation columns for each interactor (for corresponding species in stringdb)
+#'
+#'@export
+#'
+#'
+#' @examples
+#' #\dontrun{
+#'
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+#'                                            version = "12.0",
+#'                                            cache = TRUE,
+#'                                            get_annotation = FALSE,
+#'                                            add_annotation = FALSE
+#'                                           )
+#'
+#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                 species = "Mus musculus"
+#'                                               )
+#'
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                    anno_df = db_stringdb_anno_df,
+#'                                                    species = "Mus musculus")
+#'
+#'}
+
+add_annotation_stringdb <- function(ppi_stringdb,
+                                    anno_df,
+                                    species
+                                    ) {
+
+  ppi_stringdb <- ppi_stringdb
 
   #adding Ensembl
-  ppis_stringdb_annotated$Ensembl_A <-
-    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
-  ppis_stringdb_annotated$Ensembl_B <-
-    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
+  ppi_stringdb$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+  ppi_stringdb$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
 
 
   #adding GeneSymbol
-  ppis_stringdb_annotated$GeneSymbol_A <-
-    anno_df$gene_symbol[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
-  ppis_stringdb_annotated$GeneSymbol_B <-
-    anno_df$gene_symbol[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
+  ppi_stringdb$GeneSymbol_A <-
+    anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+  ppi_stringdb$GeneSymbol_B <-
+    anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
 
   #adding Uniprot
-  ppis_stringdb_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
-  ppis_stringdb_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
+  ppi_stringdb$Uniprot_A <-
+    anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+  ppi_stringdb$Uniport_B <-
+    anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
 
   #adding Entrez
-  ppis_stringdb_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_A, anno_df$ensembl_prot_id)]
-  ppis_stringdb_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_stringdb_annotated$Ensembl_B, anno_df$ensembl_prot_id)]
+  ppi_stringdb$Entrez_A <-
+    anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+  ppi_stringdb$Entrez_B <-
+    anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
 
 
-  return(ppis_stringdb_annotated)
-  }
-
-  return(anno_df)
+  return(ppi_stringdb)
 
 }
 
@@ -287,8 +345,12 @@ annotation_stringdb <- function(ppi_stringdb,
 #' @examples
 #' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version =  "12.0")
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+#'                                            version = "12.0",
+#'                                            cache = TRUE,
+#'                                            get_annotation = TRUE,
+#'                                            add_annotation = TRUE
+#'                                           )
 #'
 #' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_df,
 #'                                                   output_format = "igraph",
@@ -303,12 +365,12 @@ build_graph_stringdb <- function (graph_data,
                                   output_format = "igraph",
                                   min_score_threshold = NULL ){
 
-  #check on the clumns in your ppi data file
+  #check on the columns in your ppi data file
   colnames(graph_data)
 
   graph_data$combined_score <- as.numeric(graph_data$combined_score)
 
-  # Erstelle das Histogramm mit 50 bins (breaks)
+  # create hist with 50 breaks
   hist(graph_data$combined_score, breaks = 50)
 
   #select ppi data >= minimal score
@@ -338,13 +400,3 @@ build_graph_stringdb <- function (graph_data,
     return(my_graph)
   }
 }
-
-# map_SE_stringdb() -------
-
-# map_SE_stringdb <- function(graph,
-#                             se,
-#                             annotation_df,
-#                             rowdata_to_map = NULL,
-#                             assay_name){
-#
-# }
