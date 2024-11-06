@@ -6,7 +6,8 @@
 \usage{
 build_graph(
   graph_data,
-  graph_data_anno,
+  anno_df,
+  idtype_anno,
   data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint", "genemania",
     "huri", "stringdb", "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
   output_format = "igraph",
@@ -17,7 +18,10 @@ build_graph(
 \arguments{
 \item{graph_data}{ppi data}
 
-\item{graph_data_anno}{dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)}
+\item{anno_df}{dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)}
+
+\item{idtype_anno}{Character, specifies which identifier type is used in the
+\code{anno_df}. Defaults to "gene_symbol"}
 
 \item{data_source}{database}
 
@@ -26,6 +30,8 @@ build_graph(
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 
 \item{add_info_nodes}{TRUE adding annotation infos to nodes}
+
+\item{g}{graph object created with build_graph()}
 }
 \value{
 my_graph
@@ -35,23 +41,31 @@ build_graph()
 }
 \examples{
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0"
-                                           )
+\dontrun{
 
-db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                            species = "Homo sapiens",
-                                            version = "12.0",
-                                            create_ppi_anno_df = FALSE)
+db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+                                           version = "12.0",
+                                           cache = TRUE,
+                                           get_annotation = FALSE,
+                                           add_annotation = FALSE
+                                          )
 
-db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
-                                         graph_data_anno = db_stringdb_anno_df,
+db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                               species = "Mus musculus"
+                                              )
+
+db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                                   anno_df = db_stringdb_anno_df,
+                                                   species = "Mus musculus")
+
+
+db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
+                                         anno_df = db_stringdb_anno_df,
+                                         idtype_anno = "gene_symbol",
                                          data_source = "stringdb",
                                          output_format = "igraph",
                                          min_score_threshold = "0.35",
-                                         add_info_nodes = TRUE)
-
-
-
-
+                                         add_info_nodes = TRUE
+                                         )
+}
 }

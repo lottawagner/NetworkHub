@@ -137,7 +137,10 @@ fetch_NetworkHub <- function(rname, # resourcename
 #' build_graph()
 #'
 #' @param graph_data ppi data
-#' @param graph_data_anno dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
+#' @param anno_df dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
+#' @param g graph object created with build_graph()
+#' @param idtype_anno Character, specifies which identifier type is used in the
+#' `anno_df`. Defaults to "gene_symbol"
 #' @param data_source database
 #' @param output_format selection of different graph functions that can be used
 #' @param min_score_threshold select ppis that are "confident" depending on the scoretype/value
@@ -148,27 +151,37 @@ fetch_NetworkHub <- function(rname, # resourcename
 #'
 #' @examples
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0"
-#'                                            )
+#' \dontrun{
 #'
-#' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                             species = "Homo sapiens",
-#'                                             version = "12.0",
-#'                                             create_ppi_anno_df = FALSE)
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+#'                                            version = "12.0",
+#'                                            cache = TRUE,
+#'                                            get_annotation = FALSE,
+#'                                            add_annotation = FALSE
+#'                                           )
 #'
-#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
-#'                                          graph_data_anno = db_stringdb_anno_df,
+#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                species = "Mus musculus"
+#'                                               )
+#'
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                    anno_df = db_stringdb_anno_df,
+#'                                                    species = "Mus musculus")
+#'
+#'
+#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
+#'                                          anno_df = db_stringdb_anno_df,
+#'                                          idtype_anno = "gene_symbol",
 #'                                          data_source = "stringdb",
 #'                                          output_format = "igraph",
 #'                                          min_score_threshold = "0.35",
-#'                                          add_info_nodes = TRUE)
-#'
-#'
-#'
-#'
+#'                                          add_info_nodes = TRUE
+#'                                          )
+#' }
+
 build_graph <- function(graph_data,
-                        graph_data_anno,
+                        anno_df,
+                        idtype_anno,
                         data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
                                         "genemania", "huri", "stringdb",
                                         "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
@@ -191,7 +204,7 @@ build_graph <- function(graph_data,
                              min_score_threshold = min_score_threshold)
 
   if (add_info_nodes) {
-    my_graph <- add_info_from_dataframe_to_graph(graph_data_anno = graph_data_anno, g = my_graph)
+    my_graph <- add_info_from_dataframe_to_graph(anno_df = anno_df, g = my_graph, idtype_anno = "gene_symbol")
   }
 
   return(my_graph)
@@ -202,10 +215,10 @@ build_graph <- function(graph_data,
 
 #' add_info_from_dataframe_to_graph()
 #'
-#' @param graph_data_anno dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
+#' @param anno_df dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
 #' @param g graph object created with build_graph()
 #' @param idtype_anno Character, specifies which identifier type is used in the
-#' `graph_data_anno`. Defaults to "gene_symbol"
+#' `anno_df`. Defaults to "gene_symbol"
 #'
 #' @return An igraph object
 #'
@@ -214,30 +227,31 @@ build_graph <- function(graph_data,
 #'
 #' @examples
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+#' \dontrun{
+#'
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
 #'                                            version = "12.0",
+#'                                            cache = TRUE,
+#'                                            get_annotation = FALSE,
 #'                                            add_annotation = FALSE
-#'                                            )
+#'                                           )
+#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                species = "Mus musculus"
+#'                                               )
 #'
-#' db_stringdb_annotated_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0",
-#'                                            add_annotation = TRUE
-#'                                            )
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                    anno_df = db_stringdb_anno_df,
+#'                                                    species = "Mus musculus")
 #'
 #'
-#' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                             species = "Homo sapiens",
-#'                                             version = "12.0",
-#'                                             create_ppi_anno_df = FALSE
-#'                                             )
-#'
-#' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_annotated_df,
+#' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_ppi_anno_df,
 #'                                                   output_format = "igraph",
 #'                                                   min_score_threshold = "0.35"
 #'                                                   )
 #'
-#' db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(graph_data_anno = db_stringdb_anno_df,
-#'                                                                          g = db_stringdb_igraph_object
+#' db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
+#'                                                                          g = db_stringdb_igraph_object,
+#'                                                                          idtype_anno = "gene_symbol")
 #'                                                                          )
 #'
 #'
@@ -249,18 +263,18 @@ build_graph <- function(graph_data,
 #' igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
 #' # this should have much less NAs, see above - possible TODO to re-check
 #'
-add_info_from_dataframe_to_graph <- function(graph_data_anno,
+add_info_from_dataframe_to_graph <- function(anno_df,
                                              g,
                                              idtype_anno = "gene_symbol") {
   #loop through annotation column names
   for (col_name in c("entrez_id", "gene_symbol", "uniprot_id", "ensembl_id")) {
     # if column name is in dataframe
-    if (col_name %in% colnames(graph_data_anno)) {
+    if (col_name %in% colnames(anno_df)) {
 
       #define attributin column names for igraph object
       attr_name <- paste0("attr_", col_name)
       #match values from graph and annotation dataframe
-      matched_values <- graph_data_anno[match(igraph::V(g)$name, graph_data_anno[[idtype_anno]]), col_name, drop = TRUE]
+      matched_values <- anno_df[match(igraph::V(g)$name, anno_df[[idtype_anno]]), col_name, drop = TRUE]
 
       #add values to graph
       g <- igraph::set_vertex_attr(g, name = attr_name, value = matched_values)
@@ -312,7 +326,7 @@ add_info_from_dataframe_to_graph <- function(graph_data_anno,
 #'                                             create_ppi_anno_df = FALSE)
 #'
 #' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
-#'                                          graph_data_anno = db_stringdb_anno_df,
+#'                                          anno_df = db_stringdb_anno_df,
 #'                                          data_source = "stringdb",
 #'                                          output_format = "igraph",
 #'                                          min_score_threshold = "0.35",

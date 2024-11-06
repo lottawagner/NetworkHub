@@ -23,8 +23,12 @@ build_graph_stringdb()
 \examples{
 \dontrun{
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version =  "12.0")
+db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+                                           version = "12.0",
+                                           cache = TRUE,
+                                           get_annotation = TRUE,
+                                           add_annotation = TRUE
+                                          )
 
 db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_df,
                                                   output_format = "igraph",

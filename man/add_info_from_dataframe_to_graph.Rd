@@ -4,54 +4,19 @@
 \alias{add_info_from_dataframe_to_graph}
 \title{add_info_from_dataframe_to_graph()}
 \usage{
-add_info_from_dataframe_to_graph(graph_data_anno, g)
+add_info_from_dataframe_to_graph(anno_df, g, idtype_anno = "gene_symbol")
 }
 \arguments{
-\item{graph_data_anno}{dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)}
+\item{anno_df}{dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)}
 
 \item{g}{graph object created with build_graph()}
+
+\item{idtype_anno}{Character, specifies which identifier type is used in the
+\code{anno_df}. Defaults to "gene_symbol"}
 }
 \value{
-g
+An igraph object
 }
 \description{
 add_info_from_dataframe_to_graph()
-}
-\examples{
-
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0",
-                                           add_annotation = FALSE
-                                           )
-
-db_stringdb_annotated_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0",
-                                           add_annotation = TRUE
-                                           )
-
-
-db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                            species = "Homo sapiens",
-                                            version = "12.0",
-                                            create_ppi_anno_df = FALSE
-                                            )
-
-db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_annotated_df,
-                                                  output_format = "igraph",
-                                                  min_score_threshold = "0.35"
-                                                  )
-
-db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(graph_data_anno = db_stringdb_anno_df,
-                                                                         g = db_stringdb_igraph_object
-                                                                         )
-
-
-db_stringdb_igraph_object_info_added
-
-
-# check that it worked:
-igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
-igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
-# this should have much less NAs, see above - possible TODO to re-check
-
 }

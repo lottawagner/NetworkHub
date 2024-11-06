@@ -8,6 +8,7 @@ get_networkdata_stringdb(
   species,
   version,
   cache = TRUE,
+  get_annotation = TRUE,
   add_annotation = TRUE,
   ...
 )
@@ -19,7 +20,9 @@ get_networkdata_stringdb(
 
 \item{cache}{default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 
-\item{add_annotation}{default value set to TRUE}
+\item{get_annotation}{creation of an annotation dataframe , default value set to TRUE}
+
+\item{add_annotation}{adding annotation to ppi datatframe, default value set to TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -32,7 +35,10 @@ get_networkdata_stringdb()
 \examples{
 \dontrun{
 db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
-                                         version = "12.0"
+                                         version = "12.0",
+                                         cache = TRUE,
+                                         get_annotation = FALSE,
+                                         add_annotation = FALSE
                                         )
 db_string_df
 }
