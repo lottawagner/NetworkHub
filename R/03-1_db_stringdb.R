@@ -1,5 +1,4 @@
 
-
 # get_networkdata_stringdb() ---------
 
 #' get_networkdata_stringdb()
@@ -357,8 +356,6 @@ add_annotation_stringdb <- function(ppi_stringdb,
 #'                                                   min_score_threshold = "0.35")
 #' db_stringdb_graph #list of 17490
 #' }
-#'
-#'
 
 
 build_graph_stringdb <- function (graph_data,

@@ -252,11 +252,11 @@ build_graph <- function(graph_data,
 #' db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
 #'                                                                          g = db_stringdb_igraph_object,
 #'                                                                          idtype_anno = "gene_symbol")
-#'                                                                          )
+#'                                                                      )
 #'
 #'
 #' db_stringdb_igraph_object_info_added
-#'
+#' }
 #'
 #' # check that it worked:
 #' igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
@@ -300,6 +300,37 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #'
 #' @examples
+#' \dontrun{
+#'
+#'
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+#'                                            version = "12.0",
+#'                                            cache = TRUE,
+#'                                            get_annotation = FALSE,
+#'                                            add_annotation = FALSE
+#'                                           )
+#'
+#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                species = "Homo sapiens"
+#'                                               )
+#'
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+#'                                                    anno_df = db_stringdb_anno_df,
+#'                                                    species = "Homo sapiens")
+#'
+#'
+#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
+#'                                          anno_df = db_stringdb_anno_df,
+#'                                          idtype_anno = "gene_symbol",
+#'                                          data_source = "stringdb",
+#'                                          output_format = "igraph",
+#'                                          min_score_threshold = "0.35",
+#'                                          add_info_nodes = TRUE
+#'                                         )
+#' library("macrophage") #demo dataset
+#' library("DESeq2") #package to perform differential expression analysis
+#' library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...
+#' library("AnnotationDbi") #Annotation package
 #'
 #' data(gse, package = "macrophage")
 #' dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
@@ -316,21 +347,7 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #' res_de <- res_macrophage_IFNg_vs_naive
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0"
-#'                                            )
 #'
-#' db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                             species = "Homo sapiens",
-#'                                             version = "12.0",
-#'                                             create_ppi_anno_df = FALSE)
-#'
-#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
-#'                                          anno_df = db_stringdb_anno_df,
-#'                                          data_source = "stringdb",
-#'                                          output_format = "igraph",
-#'                                          min_score_threshold = "0.35",
-#'                                          add_info_nodes = TRUE)
 #'
 #' #SE object
 #' dds <- dds_macrophage
@@ -352,12 +369,13 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #' se_macrophage
 #'
-#' map_SE_on_graph(se = se_macrophage,
-#'                 de_name = "ifng_vs_naive",
-#'                 value = "log2FoldChange",
-#'                 g = db_stringdb_igraph_object
-#'                 )
-#'
+#' graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
+#'                                               de_name = "ifng_vs_naive",
+#'                                               value = "log2FoldChange",
+#'                                               g = db_stringdb_igraph_object
+#'                                               )
+#'}
+
 map_SE_on_graph <- function(se,
                             de_name = "ifng_vs_naive",
                             value = c("log2FoldChange", "pvalue"),
@@ -366,8 +384,6 @@ map_SE_on_graph <- function(se,
 
     # Initialize a vector with `NA` for all nodes
     values <- rep(NA, igraph::vcount(g))
-
-    igraph::V(g)$attr_ensembl_id <- gsub("^ENSP", "ENSG", igraph::V(g)$attr_ensembl_id)
 
     #take the names of the nodes from the graph
     node_names <- igraph::V(g)$attr_ensembl_id
