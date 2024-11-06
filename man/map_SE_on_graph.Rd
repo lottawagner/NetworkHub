@@ -22,7 +22,7 @@ map_SE_on_graph(
 map_SE_on_graph
 }
 \examples{
-
+\dontrun{
 data(gse, package = "macrophage")
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
@@ -79,5 +79,5 @@ map_SE_on_graph(se = se_macrophage,
                 value = "log2FoldChange",
                 g = db_stringdb_igraph_object
                 )
-
+}
 }
