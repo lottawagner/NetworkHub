@@ -461,7 +461,7 @@ map_SE_on_graph <- function(se,
     vertex_title_genesymbol <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"))
     vertex_title_entrez     <- paste("Entrez ID:", vertex_attr(g, "attr_entrez_id"))
     vertex_title_uniprot    <- paste("Uniprot ID:", vertex_attr(g, "attr_uniprot_id"))
-    vertex_title_log2fc     <- paste("log2FC:", vertex_attr(g, "log2FoldChange"))
+    vertex_title_log2fc <- paste("log2FC:", round(vertex_attr(g, "log2FoldChange"), 4))
 
     vertex_titles <- paste0(vertex_title_genesymbol, "<br>",
                            vertex_title_entrez, "<br>",
