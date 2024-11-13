@@ -29,6 +29,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
 # About NetworkHub#TODO
 
 
