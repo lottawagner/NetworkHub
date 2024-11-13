@@ -375,6 +375,8 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'  return(dds)
 #'  }
 #' se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
+#'
+#' # what is this for? #TODO
 #' de_res_scrambles <- de_res
 #' de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 #'
