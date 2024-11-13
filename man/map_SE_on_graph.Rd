@@ -23,6 +23,37 @@ map_SE_on_graph
 }
 \examples{
 \dontrun{
+
+
+db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
+                                           version = "12.0",
+                                           cache = TRUE,
+                                           get_annotation = FALSE,
+                                           add_annotation = FALSE
+                                          )
+
+db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                               species = "Homo sapiens"
+                                              )
+
+db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                                   anno_df = db_stringdb_anno_df,
+                                                   species = "Homo sapiens")
+
+
+db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
+                                         anno_df = db_stringdb_anno_df,
+                                         idtype_anno = "gene_symbol",
+                                         data_source = "stringdb",
+                                         output_format = "igraph",
+                                         min_score_threshold = "0.35",
+                                         add_info_nodes = TRUE
+                                        )
+library("macrophage") #demo dataset
+library("DESeq2") #package to perform differential expression analysis
+library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...
+library("AnnotationDbi") #Annotation package
+
 data(gse, package = "macrophage")
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
@@ -37,22 +68,14 @@ res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
                                        alpha = 0.05)
 
 res_de <- res_macrophage_IFNg_vs_naive
+de_df <- mosdef::deresult_to_df(res_de)
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0"
-                                           )
+top_ones <- mapIds(org.Hs.eg.db, de_df$id[1:100], column = "SYMBOL", keytype = "ENSEMBL")
+top_ones_narm <- top_ones[!is.na(top_twenty)]
 
-db_stringdb_anno_df  <- annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                            species = "Homo sapiens",
-                                            version = "12.0",
-                                            create_ppi_anno_df = FALSE)
+top_ones_in_graph <- intersect(top_ones_narm, V(g)$name)
 
-db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_df,
-                                         anno_df = db_stringdb_anno_df,
-                                         data_source = "stringdb",
-                                         output_format = "igraph",
-                                         min_score_threshold = "0.35",
-                                         add_info_nodes = TRUE)
+
 
 #SE object
 dds <- dds_macrophage
@@ -74,10 +97,10 @@ de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 
 se_macrophage
 
-map_SE_on_graph(se = se_macrophage,
-                de_name = "ifng_vs_naive",
-                value = "log2FoldChange",
-                g = db_stringdb_igraph_object
-                )
+graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
+                                              de_name = "ifng_vs_naive",
+                                              value = "log2FoldChange",
+                                              g = db_stringdb_igraph_object
+                                              )
 }
 }
