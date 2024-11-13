@@ -463,9 +463,9 @@ map_SE_on_graph <- function(se,
     vertex_title_uniprot    <- paste("Uniprot ID:", vertex_attr(g, "attr_uniprot_id"))
     vertex_title_log2fc     <- paste("log2FC:", vertex_attr(g, "log2FoldChange"))
 
-    vertex_titles <- paste0(vertex_title_genesymbol, "\n",
-                           vertex_title_entrez, "\n",
-                           vertex_title_uniprot, "\n",
+    vertex_titles <- paste0(vertex_title_genesymbol, "<br>",
+                           vertex_title_entrez, "<br>",
+                           vertex_title_uniprot, "<br>",
                            vertex_title_log2fc)
 
     #TODO title with line break
