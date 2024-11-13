@@ -1,6 +1,6 @@
 # NetworkHub 
 
-<img src="inst/scripts/etwork  ub.png" alt="NetworkHubSticker" align="right" alt="" width="120" />
+<img src="inst/scripts/networkhub_sticker.png" alt="NetworkHubSticker" align="right" width="140" />
 
 ## Installation 
 
