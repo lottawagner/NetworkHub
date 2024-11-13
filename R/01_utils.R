@@ -284,16 +284,17 @@ add_info_from_dataframe_to_graph <- function(anno_df,
   return(g)
 }
 
-# project_SE() -------------
+# map_SE_on_graph() -------------
 
 #' map_SE_on_graph
 #'
 #' @param se summerized experiment object (e.g. DE analysis resluts)
-#' @param value select the value of the results you want to compare
-#' @param de_name
-#' @param id_in_graph
+#' @param value_to_map select the value of the results you want to compare
+#' @param de_name name of experiment results/ what to compare (e.g. "ifng_vs_naive")
+#' @param id_in_graph annotation type of se dataframe rows/ what should be mapped in the graph
+#' @param g igraph object
 #'
-#' @return
+#' @return g
 #' @export
 #'
 #' @import visNetwork
@@ -328,6 +329,8 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'                                          min_score_threshold = "0.35",
 #'                                          add_info_nodes = TRUE
 #'                                         )
+#' g <- db_stringdb_igraph_object
+#'
 #' library("macrophage") #demo dataset
 #' library("DESeq2") #package to perform differential expression analysis
 #' library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...
@@ -350,16 +353,17 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #' de_df <- mosdef::deresult_to_df(res_de)
 #'
 #' top_ones <- mapIds(org.Hs.eg.db, de_df$id[1:100], column = "SYMBOL", keytype = "ENSEMBL")
-#' top_ones_narm <- top_ones[!is.na(top_twenty)]
+#' top_ones_narm <- top_ones[!is.na(top_ones)]
 #'
 #' top_ones_in_graph <- intersect(top_ones_narm, V(g)$name)
-#'
 #'
 #'
 #' #SE object
 #' dds <- dds_macrophage
 #' de_res <- res_de
 #' de_name <- "ifngVSnaive"
+#'
+#' #function to combine dds dataframe (SE) with the results de dataframe (df)
 #' combine_dds_deres <- function(dds, de_res, de_name) {
 #'    matched_ids <- match(rownames(res_de), rownames(dds))
 #'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
@@ -370,7 +374,7 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'    rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
 #'  return(dds)
 #'  }
-#' se_macrophage <- combine_dds_deres(dds_macrophage, res_de, "ifng_vs_naive")
+#' se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
 #' de_res_scrambles <- de_res
 #' de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 #'
@@ -378,10 +382,12 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #' graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
 #'                                               de_name = "ifng_vs_naive",
-#'                                               value = "log2FoldChange",
+#'                                               value_to_map = "log2FoldChange",
+#'                                               id_in_graph = "attr_ensembl_id",
 #'                                               g = db_stringdb_igraph_object
 #'                                               )
-#' }
+#'
+#' #Extra: Creation of a visNetwork :)
 #'
 #' subg <- induced_subgraph(
 #'    graph_se_macrophage_string,
@@ -395,10 +401,11 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'                                                    hover = TRUE),
 #'                            nodesIdSelection = TRUE)
 #'
+#'
 
 map_SE_on_graph <- function(se,
                             de_name = "ifng_vs_naive",
-                            value = c("log2FoldChange", "pvalue"),
+                            value_to_map = c("log2FoldChange", "pvalue"),
                             id_in_graph = "attr_ensembl_id",
                             g
                             ) {
@@ -413,14 +420,14 @@ map_SE_on_graph <- function(se,
     matched_names <- match(node_names, rownames(se))
 
     # extract value (e.g. log2foldchange) and save in vector
-    column_name <- paste0(de_name, "_", value)
+    column_name <- paste0(de_name, "_", value_to_map)
     values[!is.na(matched_names)] <- rowData(se)[[column_name]][matched_names[!is.na(matched_names)]]
 
     # colors <- ifelse(is.na(values), "grey",
     #                  ifelse(values > 0, "red", "blue"))
     #
     # # add the color as an attribute
-    g <- igraph::set_vertex_attr(g, value, value = values)
+    g <- igraph::set_vertex_attr(g, value_to_map, value = values)
 
 
     mypal <- rev(scales::alpha(
@@ -428,16 +435,10 @@ map_SE_on_graph <- function(se,
     ))
 
     max_de <- max(abs(range(
-      vertex_attr(g, value), na.rm = TRUE
+      vertex_attr(g, value_to_map), na.rm = TRUE
     )))
 
-    V(g)$color <- mosdef::map_to_color(vertex_attr(g, value), mypal, limits = c(-max_de, max_de))
-
-    # gene_ids_backup <- V(g)$name
-    # gene_names <- anno_df_string$gene_symbol[match(gene_ids_backup, anno_df_string$ensembl_id)]
-    # new_names <- gene_names
-    # new_names[is.na(new_names)] <- gene_ids_backup[is.na(new_names)]
-    # V(g)$name <- new_names
+    V(g)$color <- mosdef::map_to_color(vertex_attr(g, value_to_map), mypal, limits = c(-max_de, max_de))
 
     rank_gs <- rank(V(g)$name)
     g <- permute(g, rank_gs)
@@ -445,62 +446,31 @@ map_SE_on_graph <- function(se,
     # title for tooltips
     g <- set_vertex_attr(g, name = "title", value = NA)
 
-    # TODO: move away-ish from V(g)$ --> set_vertex_attr/vertex_attr
-    V(g)$title <- paste0(
-      "<h4>", V(g)$name, "</h4><br>",
-      "logFC = ", "lotta"
-    )
 
+    # vertex_titles <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"),
+    #                         "Entrez ID:", vertex_attr(g, "attr_entrez_id"),
+    #                         "Uniprot ID:", vertex_attr(g, "attr_uniprot_id"),
+    #                         "log2FC:", vertex_attr(g, "log2FoldChange")
+    #                       )
+    #
+    #
+    # g <- set_vertex_attr(g, name = "title", value = vertex_titles)
+
+    vertex_title_genesymbol <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"))
+    vertex_title_entrez     <- paste("Entrez ID:", vertex_attr(g, "attr_entrez_id"))
+    vertex_title_uniprot    <- paste("Uniprot ID:", vertex_attr(g, "attr_uniprot_id"))
+    vertex_title_log2fc     <- paste("log2FC:", vertex_attr(g, "log2FoldChange"))
+
+    vertex_titles <- paste0(vertex_title_genesymbol, "\n",
+                           vertex_title_entrez, "\n",
+                           vertex_title_uniprot, "\n",
+                           vertex_title_log2fc)
+
+    #TODO title with line break
+    g <- set_vertex_attr(g, name = "title", value = vertex_titles)
 
     rank_gs <- rank(V(g)$name)
     g <- permute.vertices(g, rank_gs)
 
-
-    # V(g)$color <- colors
-
-    # # Convert to a visNetwork-compatible object
-    # vis_data <- visNetwork::toVisNetworkData(g)
-    # vis_data$nodes$color <- colors
-    #
-    # # Network visualization
-    # visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges) %>%
-    #   visNetwork::visNodes(color = list(background = vis_data$nodes$color)) %>%
-    #   visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
-
     return(g)
 }
-
-#
-#
-# V(de_graph)$color <- GeneTonic::map2color(V(de_graph)$log2FC, mypal, limits = c(-max_de, max_de))
-#
-# gene_ids_backup <- V(de_graph)$name
-# gene_names <- anno_df_string$gene_symbol[match(gene_ids_backup, anno_df_string$ensembl_id)]
-# new_names <- gene_names
-# new_names[is.na(new_names)] <- gene_ids_backup[is.na(new_names)]
-# V(de_graph)$name <- new_names
-
-
-# title for tooltips
-
-# visNetwork::visIgraph(de_graph) |>
-#   visNetwork::visEdges(color = list(color = "#88888888")) |>
-#   visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-#                                                  degree = 1,
-#                                                  hover = TRUE),
-#                          nodesIdSelection = TRUE)
-#
-
-
-#Error in visNetwork(nodes = vis_data$nodes, edges = vis_data$edges) %>%  :
-#could not find function "%>%"
-
-#TODO
-# Convert to a visNetwork-compatible object
-# vis_data <- visNetwork::toVisNetworkData(g2)
-# vis_data$nodes$color <- colors
-#
-# # Network visualization
-# visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges) %>%
-#   visNetwork::visNodes(color = list(background = vis_data$nodes$color)) %>%
-#   visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
