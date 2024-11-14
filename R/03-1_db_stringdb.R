@@ -17,7 +17,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
+#' db_string_df <- get_networkdata_stringdb(species = "Homo sapiens",
 #'                                          version = "12.0",
 #'                                          cache = TRUE,
 #'                                          get_annotation = FALSE,
@@ -103,9 +103,11 @@ get_networkdata_stringdb <- function(species,
            "Annotation for this species is not provided") # stop function and print
     }
 
-    db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = ppis_stringdb,
-                                                   species = species
-                                                   )
+    db_stringdb_anno_df <- get_annotation_stringdb(species = species,
+                                                   version = "12.0",
+                                                   cache = TRUE
+                                                  )
+
     message("...created annotation dataframe")
 
 
@@ -175,92 +177,7 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
                                     row.names = list_common_species_stringdb
 )
 
-
-# get_annotation_stringdb() --------
-
-#' get_annotation_stringdb ()
-#'
-#' @param ppi_stringdb variable defined by ppis_stringdb in get_networkdata_stringdb()
-#' @param species  from which species does the data come from
-#'
-#'
-#' @importFrom AnnotationDbi mapIds
-#' @importFrom stats na.omit
-#' @import org.Bt.eg.db
-#' @import org.Ce.eg.db
-#' @import org.Cf.eg.db
-#' @import org.Dm.eg.db
-#' @import org.Gg.eg.db
-#' @import org.Hs.eg.db
-#' @import org.Mm.eg.db
-#' @import org.Rn.eg.db
-#' @import org.Sc.sgd.db
-#'
-#'@return anno_df (for corresponding species in stringdb)
-#'
-#'@export
-#'
-#'
-#' @examples
-#' \dontrun{
-#'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = FALSE,
-#'                                            add_annotation = FALSE
-#'                                           )
-#'
-#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                 species = "Mus musculus"
-#'                                               )
-#'}
-
-
-# get_annotation_stringdb <- function(ppi_stringdb,
-#                                     species) {
-#
-#   annotation_db <-
-#     stringdb_db_annotations$anno_db_stringdb[match(species, stringdb_db_annotations$species)]
-#
-#   #create a list that contains all uniprot ids (but not NA)
-#   all_prot_ids <- unique(c(ppi_stringdb$Ensembl_Prot_A, ppi_stringdb$Ensembl_Prot_B))
-#   all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
-#
-#
-#   anno_df <- data.frame(ensembl_prot_id = all_prot_ids,
-#                         ensembl_id = AnnotationDbi::mapIds(get(annotation_db),
-#                                                            keys = all_prot_ids,
-#                                                            keytype = "ENSEMBLPROT",
-#                                                            column = "ENSEMBL"
-#                         ),
-#                         gene_symbol = AnnotationDbi::mapIds(get(annotation_db),
-#                                               keys = all_prot_ids,
-#                                               keytype = "ENSEMBLPROT",
-#                                               column = "SYMBOL"
-#                         ),
-#                         uniprot_id = AnnotationDbi::mapIds(get(annotation_db),
-#                                              keys = all_prot_ids,
-#                                              keytype = "ENSEMBLPROT",
-#                                              column = "UNIPROT"
-#                         ),
-#                         entrez_id = AnnotationDbi::mapIds(get(annotation_db),
-#                                              keys = all_prot_ids,
-#                                              keytype = "ENSEMBLPROT",
-#                                              column = "ENTREZID"
-#                         ),
-#                         row.names = all_prot_ids
-#   )
-#
-#   return (anno_df)
-# }
-
-
-
-
 # get_annotation_stringdb() ------
-
-
 
 #' get_annotation_stringdb()
 #'
@@ -449,7 +366,7 @@ add_annotation_stringdb <- function(ppi_stringdb,
 #' @examples
 #' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
 #'                                            version = "12.0",
 #'                                            cache = TRUE,
 #'                                            get_annotation = TRUE,

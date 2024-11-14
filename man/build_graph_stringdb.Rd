@@ -23,7 +23,7 @@ build_graph_stringdb()
 \examples{
 \dontrun{
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
                                            version = "12.0",
                                            cache = TRUE,
                                            get_annotation = TRUE,

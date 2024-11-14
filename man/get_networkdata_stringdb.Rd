@@ -34,7 +34,7 @@ get_networkdata_stringdb()
 }
 \examples{
 \dontrun{
-db_string_df <- get_networkdata_stringdb(species = "Mus musculus",
+db_string_df <- get_networkdata_stringdb(species = "Homo sapiens",
                                          version = "12.0",
                                          cache = TRUE,
                                          get_annotation = FALSE,

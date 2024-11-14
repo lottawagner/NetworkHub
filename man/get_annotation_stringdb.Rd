@@ -2,33 +2,31 @@
 % Please edit documentation in R/03-1_db_stringdb.R
 \name{get_annotation_stringdb}
 \alias{get_annotation_stringdb}
-\title{get_annotation_stringdb ()}
+\title{get_annotation_stringdb()}
 \usage{
-get_annotation_stringdb(ppi_stringdb, species)
+get_annotation_stringdb(species, version, cache = TRUE)
 }
 \arguments{
-\item{ppi_stringdb}{variable defined by ppis_stringdb in get_networkdata_stringdb()}
-
 \item{species}{from which species does the data come from}
+
+\item{version}{version of data files in STRING, default value = "12.0"}
+
+\item{cache}{efault value set to TRUE (automatically checks if the data file is already stored in the cache)}
 }
 \value{
 anno_df (for corresponding species in stringdb)
 }
 \description{
-get_annotation_stringdb ()
+get_annotation_stringdb()
 }
 \examples{
-\dontrun{
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+anno_df_stringdb <- get_annotation_stringdb(species = "Homo sapiens",
                                            version = "12.0",
-                                           cache = TRUE,
-                                           get_annotation = FALSE,
-                                           add_annotation = FALSE
-                                          )
+                                           cache = TRUE
+                                           )
 
-db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                                species = "Mus musculus"
-                                              )
-}
+# returns a dataframe containing 19699 rows and 5 columns
+
+
 }
