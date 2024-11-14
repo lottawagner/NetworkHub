@@ -200,7 +200,7 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #'
 #'
 #' @examples
-#' #\dontrun{
+#' \dontrun{
 #'
 #' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
 #'                                            version = "12.0",
@@ -268,7 +268,7 @@ get_annotation_stringdb <- function(ppi_stringdb,
 #'
 #'
 #' @examples
-#' #\dontrun{
+#' \dontrun{
 #'
 #' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
 #'                                            version = "12.0",
