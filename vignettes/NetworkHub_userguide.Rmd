@@ -47,9 +47,9 @@ knitr::opts_chunk$set(
 # Setting up NetworkHub#TODO
 
 ```{r eval = FALSE}
-if(!requireNamespace("NetworkHub", quietly = TRUE))
-    install.packages("NetworkHub")
-BiocManager::install("NetworkHub")
+# if(!requireNamespace("NetworkHub", quietly = TRUE))
+#     install.packages("NetworkHub")
+# BiocManager::install("NetworkHub")
 ``` 
 
 If you want to install the development version from GitHub, you can alternatively run this command:
@@ -184,22 +184,23 @@ Going from the DE genes to the proteins...
                                             add_annotation = FALSE
                                            )
 
- db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                                species = "Homo sapiens"
+db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
+                                               version = "12.0",
+                                               cache = TRUE
                                                )
 
- db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                                    anno_df = db_stringdb_anno_df,
-                                                    species = "Homo sapiens")
+db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
+                                                   anno_df = db_stringdb_anno_df,
+                                                   species = "Homo sapiens")
 
 
- db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
-                                          anno_df = db_stringdb_anno_df,
-                                          idtype_anno = "gene_symbol",
-                                          data_source = "stringdb",
-                                          output_format = "igraph",
-                                          min_score_threshold = "0.35",
-                                          add_info_nodes = TRUE
+db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
+                                         anno_df = db_stringdb_anno_df,
+                                         idtype_anno = "gene_symbol",
+                                         data_source = "stringdb",
+                                         output_format = "igraph",
+                                         min_score_threshold = "0.35",
+                                         add_info_nodes = TRUE
                                          )
 
 first_proteins <- SE_dataframe_string$Ensembl[match(first_degenes, proteins_string)] |> 
@@ -304,150 +305,6 @@ visNetwork::visIgraph(de_graph) |>
                                                  hover = TRUE),
                          nodesIdSelection = TRUE)
 ```
-
-
-# Trying to go 1 on 1 vs the STRINGDB vignette!
-
-```{r sdbvignette}
-library("STRINGdb")
-library("igraph")
-
-string_db <- STRINGdb$new(version="11.5", 
-                          species=9606,
-                          score_threshold=200, 
-                          network_type="full", 
-                          input_directory="../dev/sdb_human/")
-
-data(diff_exp_example1)
-head(diff_exp_example1)
-
-example1_mapped <- string_db$map( diff_exp_example1, "gene", removeUnmappedRows = TRUE )
-
-hits <- example1_mapped$STRING_id[1:600]
-string_db$plot_network(hits)
-
-# get clusters
-clustersList <- string_db$get_clusters(example1_mapped$STRING_id[1:600])
-# plot first 4 clusters
-par(mfrow=c(2,2))
-for(i in seq(1:4)) {
-  string_db$plot_network(clustersList[[i]])
-}
-```
-
-
-```{r sdbnh}
-# similarly, with our interactive thingoooooos...
-ppi_human_v11.5 <- get_networkdata_STRINGDB(species = "Homo sapiens",
-                                            version = "11.5")
-
-
-network_desubset_600 <- build_graph_STRINGDB(graph_data = ppi_human_v11.5, 
-                                             output_format = "igraph",
-                                             min_score_threshold = 200,
-                                             subset_nodes = example1_mapped$STRING_id[1:600])
-
-
-
-# clustering the main graph like...
-
-clu_graph_walktrap <- walktrap.community(network_desubset_600,merges=TRUE, modularity=TRUE)
-clu_graph_fastgreedy <- fastgreedy.community(network_desubset_600,merges=TRUE, modularity=TRUE)
-clu_graph_markov <- GeneTonic::cluster_markov(network_desubset_600)
-clu_graph_louvain <- igraph::cluster_louvain(network_desubset_600)
-
-table(membership(clu_graph_walktrap))
-table(membership(clu_graph_fastgreedy))
-table(membership(clu_graph_markov))
-table(membership(clu_graph_louvain))
-
-memb_to_use <- membership(clu_graph_walktrap)
-memb_to_use <- membership(clu_graph_fastgreedy)
-memb_to_use <- membership(clu_graph_louvain)
-
-V(network_desubset_600)$membership <- memb_to_use
-V(network_desubset_600)$color <- memb_to_use
-
-visNetwork::visIgraph(network_desubset_600) %>%
-   visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                    degree = 1,
-                                                    hover = TRUE),
-                            nodesIdSelection = TRUE,
-                          selectedBy = "membership")
-```
-
-
-```{r allclusts}
-clustersList_redone <- list()
-
-for(i in 1:max(memb_to_use)){
-  clustersList_redone[[i]] <- names(memb_to_use[memb_to_use == i])
-}
-
-cluster_networks <- lapply(clustersList_redone[1:4], function(arg) {
-  build_graph_STRINGDB(graph_data = ppi_human_v11.5, 
-                       output_format = "igraph",
-                       min_score_threshold = 200,
-                       subset_nodes = arg)
-})
-
-visNetwork::visIgraph(cluster_networks[[1]]) %>%
-  visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                 degree = 1,
-                                                 hover = TRUE),
-                         nodesIdSelection = TRUE)
-
-visNetwork::visIgraph(cluster_networks[[2]]) %>%
-  visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                 degree = 1,
-                                                 hover = TRUE),
-                         nodesIdSelection = TRUE)
-
-visNetwork::visIgraph(cluster_networks[[3]]) %>%
-  visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                 degree = 1,
-                                                 hover = TRUE),
-                         nodesIdSelection = TRUE)
-
-visNetwork::visIgraph(cluster_networks[[4]]) %>%
-  visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                 degree = 1,
-                                                 hover = TRUE),
-                         nodesIdSelection = TRUE)
-
-```
-
-
-# Ok, bringing this into functions to make it streamlined
-
-```{r mapse}
-de_graph # would have to be with gene identifiers as in the SE
-se_macrophage
-annotation_df <- anno_df_string
-
-rowdata_to_map <- "macrores_log2FoldChange"
-assay_name <- "counts"
-
-
-gg <- NetworkHub:::map_se_onto_graph(de_graph_ens, 
-                                     se_macrophage, 
-                                     anno_df_string, 
-                                     assay_name = "counts")
-
-gg
-
-NetworkHub:::iplot_graph(gg, color_nodes_by = "macrores_log2FoldChange")
-
-gg_genenames <- gg
-genesymbols_matched <- anno_df_string$gene_symbol[match(V(gg)$name, anno_df_string$ensembl_id)]
-
-scater::uniquifyFeatureNames(V(gg)$name, genesymbols_matched)
-V(gg_genenames)$name <- scater::uniquifyFeatureNames(V(gg)$name, genesymbols_matched)
-
-NetworkHub:::iplot_graph(gg_genenames, color_nodes_by = "macrores_log2FoldChange")
-```
-
-
 
 # Session Info {-}
 
