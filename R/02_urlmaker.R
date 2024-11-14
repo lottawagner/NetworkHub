@@ -18,6 +18,7 @@
 #'
 #' @param species from which species does the data come from
 #' @param version version of the data files in stringdb
+#' @param type which data file do you want to download ? ("PPI", "protein_info")
 #'
 #' @return url returns the corresponding url set by params
 #' @export
@@ -25,11 +26,13 @@
 #' @importFrom utils read.delim
 #'
 #' @examples
-#' url_stringdb <- urlmaker_stringdb(species = "Homo sapiens",
+#' url_stringdb <- urlmaker_stringdb(type = "PPI",
+#'                                   species = "Homo sapiens",
 #'                                   version = "12.0")
 #'
 #' url_stringdb
-urlmaker_stringdb <- function(species = "Homo sapiens",
+urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
+                              species = "Homo sapiens",
                               version = "12.0") {
 
   stopifnot(is.character(species))                  # make sure to type in a species name as character
@@ -56,15 +59,23 @@ urlmaker_stringdb <- function(species = "Homo sapiens",
   ]
 
   # here we define the url for the different type options
-  #QUESTION: my link is stringdb-downloads and yours is:
-  #https://stringdb-static.org/download/protein.links.full.v%s/%s.protein.links.full.v%s.txt.gz
 
+  if (type == "PPI") {
+    url <- sprintf(
+      "https://stringdb-downloads.org/download/protein.links.v%s/%s.protein.links.v%s.txt.gz",
+      version,
+      species_id,
+      version
+    )
 
-  url <- sprintf("https://stringdb-downloads.org/download/protein.links.v%s/%s.protein.links.v%s.txt.gz",
-                 version,
-                 species_id,
-                 version)
-
+  } else if (type == "protein_info") {
+    url <- sprintf(
+      "https://stringdb-downloads.org/download/protein.aliases.v%s/%s.protein.aliases.v%s.txt.gz",
+      version,
+      species_id,
+      version
+    )
+  }
   # return value is "url"
   return(url)
 }
@@ -652,10 +663,7 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 
 
 
-# TODO
 
-
-# TODO
 # MatrixDB - ONLY HUMAN ------------------
 
 #' urlmaker_matrixdb()
