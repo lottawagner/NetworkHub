@@ -52,7 +52,7 @@ initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 #' @examples
 #' # for example, retrieve something from stringDB
 #'
-#' url_sdb <- urlmaker_stringdb(species = "Homo sapiens", version = "12.0")
+#' url_sdb <- urlmaker_stringdb(species = "Homo sapiens", version = "12.0", type == "PPI")
 #' url_sdb
 #'
 #' cache_NetworkHub(
