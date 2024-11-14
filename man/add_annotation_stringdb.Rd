@@ -20,7 +20,7 @@ ppi_stringdb with annotation columns for each interactor (for corresponding spec
 add_annotation_stringdb ()
 }
 \examples{
-#\dontrun{
+\dontrun{
 
 db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
                                            version = "12.0",

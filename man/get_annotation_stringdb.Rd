@@ -18,7 +18,7 @@ anno_df (for corresponding species in stringdb)
 get_annotation_stringdb ()
 }
 \examples{
-#\dontrun{
+\dontrun{
 
 db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
                                            version = "12.0",
