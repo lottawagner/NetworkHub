@@ -29,19 +29,24 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
 # About NetworkHub#TODO
-
-
-
 
 
 
 # Setting up NetworkHub#TODO
 
 ```{r eval = FALSE}
-if(!requireNamespace("NetworkHub", quietly = TRUE))
-    install.packages("NetworkHub")
-BiocManager::install("NetworkHub")
+# if(!requireNamespace("NetworkHub", quietly = TRUE))
+#     install.packages("NetworkHub")
+# BiocManager::install("NetworkHub")
 ``` 
 
 If you want to install the development version from GitHub, you can alternatively run this command:
@@ -118,7 +123,8 @@ res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look i
 
 ## Differential Expression Analysis
 
-To perform a differential expression anlaysis "on your own" you can run the following lines: 
+To perform a differential expression anlaysis "on your own" you can run the following lines:
+
 ```{r DE}
 data(gse, package = "macrophage")
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
@@ -157,6 +163,10 @@ combine_dds_deres <- function(dds, de_res, de_name) {
   }
 se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
 
+# What is this for #TODO ?
+# de_res_scrambles <- de_res
+# de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
+
 se_macrophage
 
 ```
@@ -180,9 +190,12 @@ db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
 
 
 # anno df: get the annotation for "Homo sapiens"
-db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                               species = "Homo sapiens"
-                                              )
+
+db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
+                                               version = "12.0",
+                                               cache = TRUE
+                                               )
+
 # PPI anno df: add the annotation for "Homo sapiens" from "db_stringdb_anno_df" to "db_stringdb_df" to get "db_stringdb_ppi_anno_df"
 
 db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
