@@ -71,6 +71,7 @@ get_networkdata_stringdb <- function(species,
     # buildup from "base" stringdb url
     stringdb_url <-
       urlmaker_stringdb(
+        type = "PPI",
         species = species,
         version = version
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_stringdb
@@ -88,7 +89,8 @@ get_networkdata_stringdb <- function(species,
 
 
   # rename columns
-  #Uniprot
+
+  #Ensembl
   colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein1"] <- "Ensembl_Prot_A"
   colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein2"] <- "Ensembl_Prot_B"
   ppis_stringdb$Ensembl_Prot_A <- str_extract(ppis_stringdb$Ensembl_Prot_A, "(EN[S][A-Z0-9]+)")
@@ -215,43 +217,146 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #'}
 
 
-get_annotation_stringdb <- function(ppi_stringdb,
-                                    species) {
+# get_annotation_stringdb <- function(ppi_stringdb,
+#                                     species) {
+#
+#   annotation_db <-
+#     stringdb_db_annotations$anno_db_stringdb[match(species, stringdb_db_annotations$species)]
+#
+#   #create a list that contains all uniprot ids (but not NA)
+#   all_prot_ids <- unique(c(ppi_stringdb$Ensembl_Prot_A, ppi_stringdb$Ensembl_Prot_B))
+#   all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
+#
+#
+#   anno_df <- data.frame(ensembl_prot_id = all_prot_ids,
+#                         ensembl_id = AnnotationDbi::mapIds(get(annotation_db),
+#                                                            keys = all_prot_ids,
+#                                                            keytype = "ENSEMBLPROT",
+#                                                            column = "ENSEMBL"
+#                         ),
+#                         gene_symbol = AnnotationDbi::mapIds(get(annotation_db),
+#                                               keys = all_prot_ids,
+#                                               keytype = "ENSEMBLPROT",
+#                                               column = "SYMBOL"
+#                         ),
+#                         uniprot_id = AnnotationDbi::mapIds(get(annotation_db),
+#                                              keys = all_prot_ids,
+#                                              keytype = "ENSEMBLPROT",
+#                                              column = "UNIPROT"
+#                         ),
+#                         entrez_id = AnnotationDbi::mapIds(get(annotation_db),
+#                                              keys = all_prot_ids,
+#                                              keytype = "ENSEMBLPROT",
+#                                              column = "ENTREZID"
+#                         ),
+#                         row.names = all_prot_ids
+#   )
+#
+#   return (anno_df)
+# }
 
-  annotation_db <-
-    stringdb_db_annotations$anno_db_stringdb[match(species, stringdb_db_annotations$species)]
-
-  #create a list that contains all uniprot ids (but not NA)
-  all_prot_ids <- unique(c(ppi_stringdb$Ensembl_Prot_A, ppi_stringdb$Ensembl_Prot_B))
-  all_prot_ids <- gsub("\\.[0-9]+$", "", all_prot_ids)
 
 
-  anno_df <- data.frame(ensembl_prot_id = all_prot_ids,
-                        ensembl_id = AnnotationDbi::mapIds(get(annotation_db),
-                                                           keys = all_prot_ids,
-                                                           keytype = "ENSEMBLPROT",
-                                                           column = "ENSEMBL"
-                        ),
-                        gene_symbol = AnnotationDbi::mapIds(get(annotation_db),
-                                              keys = all_prot_ids,
-                                              keytype = "ENSEMBLPROT",
-                                              column = "SYMBOL"
-                        ),
-                        uniprot_id = AnnotationDbi::mapIds(get(annotation_db),
-                                             keys = all_prot_ids,
-                                             keytype = "ENSEMBLPROT",
-                                             column = "UNIPROT"
-                        ),
-                        entrez_id = AnnotationDbi::mapIds(get(annotation_db),
-                                             keys = all_prot_ids,
-                                             keytype = "ENSEMBLPROT",
-                                             column = "ENTREZID"
-                        ),
-                        row.names = all_prot_ids
+
+# get_annotation_stringdb() ------
+
+
+
+#' get_annotation_stringdb()
+#'
+#' @param species from which species does the data come from
+#' @param version version of data files in STRING, default value = "12.0"
+#' @param cache efault value set to TRUE (automatically checks if the data file is already stored in the cache)
+#'
+#' @return anno_df (for corresponding species in stringdb)
+#' @export
+#'
+#' @examples
+#'
+#' anno_df_stringdb <- get_annotation_stringdb(species = "Homo sapiens",
+#'                                            version = "12.0",
+#'                                            cache = TRUE
+#'                                            )
+#'
+#' # returns a dataframe containing 19699 rows and 5 columns
+#'
+#'
+get_annotation_stringdb <- function(species,
+                                    version,
+                                    cache = TRUE) {
+  # matching for the species...
+  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
+                                  version)
+
+  # read.delim the data from the species text file (columns separated using a delimiter)
+  info_species <- read.delim(url(url_species_stringdb))
+  species_id <- info_species$X.taxon_id[ # in the column X.taxon_id we will find the taxon_id and assign it to the variable species_id
+    match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
+  ]
+
+  rname <- paste0(
+    "STRINGDB_protein_info_",
+    species,
+    "_v",
+    version
   )
 
-  return (anno_df)
+  if (cache) {
+    # tries to fetch from the cache
+    message("Trying to fetch from cache...")
+    proteininfo_file <- fetch_NetworkHub(rname)
+  }
+
+  if (!cache | is.null(proteininfo_file)) {
+    # retrieves the file for the first time
+    message("Retrieving to cache...")
+    # buildup from "base" STRINGDB url
+    url_stringdb_info <-
+      urlmaker_stringdb(
+        type = "protein_info",
+        species = species,
+        version = version
+      )
+
+    proteininfo_file <- cache_NetworkHub(
+      rname = rname,
+      fpath = url_stringdb_info
+    )
+  }
+
+  # read in the resource, whether cached or freshly downloaded
+  stringdb_protein_info <- vroom::vroom(proteininfo_file)
+
+  anno_df <- data.frame(
+    protein_id = unique(stringdb_protein_info$`#string_protein_id`),
+    row.names = unique(stringdb_protein_info$`#string_protein_id`)
+  )
+
+  # prefill with NAs
+  anno_df$ensembl_id <- NA
+  anno_df$gene_symbol <- NA
+  anno_df$entrez_id <- NA
+  anno_df$uniprot_id <- NA
+
+  df_ensembl <- stringdb_protein_info[stringdb_protein_info$source == "Ensembl_gene", ]
+  df_genesymbol <- stringdb_protein_info[stringdb_protein_info$source == "Ensembl_EntrezGene", ]
+  df_entrez <- stringdb_protein_info[stringdb_protein_info$source == "Ensembl_HGNC_entrez_id", ]
+  df_uniprot <- stringdb_protein_info[stringdb_protein_info$source == "Ensembl_UniProt", ]
+
+  anno_df$ensembl_id <-
+    df_ensembl$alias[match(anno_df$protein_id, df_ensembl$`#string_protein_id`)]
+  anno_df$gene_symbol <-
+    df_genesymbol$alias[match(anno_df$protein_id, df_genesymbol$`#string_protein_id`)]
+  anno_df$entrez_id  <-
+    df_entrez$alias[match(anno_df$protein_id, df_entrez$`#string_protein_id`)]
+  anno_df$uniprot_id  <-
+    df_uniprot$alias[match(anno_df$protein_id, df_uniprot$`#string_protein_id`)]
+
+  anno_df$protein_id <- str_extract(anno_df$protein_id, "(EN[S][A-Z0-9]+)")
+
+  return(anno_df)
 }
+
 
 # add_annotation_stringdb() --------
 
@@ -268,22 +373,24 @@ get_annotation_stringdb <- function(ppi_stringdb,
 #'
 #'
 #' @examples
-#' #\dontrun{
+#' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
+#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
 #'                                            version = "12.0",
 #'                                            cache = TRUE,
 #'                                            get_annotation = FALSE,
 #'                                            add_annotation = FALSE
 #'                                           )
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                 species = "Mus musculus"
-#'                                               )
+#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
+#'                                             version = "12.0",
+#'                                             cache = TRUE
+#'                                             )
 #'
 #' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
 #'                                                    anno_df = db_stringdb_anno_df,
-#'                                                    species = "Mus musculus")
+#'                                                    species = "Homo sapiens"
+#'                                                    )
 #'
 #'}
 
@@ -296,29 +403,27 @@ add_annotation_stringdb <- function(ppi_stringdb,
 
   #adding Ensembl
   ppi_stringdb$Ensembl_A <-
-    anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+    anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$Ensembl_B <-
-    anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
-
+    anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
   #adding GeneSymbol
   ppi_stringdb$GeneSymbol_A <-
-    anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+    anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$GeneSymbol_B <-
-    anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
-
-  #adding Uniprot
-  ppi_stringdb$Uniprot_A <-
-    anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
-  ppi_stringdb$Uniport_B <-
-    anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
+    anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
   #adding Entrez
   ppi_stringdb$Entrez_A <-
-    anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$ensembl_prot_id)]
+    anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$Entrez_B <-
-    anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$ensembl_prot_id)]
+    anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
+  #adding Uniprot
+  ppi_stringdb$Uniprot_A <-
+    anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
+  ppi_stringdb$Uniport_B <-
+    anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
   return(ppi_stringdb)
 
