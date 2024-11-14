@@ -54,8 +54,8 @@ db_stringdb_igraph_object_info_added
 }
 
 # check that it worked:
-igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
-igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
+## igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
+## igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
 # this should have much less NAs, see above - possible TODO to re-check
 
 }

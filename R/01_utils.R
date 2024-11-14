@@ -259,8 +259,8 @@ build_graph <- function(graph_data,
 #' }
 #'
 #' # check that it worked:
-#' igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
-#' igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
+#' ## igraph::vertex_attr_names(graph = db_stringdb_igraph_object_info_added)
+#' ## igraph::V(db_stringdb_igraph_object_info_added)$attr_gene_symbol
 #' # this should have much less NAs, see above - possible TODO to re-check
 #'
 add_info_from_dataframe_to_graph <- function(anno_df,
@@ -403,7 +403,7 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'                                                    hover = TRUE),
 #'                            nodesIdSelection = TRUE)
 #'
-#'
+#' }
 
 map_SE_on_graph <- function(se,
                             de_name = "ifng_vs_naive",
