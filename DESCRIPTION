@@ -42,6 +42,10 @@ Imports:
   org.Xl.eg.db,
   utils,
   graphics,
+  RColorBrewer,
+  scales,
+  mosdef,
+  SummarizedExperiment,
   stringr,
   visNetwork
 Suggests: 

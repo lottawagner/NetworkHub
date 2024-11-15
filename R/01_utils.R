@@ -304,7 +304,11 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #' @import visNetwork
 #' @import igraph
-#'
+#' @importFrom SummarizedExperiment rowData
+#' @importFrom scales alpha
+#' @importFrom grDevices colorRampPalette
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom mosdef map_to_color
 #'
 #' @examples
 #' \dontrun{
