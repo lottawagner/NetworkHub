@@ -20,10 +20,10 @@ ppis_innatedb_annotated
 annotation_innatedb ()
 }
 \examples{
-#\dontrun{
-#annotation_innatedb <- annotation_innatedb(ppi_innatedb,
-                                            species = "taxid:9606(Homo sapiens)",
-                                            version = "current")
-#annotation_innatedb
-#}
+\dontrun{
+annotation_innatedb <- annotation_innatedb(ppi_innatedb,
+                                           species = "taxid:9606(Homo sapiens)",
+                                           version = "current")
+annotation_innatedb
+}
 }

@@ -128,12 +128,12 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 #' @export
 #'
 #' @examples
-#' #\dontrun{
-#' #annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons,
-#'                                                         species = "human",
-#'                                                         version = "v12")
-#' #annotation_pathwaycommons
-#' #}
+#' \dontrun{
+#' annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons,
+#'                                                        species = "human",
+#'                                                        version = "v12")
+#' annotation_pathwaycommons
+#' }
 
 
 

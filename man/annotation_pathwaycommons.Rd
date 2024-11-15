@@ -20,10 +20,10 @@ ppis_pathwaycommons_annotated
 annotation_pathwaycommons ()
 }
 \examples{
-#\dontrun{
-#annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons,
-                                                        species = "human",
-                                                        version = "v12")
-#annotation_pathwaycommons
-#}
+\dontrun{
+annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons,
+                                                       species = "human",
+                                                       version = "v12")
+annotation_pathwaycommons
+}
 }

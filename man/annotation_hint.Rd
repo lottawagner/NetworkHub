@@ -22,12 +22,12 @@ ppis_hint_annotated
 annotation_hint ()
 }
 \examples{
-#\dontrun{
-# annotation_hint <- annotation_hint(ppi_hint,
-                                     species = "HomoSapiens",
-                                     version = "2024-06",
-                                     type = "binary")
-# annotation_hint
-#}
+\dontrun{
+annotation_hint <- annotation_hint(ppi_hint,
+                                   species = "HomoSapiens",
+                                   version = "2024-06",
+                                   type = "binary")
+annotation_hint
+}
 
 }
