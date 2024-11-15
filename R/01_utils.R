@@ -140,7 +140,6 @@ fetch_NetworkHub <- function(rname, # resourcename
 #'
 #' @param graph_data ppi data
 #' @param anno_df dataframe of ppi data from corresponding database containing annotation (Ensembl, GeneSymbol, Entrez, Uniprot)
-#' @param g graph object created with build_graph()
 #' @param idtype_anno Character, specifies which identifier type is used in the
 #' `anno_df`. Defaults to "gene_symbol"
 #' @param data_source database
