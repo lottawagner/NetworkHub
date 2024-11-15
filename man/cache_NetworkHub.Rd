@@ -24,11 +24,11 @@ cache_NetworkHub()
 \examples{
 # for example, retrieve something from stringDB
 
-url_sdb <- urlmaker_stringdb("Homo sapiens", "12.0")
-url_sdb
-
+url_stringdb <- urlmaker_stringdb(type = "PPI",
+                                  species = "Homo sapiens",
+                                  version = "12.0")
 cache_NetworkHub(
   rname = "STRINGDB_Homo sapiens_v12.0",
-  fpath = url_sdb
+  fpath = url_stringdb
 )
 }

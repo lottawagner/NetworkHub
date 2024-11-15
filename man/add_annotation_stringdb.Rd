@@ -30,9 +30,9 @@ db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
                                           )
 
 db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-                                            version = "12.0",
-                                            cache = TRUE
-                                            )
+                                               version = "12.0",
+                                               cache = TRUE
+                                               )
 
 db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
                                                    anno_df = db_stringdb_anno_df,
