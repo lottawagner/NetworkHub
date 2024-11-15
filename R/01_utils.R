@@ -253,10 +253,10 @@ build_graph <- function(graph_data,
 #'                                                   min_score_threshold = "0.35"
 #'                                                   )
 #'
-#' db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
-#'                                                                          g = db_stringdb_igraph_object,
-#'                                                                          idtype_anno = "gene_symbol")
-#'                                                                      )
+#' db_stringdb_igraph_object_info_added <-
+#'   add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
+#'                                    g = db_stringdb_igraph_object,
+#'                                    idtype_anno = "gene_symbol")
 #'
 #'
 #' db_stringdb_igraph_object_info_added
@@ -342,7 +342,8 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #' library("macrophage") #demo dataset
 #' library("DESeq2") #package to perform differential expression analysis
-#' library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...
+#' library("org.Hs.eg.db")
+#'
 #' library("AnnotationDbi") #Annotation package
 #'
 #' data(gse, package = "macrophage")

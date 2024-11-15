@@ -186,7 +186,9 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #'
 #' @examples
 #' #\dontrun{
-#' #annotation_reactome <- annotation_reactome(ppi_reactome, species = "taxid:9606(Homo sapiens)", version = "current")
+#' #annotation_reactome <- annotation_reactome(ppi_reactome,
+#'                                             species = "taxid:9606(Homo sapiens)",
+#'                                             version = "current")
 #' #annotation_reactome
 #' #}
 
