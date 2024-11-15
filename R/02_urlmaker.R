@@ -182,11 +182,11 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 #' @export
 #'
 #' @examples
-#' url_funcoup <- urlmaker_funcoup(version = "4.1",
+#' url_funcoup <- urlmaker_funcoup(version = "6.0",
 #'                                 species = "B.taurus",
 #'                                 type = "full")
 #' url_funcoup
-urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as type "5.0"
+urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as type "5.0"
                              species = "H.sapiens", # default value = "H.sapiens", value as type first letter (capital) of first name, full second name with small letters
                              type = c("compact", "full")) { #for current version compact recommended, for older versions only full possible
 
@@ -201,6 +201,43 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
   # using sprintf to define the url of FunCoup by looking at the corresponding version and species
 
   # current version is stored on website in download folder #UPDATEVERSION
+  if (version == "6.0") {
+
+    list_species_funcoup_6.0 <- c( "A.thaliana",
+                                   "B.subtilis",
+                                   "B.taurus",
+                                   "C.elegans",
+                                   "C.familiaris",
+                                   "C.intestinalis",
+                                   "D.discoideum",
+                                   "D.melanogatser",
+                                   "D.rerio",
+                                   "E.coli",
+                                   "G.gallus",
+                                   "H.sapiens",
+                                   "M.jannaschii",
+                                   "M.musculus",
+                                   "M.tuberculosis",
+                                   "O.sativa",
+                                   "P.falciparum",
+                                   "R.norvegicus",
+                                   "S.cerevisae",
+                                   "S.pombe",
+                                   "S.scrofa",
+                                   "S.solfataricus",
+                                   "SARS-CoV-2"
+    )
+
+    if (!species %in% list_species_funcoup_6.0){
+      stop("Species not found as specified by Funcoup version 6.0,",
+           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    }
+
+    url <- sprintf("https://funcoup.org/download/network&FC%s_%s_%s.gz",
+                  version,
+                  species,
+                  type)
+  }
 
   if (version == "5.0") {
 
@@ -231,8 +268,7 @@ urlmaker_funcoup <- function(version = "5.0", # default value = "5.0", value as 
            "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
     }
 
-
-    url <- sprintf("https://funcoup.org/downloads/download.action?type=network&instanceID=24480085&fileName=FC%s_%s_%s.gz",
+    url <- sprintf("https://funcoup.org/download/archive&FC%s_%s_%s.gz",
                   version,
                   species,
                   type)
