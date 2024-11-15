@@ -21,7 +21,9 @@ annotation_genemania ()
 }
 \examples{
 #\dontrun{
-# annotation_genemania <- annotation_genemania(ppi_genemania, species = "Homo_sapiens", version = "current")
+# annotation_genemania <- annotation_genemania(ppi_genemania,
+                                               species = "Homo_sapiens",
+                                               version = "current")
 #annotation_genemania
 #}
 }

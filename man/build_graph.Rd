@@ -30,8 +30,6 @@ build_graph(
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 
 \item{add_info_nodes}{TRUE adding annotation infos to nodes}
-
-\item{g}{graph object created with build_graph()}
 }
 \value{
 my_graph

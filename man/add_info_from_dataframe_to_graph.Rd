@@ -46,10 +46,10 @@ db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_ppi_a
                                                   min_score_threshold = "0.35"
                                                   )
 
-db_stringdb_igraph_object_info_added <- add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
-                                                                         g = db_stringdb_igraph_object,
-                                                                         idtype_anno = "gene_symbol")
-                                                                     )
+db_stringdb_igraph_object_info_added <-
+  add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
+                                   g = db_stringdb_igraph_object,
+                                   idtype_anno = "gene_symbol")
 
 
 db_stringdb_igraph_object_info_added

@@ -62,7 +62,8 @@ g <- db_stringdb_igraph_object
 
 library("macrophage") #demo dataset
 library("DESeq2") #package to perform differential expression analysis
-library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...
+library("org.Hs.eg.db")
+
 library("AnnotationDbi") #Annotation package
 
 data(gse, package = "macrophage")
