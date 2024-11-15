@@ -24,7 +24,7 @@ build_graph_funcoup()
 \dontrun{
 
 db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens",
-                                         version = "5.0",
+                                         version = "6.0",
                                          type = "compact")
 
 db_funcoup_graph <- build_graph_funcoup(graph_data = db_funcoup_df,
