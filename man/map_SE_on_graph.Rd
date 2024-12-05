@@ -60,6 +60,7 @@ db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
                                         )
 g <- db_stringdb_igraph_object
 
+library("igraph")
 library("macrophage") #demo dataset
 library("DESeq2") #package to perform differential expression analysis
 library("org.Hs.eg.db")

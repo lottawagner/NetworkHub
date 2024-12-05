@@ -54,6 +54,7 @@ db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
                                         )
 g <- db_stringdb_igraph_object
 
+library("igraph")
 library("macrophage") #demo dataset
 library("DESeq2") #package to perform differential expression analysis
 library("org.Hs.eg.db")
@@ -111,10 +112,9 @@ graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
                                               )
 
 explore_network(graph = graph_se_macrophage_string,
-                           subgraph = TRUE,
-                           subdata = top_ones_in_graph,
-                           edge_color = "#88888888")
+               subgraph = TRUE,
+               subdata = top_ones_in_graph,
+               edge_color = "#88888888")
 
-network
 
 }

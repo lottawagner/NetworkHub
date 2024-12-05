@@ -340,6 +340,7 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'                                         )
 #' g <- db_stringdb_igraph_object
 #'
+#' library("igraph")
 #' library("macrophage") #demo dataset
 #' library("DESeq2") #package to perform differential expression analysis
 #' library("org.Hs.eg.db")
@@ -526,6 +527,7 @@ map_SE_on_graph <- function(se,
 #'                                         )
 #' g <- db_stringdb_igraph_object
 #'
+#' library("igraph")
 #' library("macrophage") #demo dataset
 #' library("DESeq2") #package to perform differential expression analysis
 #' library("org.Hs.eg.db")
