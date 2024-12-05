@@ -50,7 +50,9 @@ Imports:
   visNetwork
 Suggests: 
   knitr,
-  rmarkdown
+  rmarkdown,
+  DESeq2,
+  macrophage
 URL: https://github.com/lottawagner/NetworkHub
 BugReports: https://github.com/lottawagner/NetworkHub/issues
 VignetteBuilder: knitr
