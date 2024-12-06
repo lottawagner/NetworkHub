@@ -27,12 +27,16 @@
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
   # define the cache directory, with tools::R_user_dir you can create a path to the cache, which = cache, return the path for caching purposes
+
   cache_dir <- tools::R_user_dir(nh_cachedir, which = "cache")
 
   # creats/uploads objects to cache
   bfc_nh <- BiocFileCache::BiocFileCache(cache_dir)
   return(bfc_nh)
 }
+
+
+
 
 # cache_NetworkHub() ----
 
