@@ -757,29 +757,28 @@ urlmaker_pathwaycommons<- function( species = "human", #default value = "human",
 
 #' urlmaker_hippie()
 #'
-#' @param species default value = "human", because this database only provides human data
-#' @param version default value = "current", version of the database ... #NEEDSUPDATE
+#' @param species default value = "Homo_sapiens", because this database only provides human data
+#' @param version default value = "current", version of the database ... #UPDATEVERSION
 #'
 #' @return url returns the corresponding url set by params
 #' @export
 #'
 #' @examples
 #'
-#' url_hippie <- urlmaker_huri(species = "human",
+#' url_hippie <- urlmaker_huri(species = "Homo_sapiens",
 #'                             version = "current")
 #' url_hippie
 #'
-urlmaker_hippie <- function (species = "human", # default value human, because this database only provides human data
-                            version = "current" { #default value current
-
-
+urlmaker_hippie <- function (species = "Homo_sapiens", # default value human, because this database only provides human data
+                             version = "current" ){ #default value current
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
-  stopifnot(is.character(type))
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
 
-  if (species != "human") { # if species is not in the list
+  if (species != "Homo_sapiens") { # if species is not in the list
     stop("Species not found as specified by HIPPIE,",
-         "HIPPIE only contains data for 'human'") # stop function and print
+         "HIPPIE only contains data for 'Homo_sapiens'") # stop function and print
   }
 
   url <- sprintf("https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/HIPPIE-%s.mitab.txt",
@@ -787,6 +786,8 @@ urlmaker_hippie <- function (species = "human", # default value human, because t
 
 
   return(url)
+
+}
 
 
 # Reactome - SPECIESDEFINITION ---------------
@@ -910,7 +911,7 @@ urlmaker_intact <- function(version = "current") { # default value for version, 
   #' @examples
   #' url_corum <- urlmaker_corum()
   #' url_corum
-  urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
+  #' urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
   #'
   #'   stopifnot(is.character(version))                  # make sure to type in a version as character
   #'   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
@@ -953,6 +954,7 @@ urlmaker_intact <- function(version = "current") { # default value for version, 
   #'   return(url)
   #'
   #' }
+  #'
 
 
 
