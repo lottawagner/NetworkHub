@@ -558,8 +558,6 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
   return(url)
 }
 
-
-
 # GeneMania -------------
 
 #' urlmaker_genemania()
@@ -622,36 +620,6 @@ urlmaker_genemania <- function ( species = "Homo_sapiens",
 
 
 
-# CPDB - ONLY HUMAN -----------------------------
-
-
-#' urlmaker_cpdb()
-#'
-#' @param species currently only human (default value)
-#'
-#' @return url returns the corresponding url set by params
-#' @export
-#'
-#' @examples
-#' url_cpdb <- urlmaker_cpdb(species = "human")
-#' url_cpdb
-urlmaker_cpdb <- function (species = "human") { #default value = human because at the moment (05.08.2024) only human
-
-  list_species_cpdb <- c("human", "mouse", "yeast")
-
-  stopifnot(is.character(species)) # make sure to type in a species name as character
-
-  if (!(species %in% list_species_cpdb)) { # if species is not in the list
-    stop("Species not found as specified by CPDB,",
-         "CPDB only contains data for 'human', 'mouse' and 'yeast'") # stop function and print
-  }
-
-
-  url <- sprintf("http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
-                 species)
-  return(url)
-
-}
 # HuRi - ONLY HUMAN ----------------
 
 #' urlmaker_huri()
@@ -785,6 +753,42 @@ urlmaker_pathwaycommons<- function( species = "human", #default value = "human",
 
 
 
+# HIPPIE - ONLY HUMAN --------------
+
+#' urlmaker_hippie()
+#'
+#' @param species default value = "human", because this database only provides human data
+#' @param version default value = "current", version of the database ... #NEEDSUPDATE
+#'
+#' @return url returns the corresponding url set by params
+#' @export
+#'
+#' @examples
+#'
+#' url_hippie <- urlmaker_huri(species = "human",
+#'                             version = "current")
+#' url_hippie
+#'
+urlmaker_hippie <- function (species = "human", # default value human, because this database only provides human data
+                            version = "current" { #default value current
+
+
+
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(type))
+
+  if (species != "human") { # if species is not in the list
+    stop("Species not found as specified by HIPPIE,",
+         "HIPPIE only contains data for 'human'") # stop function and print
+  }
+
+  url <- sprintf("https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/HIPPIE-%s.mitab.txt",
+                 version)
+
+
+  return(url)
+
+
 # Reactome - SPECIESDEFINITION ---------------
 #' urlmaker_reactome()
 #'
@@ -860,35 +864,6 @@ urlmaker_biogrid <- function(version = "4.4.238") { # default value = "4.4.238" 
 
 
 
-# CORUM - SPECIESDEFINITION ------------------------------
-
-## #' urlmaker_corum()
-## #'
-## #' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
-## #'
-## #' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
-## #' @export
-## #'
-## #' @examples
-## #' url_corum <- urlmaker_corum()
-## #' url_corum
-## urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
-## #'
-## #'   stopifnot(is.character(version))                  # make sure to type in a version as character
-## #'   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
-## #'
-## #'
-## #'   url <- sprintf("https://mips.helmholtz-muenchen.de/corum/download/releases/%s/allComplexes.txt.zip",
-## #'                  version)
-## #'   return (url)
-## #'
-## #' }
-## #'
-## #' new corum :https://mips.helmholtz-muenchen.de/corum/download
-
-
-
-
 # IntAct - SPECIESDEFINITION ---------------------------------
 
 #' urlmaker_intact()
@@ -919,5 +894,81 @@ urlmaker_intact <- function(version = "current") { # default value for version, 
   return(url)
 
 }
+
+
+
+# EXCLUDED DATABASES ----------
+
+  # CORUM - SPECIESDEFINITION
+  #' urlmaker_corum()
+  #'
+  #' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
+  #'
+  #' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
+  #' @export
+  #'
+  #' @examples
+  #' url_corum <- urlmaker_corum()
+  #' url_corum
+  urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
+  #'
+  #'   stopifnot(is.character(version))                  # make sure to type in a version as character
+  #'   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  #'
+  #'
+  #'   url <- sprintf("https://mips.helmholtz-muenchen.de/corum/download/releases/%s/allComplexes.txt.zip",
+  #'                  version)
+  #'   return (url)
+  #'
+  #' }
+  #'
+  #' new corum :https://mips.helmholtz-muenchen.de/corum/download
+
+  # CPDB - ONLY HUMAN
+
+  #' #' urlmaker_cpdb()
+  #' #'
+  #' #' @param species currently only human (default value)
+  #' #'
+  #' #' @return url returns the corresponding url set by params
+  #' #' @export
+  #' #'
+  #' #' @examples
+  #' #' url_cpdb <- urlmaker_cpdb(species = "human")
+  #' #' url_cpdb
+  #' urlmaker_cpdb <- function (species = "human") { #default value = human because at the moment (05.08.2024) only human
+  #'
+  #'   list_species_cpdb <- c("human", "mouse", "yeast")
+  #'
+  #'   stopifnot(is.character(species)) # make sure to type in a species name as character
+  #'
+  #'   if (!(species %in% list_species_cpdb)) { # if species is not in the list
+  #'     stop("Species not found as specified by CPDB,",
+  #'          "CPDB only contains data for 'human', 'mouse' and 'yeast'") # stop function and print
+  #'   }
+  #'
+  #'
+  #'   url <- sprintf("http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
+  #'                  species)
+  #'   return(url)
+  #'
+  #' }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
