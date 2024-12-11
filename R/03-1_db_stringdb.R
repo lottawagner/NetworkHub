@@ -339,7 +339,7 @@ add_annotation_stringdb <- function(ppi_stringdb,
   #adding Uniprot
   ppi_stringdb$Uniprot_A <-
     anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
-  ppi_stringdb$Uniport_B <-
+  ppi_stringdb$Uniprot_B <-
     anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
   return(ppi_stringdb)
