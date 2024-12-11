@@ -135,6 +135,7 @@ get_networkdata_mint <- function(species,
 }
 
 
+
 # outside of function ----------
 
 list_species_mint <- c ("Homo Sapiens",
@@ -225,5 +226,7 @@ build_graph_mint <- function (graph_data,
   ## could make it smaller and easier to handle, without losing too much/at all in info
 
 }
+
+
 
 
