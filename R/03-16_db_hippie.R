@@ -141,6 +141,8 @@ hippie_db_annotations <- data.frame(species = list_species_hippie,
 
 # get_annotation_hippie() ------
 
+#TODO
+
 #' get_annotation_hippie()
 #'
 #' @param ppi_hippie variable defined by ppis_hippie in get_networkdata_hippie()
