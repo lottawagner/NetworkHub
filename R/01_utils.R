@@ -492,7 +492,7 @@ map_SE_on_graph <- function(se,
     return(g)
 }
 
-
+# expolre_network() ---------------------
 #' explore_network
 #'
 #' @param graph graph object containing ppi and se data
