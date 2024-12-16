@@ -765,7 +765,7 @@ urlmaker_pathwaycommons<- function( species = "human", #default value = "human",
 #'
 #' @examples
 #'
-#' url_hippie <- urlmaker_huri(species = "Homo_sapiens",
+#' url_hippie <- urlmaker_hippie(species = "Homo_sapiens",
 #'                             version = "current")
 #' url_hippie
 #'
