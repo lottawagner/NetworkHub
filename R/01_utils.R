@@ -16,13 +16,18 @@
 #'
 #' @examples
 #' library("BiocFileCache") # load the library of the package
-#' bfc_nh <- initialize_NetworkHub(nh_cachedir = "NetworkHub") # use this function to create the cache called "bfc_nh"
-#' bfccache(bfc_nh) # get the path to the cache
-#' length(bfc_nh) # how many entries?
-#' bfcinfo(bfc_nh) # what are the column names of the cache
-#' # bfcremove(bfc_nh, c("BFC10", "BFC11", "BFC12", "BFC13"))
-#' # nh_cachedir = default directory name where the cache will be stored
 #'
+#' # use this function to create the cache called "bfc_nh"
+#' bfc_nh <- initialize_NetworkHub(nh_cachedir = "NetworkHub")
+#'
+#' # get the path to the cache
+#' bfccache(bfc_nh)
+#'
+#' # how many entries?
+#' length(bfc_nh)
+#' # an overview on the entries
+#' bfcinfo(bfc_nh)
+#' # bfcremove(bfc_nh, c("BFC10", "BFC11", "BFC12", "BFC13"))
 #'
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 
