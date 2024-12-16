@@ -179,10 +179,14 @@ get_annotation_hippie <- function(ppi_hippie,
   annotation_db <-
     hippie_db_annotations$anno_db_hippie[match(species, hippie_db_annotations$species)]
 
+  # unique(c(ppi_hippie$GeneSymbol_A, ppi_hippie$GeneSymbol_B))
+  # damn, there is an NA entry inside the entries of hippie itself?!
+  # table(is.na(unique(c(ppi_hippie$GeneSymbol_A, ppi_hippie$GeneSymbol_B))))
+
   if (!is.na(annotation_db)) {
-    all_prot_ids <- unique(c(ppi_hippie$GeneSymbol_A, ppi_hippie$GeneSymbol_B))
+    all_prot_ids <- na.omit(unique(c(ppi_hippie$GeneSymbol_A, ppi_hippie$GeneSymbol_B)))
     anno_df <- data.frame(
-      genesymbo = all_prot_ids,
+      genesymbol = all_prot_ids,
       ensembl_id = mapIds(
         get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "ENSEMBL"),
       uniprot_id = mapIds(
