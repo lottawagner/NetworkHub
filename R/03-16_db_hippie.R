@@ -251,7 +251,7 @@ add_annotation_hippie <- function(ppi_hippie,
   #adding Uniprot
   ppi_hippie$Uniprot_A <-
     anno_df$uniprot_id[match(ppi_hippie$GeneSymbol_A, anno_df$genesymbol)]
-  ppi_hippie$Uniport_B <-
+  ppi_hippie$Uniprot_B <-
     anno_df$uniprot_id[match(ppi_hippie$GeneSymbol_B, anno_df$genesymbol)]
 
   return(ppi_hippie)
