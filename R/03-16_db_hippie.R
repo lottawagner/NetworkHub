@@ -91,9 +91,9 @@ get_networkdata_hippie <- function(species,
            "Annotation for this species is not provided") # stop function and print
     }
 
-    db_hippie_anno_df <- get_annotation_hippie(species = species,
-                                               version = version,
-                                               cache = TRUE
+    db_hippie_anno_df <- get_annotation_hippie(ppi_hippie = ppis_hippie,
+                                               species = species,
+                                               version = version
     )
 
     message("...created annotation dataframe")
