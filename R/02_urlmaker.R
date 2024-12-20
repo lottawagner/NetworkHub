@@ -221,7 +221,7 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
                                    "O.sativa",
                                    "P.falciparum",
                                    "R.norvegicus",
-                                   "S.cerevisae",
+                                   "S.cerevisiae",
                                    "S.pombe",
                                    "S.scrofa",
                                    "S.solfataricus",
@@ -257,7 +257,7 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
                                    "O.sativa",
                                    "P.falciparum",
                                    "R.norvegicus",
-                                   "S.cerevisae",
+                                   "S.cerevisiae",
                                    "S.pombe",
                                    "S.scrofa",
                                    "S.solfataricus"
@@ -293,7 +293,7 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
                                    "O.sativa",
                                    "P.falciparum",
                                    "R.norvegicus",
-                                   "S.cerevisae",
+                                   "S.cerevisiae",
                                    "S.pombe"
                                   )
     if (!species %in% list_species_funcoup_4._){
@@ -326,7 +326,7 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
                                    "M.musculus",
                                    "P.falciparum",
                                    "R.norvegicus",
-                                   "S.cerevisae"
+                                   "S.cerevisiae"
                                   )
 
 

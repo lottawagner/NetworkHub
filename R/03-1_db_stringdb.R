@@ -7,7 +7,7 @@
 #' @param version version of the data files in stringdb
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param get_annotation creation of an annotation dataframe , default value set to TRUE
-#' @param add_annotation adding annotation to ppi datatframe, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_stringdb
@@ -183,7 +183,7 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #'
 #' @param species from which species does the data come from
 #' @param version version of data files in STRING, default value = "12.0"
-#' @param cache efault value set to TRUE (automatically checks if the data file is already stored in the cache)
+#' @param cache Default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #'
 #' @return anno_df (for corresponding species in stringdb)
 #' @export

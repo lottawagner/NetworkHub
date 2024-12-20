@@ -8,7 +8,7 @@
 #'
 #' @param nh_cachedir default directory name where the cache will be stored
 #'
-#' @return bfc_nh variabe assigned to the chache
+#' @return bfc_nh variable assigned to the cache
 #'
 #' @importFrom BiocFileCache BiocFileCache
 #'
@@ -301,7 +301,7 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 
 #' map_SE_on_graph
 #'
-#' @param se summerized experiment object (e.g. DE analysis resluts)
+#' @param se A [SummarizedExperiment::SummarizedExperiment] object (e.g. DE analysis results)
 #' @param value_to_map select the value of the results you want to compare
 #' @param de_name name of experiment results/ what to compare (e.g. "ifng_vs_naive")
 #' @param id_in_graph annotation type of se dataframe rows/ what should be mapped in the graph

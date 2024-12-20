@@ -2,7 +2,7 @@
 
 #' get_networkdata_funcoup()
 #'
-#' @param species  from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisae", "S.pombe", "S.scrofa", "S.solfataricus")
+#' @param species  from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
 #' @param type TODO
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
@@ -129,7 +129,7 @@ list_species_funcoup <- c( "A.thaliana",
                            "O.sativa",
                            "P.falciparum",
                            "R.norvegicus",
-                           "S.cerevisae",
+                           "S.cerevisiae",
                            "S.pombe",
                            "S.scrofa",
                            "S.solfataricus")
@@ -167,7 +167,7 @@ funcoup_db_annotations <- data.frame(
 
 #' annotation_funcoup ()
 #'
-#' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisae", "S.pombe", "S.scrofa", "S.solfataricus")
+#' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
 #' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
 #'
