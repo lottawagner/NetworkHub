@@ -90,7 +90,7 @@ if(!requireNamespace("GeneTonic", quietly = TRUE))
 BiocManager::install("GeneTonic")
 ```
 
-Now we can load the SE experiment data object ("gse") from the Macrophage(<https://www.bioconductor.org/packages/release/data/experiment/html/macrophage.html>) datatset: 
+Now we can load the SE experiment data object ("gse") from the Macrophage(<https://www.bioconductor.org/packages/release/data/experiment/html/macrophage.html>) dataset: 
 
 ```{r load from macrophage}
 
@@ -109,9 +109,9 @@ dds_macrophage <- estimateSizeFactors(dds_macrophage) # normalizes data
 
 (OR 
 
-Using GeneTonic we can retrieve a DE object from the macrophage dataset, which we can later integrate into a summerized experiment (SE) object together with the previously created dataframe <dds_macrophage> containing rows with the ENSEMBLE gene symbols and columns containing the colData for the different samples and conditions. 
+Using GeneTonic we can retrieve a DE object from the macrophage dataset, which we can later integrate into a `SummarizedExperiment` (SE) object together with the previously created dataframe <dds_macrophage> containing rows with the ENSEMBLE gene symbols and columns containing the colData for the different samples and conditions. 
 
-To compare the condition: IFNg vs naive you can use "res_macrophage_IFNg_vs_naive" DE object from GeneTonic containg rows with the ENSEMBL gene symbols and columns with the DE results ( baseMean, log2FoldChange, pvalue, ...).
+To compare the condition: IFNg vs naive you can use "res_macrophage_IFNg_vs_naive" DE object from GeneTonic containing rows with the ENSEMBL gene symbols and columns with the DE results ( baseMean, log2FoldChange, pvalue, ...).
 
 ```{r loadde from GeneTonic}
 
@@ -123,7 +123,7 @@ res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look i
 
 ## Differential Expression Analysis
 
-To perform a differential expression anlaysis "on your own" you can run the following lines:
+To perform a differential expression analysis "on your own" you can run the following lines:
 
 ```{r DE}
 data(gse, package = "macrophage")

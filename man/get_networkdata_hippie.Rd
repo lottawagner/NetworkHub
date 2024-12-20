@@ -22,7 +22,7 @@ get_networkdata_hippie(
 
 \item{get_annotation}{default value = TRUE, creation of an annotation dataframe , default value set to TRUE}
 
-\item{add_annotation}{default value = TRUE, adding annotation to ppi datatframe, default value set to TRUE}
+\item{add_annotation}{default value = TRUE, adding annotation to ppi dataframe, default value set to TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 }

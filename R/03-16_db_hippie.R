@@ -6,7 +6,7 @@
 #' @param version default value = "current", version of the database ... #UPDATEVERSION
 #' @param cache default value = TRUE, (automatically checks if the data file is already stored in the cache)
 #' @param get_annotation default value = TRUE, creation of an annotation dataframe , default value set to TRUE
-#' @param add_annotation default value = TRUE, adding annotation to ppi datatframe, default value set to TRUE
+#' @param add_annotation default value = TRUE, adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_hippie

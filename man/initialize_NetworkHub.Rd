@@ -10,7 +10,7 @@ initialize_NetworkHub(nh_cachedir = "NetworkHub")
 \item{nh_cachedir}{default directory name where the cache will be stored}
 }
 \value{
-bfc_nh variabe assigned to the chache
+bfc_nh variable assigned to the cache
 }
 \description{
 initialize_NetworkHub()

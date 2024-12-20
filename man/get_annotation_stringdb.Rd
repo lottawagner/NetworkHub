@@ -11,7 +11,7 @@ get_annotation_stringdb(species, version, cache = TRUE)
 
 \item{version}{version of data files in STRING, default value = "12.0"}
 
-\item{cache}{efault value set to TRUE (automatically checks if the data file is already stored in the cache)}
+\item{cache}{Default value set to TRUE (automatically checks if the data file is already stored in the cache)}
 }
 \value{
 anno_df (for corresponding species in stringdb)

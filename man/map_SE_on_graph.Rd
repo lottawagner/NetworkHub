@@ -13,7 +13,7 @@ map_SE_on_graph(
 )
 }
 \arguments{
-\item{se}{summerized experiment object (e.g. DE analysis resluts)}
+\item{se}{A \link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment} object (e.g. DE analysis results)}
 
 \item{de_name}{name of experiment results/ what to compare (e.g. "ifng_vs_naive")}
 
