@@ -20,9 +20,9 @@
 #' db_cpdb_df
 #' }
 
-get_networkdata_cpdb <- function( species = "human",
-                                  cache = TRUE,
-                                  ...) {
+get_networkdata_cpdb <- function(species = "human",
+                                 cache = TRUE,
+                                 ...) {
 
 
 

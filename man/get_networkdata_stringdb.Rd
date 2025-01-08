@@ -22,7 +22,7 @@ get_networkdata_stringdb(
 
 \item{get_annotation}{creation of an annotation dataframe , default value set to TRUE}
 
-\item{add_annotation}{adding annotation to ppi datatframe, default value set to TRUE}
+\item{add_annotation}{adding annotation to ppi dataframe, default value set to TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 }
