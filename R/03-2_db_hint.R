@@ -87,7 +87,7 @@ get_networkdata_hint <- function(species,
   # read in the resource, whether cached or freshly downloaded
   ppis_hint <- vroom::vroom(network_file)
   #ppis_hint <- head(read.delim(network_file, sep = " "))
-#
+
   message(dim(ppis_hint))
 
   colnames(ppis_hint)[colnames(ppis_hint) == "Gene_A"] <- "GeneSymbol_A"
@@ -148,14 +148,14 @@ hint_db_annotations <- data.frame(species = list_species_hint,
                                   )
 
 
-# annotation_hint() --------
+# get_annotation_hint() --------
 
-#' annotation_hint ()
+#' get_annotation_hint ()
 #'
+#' @param ppi_hint variable defined by ppis_hint in get_networkdata_hint()
 #' @param species  from which species does the data come from
 #' @param version version of the data files in hint
 #' @param type different interaction files provided by hint (all high-quality)
-#' @param ppi_hint variable defined by ppis_hint in get_networkdata_hint()
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
@@ -167,26 +167,35 @@ hint_db_annotations <- data.frame(species = list_species_hint,
 #' @import org.Rn.eg.db
 #'
 #'
-#'@return ppis_hint_annotated
+#'@return anno_df
 #'
 #'@export
 #'
 #'
 #' @examples
 #' \dontrun{
-#' annotation_hint <- annotation_hint(ppi_hint,
-#'                                    species = "HomoSapiens",
+#'
+#'
+#' ppis_hint <- get_networkdata_hint( species = "HomoSapiens",
 #'                                    version = "2024-06",
-#'                                    type = "binary")
-#' annotation_hint
+#'                                    type = "binary",
+#'                                    get_annotation = FALSE,
+#'                                    add_annotation = FALSE
+#' )
+#'
+#' get_annotation_hint <- annotation_hint(ppi_hint = ppis_hint,
+#'                                       species = "HomoSapiens",
+#'                                       version = "2024-06",
+#'                                       type = "binary")
+#' get_annotation_hint
 #' }
 #'
 
 
-annotation_hint <- function(ppi_hint,
-                            species,
-                            version,
-                            type){
+get_annotation_hint <- function( ppi_hint,
+                                 species,
+                                 version,
+                                 type){
 
 # find database on corresponding species
 
@@ -207,31 +216,39 @@ annotation_hint <- function(ppi_hint,
         get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
       entrez_id = mapIds(
         get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+      gene_symbol = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"),
       row.names = all_prot_ids
     )
+    }
 
-    ppis_hint_annotated <- ppi_hint
-
-    #adding Ensembl
-    ppis_hint_annotated$Ensembl_A <-
-      anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_hint_annotated$Ensembl_B <-
-      anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    #adding Entrez
-    ppis_hint_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_hint_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    return(ppis_hint_annotated)
-  }
-
-  if (is.na(annotation_db)) {
-    return(ppi_hint)
-  }
-
+    return(anno_df)
 }
+
+
+
+#     ppis_hint_annotated <- ppi_hint
+#
+#     #adding Ensembl
+#     ppis_hint_annotated$Ensembl_A <-
+#       anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
+#     ppis_hint_annotated$Ensembl_B <-
+#       anno_df$ensembl_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
+#
+#     #adding Entrez
+#     ppis_hint_annotated$Entrez_A <-
+#       anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_A, anno_df$uniprot_id)]
+#     ppis_hint_annotated$Entrez_B <-
+#       anno_df$entrez_id[match(ppis_hint_annotated$Uniprot_B, anno_df$uniprot_id)]
+#
+#     return(ppis_hint_annotated)
+#   }
+#
+#   if (is.na(annotation_db)) {
+#     return(ppi_hint)
+#   }
+#
+# }
 
 
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
