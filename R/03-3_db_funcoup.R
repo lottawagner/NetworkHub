@@ -6,7 +6,8 @@
 #' @param version version of the data files in funcoup
 #' @param type TODO
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_funcoup
@@ -24,11 +25,12 @@
 #'
 
 get_networkdata_funcoup <- function(species = "H.sapiens",
-                                 version = "5.0",
-                                 type = c("compact", "full"),
-                                 cache = TRUE,
-                                 add_annotation = TRUE,
-                                 ...) {
+                                    version = "5.0",
+                                    type = c("compact", "full"),
+                                    cache = TRUE,
+                                    get_annotation = TRUE,
+                                    add_annotation = TRUE,
+                                    ...) {
 
 
 
@@ -102,7 +104,6 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = ppis_funcoup,
                                                  species = species,
                                                  version = version)
-    )
 
     message("...created annotation dataframe")
 

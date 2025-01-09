@@ -7,7 +7,7 @@
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param type different interaction files provided by hint (all high-quality)
 #' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
-#' @param add_annotation expanding the dataframe with annotation columns for ENTREZ_A, ENTREZ_B,ENSEMBL_A, ENSEMBL_B, GeneSymbol_A, GeneSymbol_B, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_hint
@@ -205,6 +205,7 @@ get_annotation_hint <- function( ppi_hint,
                                  type){
 
 # find database on corresponding species
+  ppi_hint <- ppi_hint
 
   if (!(species %in% list_species_hint)) { # if species is not in the list
     stop("Species not found as specified by HINT,",
@@ -215,7 +216,7 @@ get_annotation_hint <- function( ppi_hint,
     hint_db_annotations$anno_db_hint[match(species, hint_db_annotations$species)]
 
   if (!is.na(annotation_db)) {
-    all_prot_ids <- unique(c(ppi_hint$GeneSymbol_A, ppi_hint$Geneymbol_B))
+    all_prot_ids <- unique(c(ppi_hint$GeneSymbol_A, ppi_hint$GeneSymbol_B))
 
     anno_df <- data.frame(
       gene_symbol = all_prot_ids,
@@ -265,17 +266,15 @@ get_annotation_hint <- function( ppi_hint,
 #'                                        type = "binary")
 #'
 #' db_hint_ppi_anno_df <- add_annotation_hint(ppi_hint = db_hint_df,
-#'                                                    anno_df = db_hint_anno_df,
-#'                                                    species = "HomoSapiens"
-#'                                                    )
+#'                                            anno_df = db_hint_anno_df,
+#'                                            species = "HomoSapiens"
+#'                                            )
 #'
 #'}
 
 add_annotation_hint <- function(ppi_hint,
                                 anno_df,
                                 species) {
-  ppi_hint <- ppi_hint
-
   #adding Ensembl
   ppi_hint$Ensembl_A <-
     anno_df$ensembl_id[match(ppi_hint$GeneSymbol_A, anno_df$gene_symbol)]
