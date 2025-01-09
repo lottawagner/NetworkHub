@@ -102,12 +102,9 @@ get_networkdata_hint <- function(species,
 
     db_hint_anno_df <- get_annotation_hint(ppi_hint = ppis_hint,
                                            species = species,
-                                           version = version,
-                                           cache = TRUE
-    )
+                                           version = version)
 
     message("...created annotation dataframe")
-
 
     if (add_annotation) {
 
@@ -118,13 +115,11 @@ get_networkdata_hint <- function(species,
       message("...added annotation from *db_hint_anno_df* to *db_hint_ppi_anno_df*")
 
       return(db_hint_ppi_anno_df)
-
     }
 
     if (!add_annotation){
       return(db_hint_anno_df)
     }
-
   }
 
   if (!get_annotation) {
@@ -132,7 +127,6 @@ get_networkdata_hint <- function(species,
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
-
 }
 
 # outside of function ----------
@@ -231,9 +225,16 @@ get_annotation_hint <- function( ppi_hint,
         get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "ENTREZID"),
       row.names = all_prot_ids
     )
-    }
 
     return(anno_df)
+  }
+
+  if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_hint(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_hint containing annotation for Uniprot_ and GeneSymbol_.")
+  return(ppi_hint)
+  }
 }
 
 # add_annotation_hint() --------
