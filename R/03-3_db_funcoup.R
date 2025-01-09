@@ -89,25 +89,44 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   annotation_db <-
     funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
 
-  if (add_annotation && !is.na(annotation_db)) {
-    ppis_funcoup_df_annotated <- annotation_funcoup(ppi_funcoup = ppis_funcoup,
-                                             species = species,
-                                             version = version)
-    message(dim(ppis_funcoup_df_annotated))
-    return(ppis_funcoup_df_annotated)
-  }
 
-  if (add_annotation && is.na(annotation_db)) {
+  if (get_annotation && is.na(annotation_db)) {
     message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_funcoup only containing annotation columns for Ensembl_.")
+            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n"
+            )
     return(ppis_funcoup)
   }
 
-  if (!add_annotation) {
-    return(ppis_funcoup)
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = ppis_funcoup,
+                                                 species = species,
+                                                 version = version)
+    )
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_funcoup_ppi_anno_df <- add_annotation_funcoup(anno_df = db_funcoup_anno_df,
+                                                       ppi_funcoup = ppis_funcoup,
+                                                       species = species)
+
+      message("...added annotation from *db_funcoup_anno_df* to *db_funcoup_ppi_anno_df*")
+
+      return(db_funcoup_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_funcoup_anno_df)
+    }
   }
 
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
+  }
 }
 
 
@@ -163,9 +182,9 @@ funcoup_db_annotations <- data.frame(
 )
 
 
-# annotation_funcoup() --------
+# get_annotation_funcoup() --------
 
-#' annotation_funcoup ()
+#' get_annotation_funcoup ()
 #'
 #' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
@@ -187,21 +206,20 @@ funcoup_db_annotations <- data.frame(
 #' @import org.Sc.sgd.db
 #' @import org.Ss.eg.db
 #'
-#' @return ppis_funcoup_annotated
+#' @return ppi_funcoup
 #' @export
 #'
 #' @examples
 #' #\dontrun{
-#' # annotation_funcoup <- annotation_funcoup(ppi_funcoup,
-#' #                    species = "H.sapiens",
-#' #                    version = "5.0")
-#' #annotation_funcoup
+#' # db_funcoup_df  <- get_annotation_funcoup( ppi_funcoup,
+#' #                                           species = "H.sapiens",
+#' #                                           version = "5.0")
 #' #}
 
 
-annotation_funcoup <- function(ppi_funcoup,
-                            species,
-                            version){
+get_annotation_funcoup <- function( ppi_funcoup,
+                                    species,
+                                    version){
 
   # find database on corresponding species
 
@@ -229,32 +247,73 @@ annotation_funcoup <- function(ppi_funcoup,
       row.names = all_gene_ids
     )
 
-    ppis_funcoup_annotated <- ppi_funcoup
-
-    #adding GeneSymbol
-    ppis_funcoup_annotated$GeneSymbol_A <-
-      anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_funcoup_annotated$GeneSymbol_B <-
-      anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-    #adding Uniprot
-    ppis_funcoup_annotated$Uniprot_A <-
-      anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_funcoup_annotated$Uniprot_B <-
-      anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-    #adding Entrez
-    ppis_funcoup_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_funcoup_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-    #TODO maybe create a dataframe that only contains 8 columns (GeneSymbol_A/B, uniprot A/B, Ensmebl A/B, Entrez A/B)?
-  return(ppis_funcoup_annotated)
+    return(anno_df)
   }
 
   if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n")
     return(ppi_funcoup)
   }
+}
 
+#add_annotation_funcoup () -------------
+#' add_annotation_funcoup ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in funcoup)
+#' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_funcoup with annotation columns for each interactor (for corresponding species in funcoup)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_funcoup_df <- get_networkdata_funcoup( species = "H.sapiens",
+#'                                           version = "5.0",
+#'                                           cache = TRUE,
+#'                                           get_annotation = FALSE,
+#'                                           add_annotation = FALSE
+#'                                          )
+#'
+#' db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = db_funcoup_df,
+#'                                        species = "H.sapiens",
+#'                                        version = "5.0"
+#'                                        )
+#'
+#' db_funcoup_ppi_anno_df <- add_annotation_funcoup(ppi_funcoup = db_funcoup_df,
+#'                                                    anno_df = db_funcoup_anno_df,
+#'                                                    species = "H.sapiens"
+#'                                                    )
+#'
+#'}
+
+add_annotation_funcoup <- function(ppi_funcoup,
+                                   anno_df,
+                                   species) {
+
+    ppi_funcoup <- ppi_funcoup
+
+    #adding GeneSymbol
+    ppi_funcoup$GeneSymbol_A <-
+      anno_df$gene_symbol[match(ppi_funcoup$Ensembl_A, anno_df$ensembl_id)]
+    ppi_funcoup$GeneSymbol_B <-
+      anno_df$gene_symbol[match(ppi_funcoup$Ensembl_B, anno_df$ensembl_id)]
+    #adding Uniprot
+    ppi_funcoup$Uniprot_A <-
+      anno_df$uniprot_id[match(ppi_funcoup$Ensembl_A, anno_df$ensembl_id)]
+    ppi_funcoup$Uniprot_B <-
+      anno_df$uniprot_id[match(ppi_funcoup$Ensembl_B, anno_df$ensembl_id)]
+    #adding Entrez
+    ppi_funcoup$Entrez_A <-
+      anno_df$entrez_id[match(ppi_funcoup$Ensembl_A, anno_df$ensembl_id)]
+    ppi_funcoup$Entrez_B <-
+      anno_df$entrez_id[match(ppi_funcoup$Ensembl_B, anno_df$ensembl_id)]
+
+    return(ppi_funcoup)
 }
 
 
