@@ -5,7 +5,8 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in irefindex
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppi_irefindex
@@ -15,18 +16,20 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_irefindex_df <- get_networkdata_irefindex(
-#'   species = "Homo sapiens",
-#'   version = "08-28-2023")
-#'
+#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
+#'                                              version = "08-28-2023",
+#'                                              get_annotation = FALSE,
+#'                                              add_annotation = FALSE
+#'                                              )
 #' db_irefindex_df
 #' }
 
 get_networkdata_irefindex <- function(species = "Homo sapiens",
-                                 version = "08-28-2023",
-                                 cache = TRUE,
-                                 add_annotation = TRUE,
-                                 ...) {
+                                      version = "08-28-2023",
+                                      cache = TRUE,
+                                      get_annotation = TRUE,
+                                      add_annotation = TRUE,
+                                      ...) {
 
 
 
@@ -101,23 +104,47 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
   ppis_irefindex$confidence <- str_extract(ppis_irefindex$confidence, "lpr:([0-9\\.]+)")
   ppis_irefindex$confidence <- gsub("lpr:", "", ppis_irefindex$confidence)
 
-
   # match the annotation db with the corresponding species
   annotation_db <-
     irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
 
-  if (add_annotation) {
-    ppi_irefindex_df_annotated <- annotation_irefindex(ppi_irefindex = ppis_irefindex,
-                                           species = species,
-                                           version = version)
-
-    return(ppi_irefindex_df_annotated)
-  }
-
-  if (!add_annotation) {
+  if (get_annotation && is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_irefindex(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_irefindex containing annotation for Uniprot_ and GeneSymbol_.")
     return(ppis_irefindex)
-  #}
   }
+
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_irefindex_anno_df <- get_annotation_irefindex(ppi_irefindex = ppis_irefindex,
+                                                     species = species,
+                                                     version = version)
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_irefindex_ppi_anno_df <- add_annotation_irefindex(anno_df = db_irefindex_anno_df,
+                                                           ppi_irefindex = ppis_irefindex,
+                                                           species = species
+                                                          )
+      message("...added annotation from *db_irefindex_anno_df* to *db_irefindex_ppi_anno_df*")
+
+      return(db_irefindex_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_irefindex_anno_df)
+    }
+  }
+
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
+  }
+  return(ppis_irefindex)
 }
 
 
@@ -163,9 +190,9 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
                                        row.names = list_species_irefindex
                                       )
 
-# annotation_irefindex() --------
+# get_annotation_irefindex() --------
 
-#' annotation_irefindex ()
+#' get_annotation_irefindex ()
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in irefindex
@@ -182,64 +209,118 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #' @import org.Ce.eg.db
 #'
 #'
-#' @return ppis_irefindex_annotated
+#' @return ppi_irefindex
 #'
 #' @export
 #'
 #'
 #' @examples
 #' \dontrun{
-#' annotation_irefindex <- annotation_irefindex(ppi_irefindex,
-#'                                              species = "Homo sapiens",
-#'                                              version = "08-28-2023")
-#' annotation_irefindex
+#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
+#'                                              version = "08-28-2023",
+#'                                              get_annotation = FALSE,
+#'                                              add_annotation = FALSE
+#'                                              )
+#'
+#' db_irefindex_anno_df <- get_annotation_irefindex( ppi_irefindex = db_irefindex_df,
+#'                                                   species = "Homo sapiens",
+#'                                                   version = "08-28-2023"
+#'                                                 )
 #' }
 
 
 
-annotation_irefindex <- function(ppi_irefindex,
-                                 species,
-                                 version) {
+get_annotation_irefindex <- function(ppi_irefindex,
+                                     species,
+                                     version) {
 
 
   # find database for corresponding species
-
   annotation_db <- irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
 
-  ppis_irefindex_annotated <- ppi_irefindex
-  all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
+  if (!is.na(annotation_db)) {
+    all_prot_ids <- unique(c(ppi_irefindex$Uniprot_A, ppi_irefindex$Uniprot_B))
 
-  anno_df <- data.frame(
-    uniprot_id = all_prot_ids,
-    genesymbol = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"),
-    ensembl_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
-    entrez_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
-    row.names = all_prot_ids
-  )
+    anno_df <- data.frame(
+      uniprot_id = all_prot_ids,
+      genesymbol = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"),
+      ensembl_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+      entrez_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+      row.names = all_prot_ids
+    )
+
+    return(anno_df)
+  }
+
+  if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_irefindex(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_irefindex containing annotation for Uniprot_ and GeneSymbol_.")
+    return(ppi_irefindex)
+  }
+}
+
+# add_annotation_irefindex() --------
+#' add_annotation_irefindex ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in irefindex)
+#' @param ppi_irefindex variable defined by ppis_irefindex in get_networkdata_irefindex()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_irefindex with annotation columns for each interactor (for corresponding species in irefindex)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
+#'                                              version = "08-28-2023",
+#'                                              get_annotation = FALSE,
+#'                                              add_annotation = FALSE
+#'                                              )
+#'
+#' db_irefindex_anno_df <- get_annotation_irefindex( ppi_irefindex = db_irefindex_df,
+#'                                                   species = "Homo sapiens",
+#'                                                   version = "08-28-2023"
+#'                                                 )
+#'
+#' db_irefindex_ppi_anno_df <- add_annotation_irefindex( ppi_irefindex = db_irefindex_df,
+#'                                                       anno_df = db_irefindex_anno_df,
+#'                                                       species = "Homo sapiens"
+#'                                                     )
+#'
+#'}
+
+add_annotation_irefindex <- function(ppi_irefindex,
+                               anno_df,
+                               species) {
+
 
   #adding GeneSymbol
-  ppis_irefindex_annotated$GeneSymbol_A <-
-    anno_df$genesymbol[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_irefindex_annotated$GeneSymbol_B <-
-    anno_df$genesymbol[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_irefindex$GeneSymbol_A <-
+    anno_df$genesymbol[match(ppi_irefindex$Uniprot_A, anno_df$uniprot_id)]
+  ppi_irefindex$GeneSymbol_B <-
+    anno_df$genesymbol[match(ppi_irefindex$Uniprot_B, anno_df$uniprot_id)]
 
 
   #adding Ensembl
-  ppis_irefindex_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_irefindex_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_irefindex$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_irefindex$Uniprot_A, anno_df$uniprot_id)]
+  ppi_irefindex$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_irefindex$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Entrez
-  ppis_irefindex_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_irefindex_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_irefindex_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_irefindex$Entrez_A <-
+    anno_df$entrez_id[match(ppi_irefindex$Uniprot_A, anno_df$uniprot_id)]
+  ppi_irefindex$Entrez_B <-
+    anno_df$entrez_id[match(ppi_irefindex$Uniprot_B, anno_df$uniprot_id)]
 
-  return(ppis_irefindex_annotated)
+  return(ppi_irefindex)
 
 
 }
