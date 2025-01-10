@@ -114,7 +114,7 @@ get_networkdata_hint <- function(species,
       )
       message("...added annotation from *db_hint_anno_df* to *db_hint_ppi_anno_df*")
 
-      return(db_hint_ppi_anno_df)
+    return(db_hint_ppi_anno_df)
     }
 
     if (!add_annotation){
@@ -127,6 +127,7 @@ get_networkdata_hint <- function(species,
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
+  return(ppis_hint)
 }
 
 # outside of function ----------
@@ -205,7 +206,6 @@ get_annotation_hint <- function( ppi_hint,
                                  type){
 
 # find database on corresponding species
-  ppi_hint <- ppi_hint
 
   if (!(species %in% list_species_hint)) { # if species is not in the list
     stop("Species not found as specified by HINT,",
@@ -216,14 +216,16 @@ get_annotation_hint <- function( ppi_hint,
     hint_db_annotations$anno_db_hint[match(species, hint_db_annotations$species)]
 
   if (!is.na(annotation_db)) {
-    all_prot_ids <- unique(c(ppi_hint$GeneSymbol_A, ppi_hint$GeneSymbol_B))
+    all_prot_ids <- unique(c(ppi_hint$Uniprot_A, ppi_hint$Uniprot_B))
+    #all_gene_ids <- unique(c(ppi_hint$GeneSymbol_A, ppi_hint$GeneSymbol_B))
 
     anno_df <- data.frame(
-      gene_symbol = all_prot_ids,
+      uniprot_id = all_prot_ids,
+      #gene_symbol = all_gene_ids,
       ensembl_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "ENSEMBL"),
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "ENTREZID"),
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
       row.names = all_prot_ids
     )
 
@@ -277,15 +279,15 @@ add_annotation_hint <- function(ppi_hint,
                                 species) {
   #adding Ensembl
   ppi_hint$Ensembl_A <-
-    anno_df$ensembl_id[match(ppi_hint$GeneSymbol_A, anno_df$gene_symbol)]
+    anno_df$ensembl_id[match(ppi_hint$Uniprot_A, anno_df$uniprot_id)]
   ppi_hint$Ensembl_B <-
-    anno_df$ensembl_id[match(ppi_hint$GeneSymbol_B, anno_df$gene_symbol)]
+    anno_df$ensembl_id[match(ppi_hint$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Entrez
   ppi_hint$Entrez_A <-
-    anno_df$entrez_id[match(ppi_hint$GeneSymbol_A, anno_df$gene_symbol)]
+    anno_df$entrez_id[match(ppi_hint$Uniprot_A, anno_df$uniprot_id)]
   ppi_hint$Entrez_B <-
-    anno_df$entrez_id[match(ppi_hint$GeneSymbol_B, anno_df$gene_symbol)]
+    anno_df$entrez_id[match(ppi_hint$Uniprot_B, anno_df$uniprot_id)]
 
   return(ppi_hint)
 
