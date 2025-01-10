@@ -5,7 +5,8 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in genemania
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_genemania
@@ -26,10 +27,9 @@
 get_networkdata_genemania <- function( species = "Homo_sapiens",
                                        version = "current",
                                        cache = TRUE,
+                                       get_annotation = TRUE,
                                        add_annotation = TRUE,
                                        ...) {
-
-
 
   # list species is actualized for version genemania "2021-05"
   # UPDATEVERSION
@@ -87,17 +87,47 @@ get_networkdata_genemania <- function( species = "Homo_sapiens",
   annotation_db <-
     genemania_db_annotations$anno_db_genemania[match(species, genemania_db_annotations$species)]
 
-  if (add_annotation) {
-    ppi_genemania_df_annotated <- annotation_genemania(ppi_genemania = ppis_genemania,
-                                           species = species,
-                                           version = version)
-    return(ppi_genemania_df_annotated)
-  }
-
-  if (!add_annotation) {
+  if (get_annotation && is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_genemania containing annotation for Uniprot_ and GeneSymbol_.")
     return(ppis_genemania)
   }
+
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_genemania_anno_df <- get_annotation_genemania(ppi_genemania = ppis_genemania,
+                                                     species = species,
+                                                     version = version)
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_genemania_ppi_anno_df <- add_annotation_genemania(anno_df = db_genemania_anno_df,
+                                                           ppi_genemania = ppis_genemania,
+                                                           species = species
+                                                          )
+
+      message("...added annotation from *db_genemania_anno_df* to *db_genemania_ppi_anno_df*")
+
+      return(db_genemania_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_genemania_anno_df)
+    }
+  }
+
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
+  }
+  return(ppis_genemania)
 }
+
+
 
 # outside of function ----------
 
@@ -128,9 +158,9 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 )
 
 
-# annotation_genemania() --------
+# get_annotation_genemania() --------
 
-#' annotation_genemania ()
+#' get_annotation_genemania ()
 #'
 #' @param ppi_genemania variable defined by ppis_genemania in get_networkdata_genemania()
 #' @param species  from which species does the data come from
@@ -147,7 +177,7 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #' @import org.Rn.eg.db
 #' @import org.Sc.sgd.db
 #'
-#' @return ppis_genemania_annotated
+#' @return ppi_genemania
 #'
 #' @export
 #'
@@ -161,9 +191,9 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 
 
 
-annotation_genemania <- function(ppi_genemania,
-                           species,
-                           version) {
+get_annotation_genemania <- function(ppi_genemania,
+                                     species,
+                                     version) {
   # find database on corresponding species
 
   if (!(species %in% list_species_genemania)) { # if species is not in the list
@@ -186,35 +216,73 @@ annotation_genemania <- function(ppi_genemania,
         get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
       row.names = all_prot_ids
     )
-
-
-    ppis_genemania_annotated <- ppi_genemania
-
-    #adding GeneSymbol
-    ppis_genemania_annotated$GeneSymbol_A <-
-      anno_df$gene_symbol[match(ppis_genemania_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_genemania_annotated$GeneSymbol_B <-
-      anno_df$gene_symbol[match(ppis_genemania_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    #adding Ensembl
-    ppis_genemania_annotated$Ensembl_A <-
-      anno_df$ensembl_id[match(ppis_genemania_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_genemania_annotated$Ensembl_B <-
-      anno_df$ensembl_id[match(ppis_genemania_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    #adding Entrez
-    ppis_genemania_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_genemania_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_genemania_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_genemania_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    return(ppis_genemania_annotated)
   }
-
 
   if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_genemania containing annotation for Uniprot_ and GeneSymbol_.")
     return(ppi_genemania)
   }
+}
+
+
+# add_annotation_genemania() --------
+#' add_annotation_genemania ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in genemania)
+#' @param ppi_genemania variable defined by ppis_genemania in get_networkdata_genemania()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_genemania with annotation columns for each interactor (for corresponding species in genemania)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
+#'                                              version = "current",
+#'                                              get_annotation = FALSE,
+#'                                              add_annotation = FALSE
+#'                                              )
+#'
+#' db_genemania_anno_df <- get_annotation_genemania( ppi_genemania = db_genemania_df,
+#'                                                   species = "Homo_sapiens",
+#'                                                   version = "current"
+#'                                                 )
+#'
+#' db_genemania_ppi_anno_df <- add_annotation_genemania( ppi_genemania = db_genemania_df,
+#'                                                       anno_df = db_genemania_anno_df,
+#'                                                       species = "Homo_sapiens"
+#'                                                     )
+#'
+#'}
+
+add_annotation_genemania <- function(ppi_genemania,
+                                     anno_df,
+                                     species) {
+
+    #adding GeneSymbol
+    ppi_genemania$GeneSymbol_A <-
+      anno_df$gene_symbol[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
+    ppi_genemania$GeneSymbol_B <-
+      anno_df$gene_symbol[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
+
+    #adding Ensembl
+    ppi_genemania$Ensembl_A <-
+      anno_df$ensembl_id[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
+    ppi_genemania$Ensembl_B <-
+      anno_df$ensembl_id[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
+
+    #adding Entrez
+    ppi_genemania$Entrez_A <-
+      anno_df$entrez_id[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
+    ppi_genemania$Entrez_B <-
+      anno_df$entrez_id[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
+
+    return(ppi_genemania)
 }
 
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
