@@ -4,7 +4,7 @@
 #'
 #' @param species  from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
-#' @param type TODO
+#' @param type compact or full file
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
 #' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
@@ -19,13 +19,19 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
+#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens",
+#'                                          version = "6.0",
+#'                                          type = "compact",
+#'                                          cache = TRUE,
+#'                                          get_annotation = FALSE,
+#'                                          add_annotation = FALSE
+#'                                          )
 #' db_funcoup_df
 #' }
 #'
 
 get_networkdata_funcoup <- function(species = "H.sapiens",
-                                    version = "5.0",
+                                    version = "6.0",
                                     type = c("compact", "full"),
                                     cache = TRUE,
                                     get_annotation = TRUE,
@@ -51,8 +57,10 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     "funcoup_",
     species,
     "_v",
-    version
-  ) # definition of the resource name
+    version,
+    "_",
+    type
+    ) # definition of the resource name
 
   #TODO problem with caching what is happening? it is always downloading again (3x)
   if (cache) {
@@ -68,7 +76,8 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     funcoup_url <-
       urlmaker_funcoup(
         species = species,
-        version = version
+        version = version,
+        type = type
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_funcoup
 
     # and cache_NetworkHub to cache the file from the url source
@@ -85,8 +94,8 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   message(dim(ppis_funcoup))
   #colnames(ppis_funcoup)
 
-  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "2:Gene1"] <- "Ensembl_A"
-  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "3:Gene2"] <- "Ensembl_B"
+  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "0:ProteinA"] <- "Uniprot_A"
+  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "1:ProteinB"] <- "Uniprot_B"
 
   annotation_db <-
     funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
@@ -128,6 +137,7 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
+  return(ppis_funcoup)
 }
 
 
@@ -235,17 +245,17 @@ get_annotation_funcoup <- function( ppi_funcoup,
 
   if (!is.na(annotation_db)) {
 
-    all_gene_ids <- unique(c(ppi_funcoup$Ensembl_A, ppi_funcoup$Ensembl_B))
+    all_prot_ids <- unique(c(ppi_funcoup$Uniprot_A , ppis_funcoup$Uniprot_B))
 
     anno_df <- data.frame(
-      ensembl_id = all_gene_ids,
+      uniprot_id = all_prot_ids,
       gene_symbol = mapIds(
-        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "SYMBOL", multiVals = "first"),
-      uniprot_id = mapIds(
-        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "UNIPROT", multiVals = "first"),
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL", multiVals = "first"),
+      ensembl_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL", multiVals = "first"),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "ENTREZID", multiVals = "first"),
-      row.names = all_gene_ids
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID", multiVals = "first"),
+      row.names = all_prot_ids
     )
 
     return(anno_df)
@@ -300,19 +310,19 @@ add_annotation_funcoup <- function(ppi_funcoup,
 
     #adding GeneSymbol
     ppi_funcoup$GeneSymbol_A <-
-      anno_df$gene_symbol[match(ppi_funcoup$Ensembl_A, anno_df$ensembl_id)]
+      anno_df$gene_symbol[match(ppi_funcoup$Uniprot_A, anno_df$uniprot_id)]
     ppi_funcoup$GeneSymbol_B <-
-      anno_df$gene_symbol[match(ppi_funcoup$Ensembl_B, anno_df$ensembl_id)]
+      anno_df$gene_symbol[match(ppi_funcoup$Uniprot_B, anno_df$uniprot_id)]
     #adding Uniprot
-    ppi_funcoup$Uniprot_A <-
-      anno_df$uniprot_id[match(ppi_funcoup$Ensembl_A, anno_df$ensembl_id)]
-    ppi_funcoup$Uniprot_B <-
-      anno_df$uniprot_id[match(ppi_funcoup$Ensembl_B, anno_df$ensembl_id)]
+    ppi_funcoup$Ensembl_A <-
+      anno_df$ensembl_id[match(ppi_funcoup$Uniprot_A, anno_df$uniprot_id)]
+    ppi_funcoup$Ensembl_B <-
+      anno_df$ensembl_id[match(ppi_funcoup$Uniprot_B, anno_df$uniprot_id)]
     #adding Entrez
     ppi_funcoup$Entrez_A <-
-      anno_df$entrez_id[match(ppi_funcoup$Ensembl_A, anno_df$ensembl_id)]
+      anno_df$entrez_id[match(ppi_funcoup$Uniprot_A, anno_df$uniprot_id)]
     ppi_funcoup$Entrez_B <-
-      anno_df$entrez_id[match(ppi_funcoup$Ensembl_B, anno_df$ensembl_id)]
+      anno_df$entrez_id[match(ppi_funcoup$Uniprot_B, anno_df$uniprot_id)]
 
     return(ppi_funcoup)
 }
