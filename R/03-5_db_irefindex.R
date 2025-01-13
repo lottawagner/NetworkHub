@@ -118,8 +118,7 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
   if (get_annotation && !is.na(annotation_db)){
 
     db_irefindex_anno_df <- get_annotation_irefindex(ppi_irefindex = ppis_irefindex,
-                                                     species = species,
-                                                     version = version)
+                                                     species = species)
 
     message("...created annotation dataframe")
 
@@ -195,7 +194,6 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #' get_annotation_irefindex ()
 #'
 #' @param species  from which species does the data come from
-#' @param version version of the data files in irefindex
 #' @param ppi_irefindex variable defined by ppis_irefindex in get_networkdata_irefindex()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -223,16 +221,14 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'                                              )
 #'
 #' db_irefindex_anno_df <- get_annotation_irefindex( ppi_irefindex = db_irefindex_df,
-#'                                                   species = "Homo sapiens",
-#'                                                   version = "08-28-2023"
+#'                                                   species = "Homo sapiens"
 #'                                                 )
 #' }
 
 
 
 get_annotation_irefindex <- function(ppi_irefindex,
-                                     species,
-                                     version) {
+                                     species) {
 
 
   # find database for corresponding species
@@ -285,8 +281,7 @@ get_annotation_irefindex <- function(ppi_irefindex,
 #'                                              )
 #'
 #' db_irefindex_anno_df <- get_annotation_irefindex( ppi_irefindex = db_irefindex_df,
-#'                                                   species = "Homo sapiens",
-#'                                                   version = "08-28-2023"
+#'                                                   species = "Homo sapiens"
 #'                                                 )
 #'
 #' db_irefindex_ppi_anno_df <- add_annotation_irefindex( ppi_irefindex = db_irefindex_df,

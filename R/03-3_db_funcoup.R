@@ -111,8 +111,7 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   if (get_annotation && !is.na(annotation_db)){
 
     db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = ppis_funcoup,
-                                                 species = species,
-                                                 version = version)
+                                                 species = species)
 
     message("...created annotation dataframe")
 
@@ -198,7 +197,6 @@ funcoup_db_annotations <- data.frame(
 #' get_annotation_funcoup ()
 #'
 #' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
-#' @param version version of the data files in funcoup
 #' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -221,16 +219,15 @@ funcoup_db_annotations <- data.frame(
 #' @export
 #'
 #' @examples
-#' #\dontrun{
-#' # db_funcoup_df  <- get_annotation_funcoup( ppi_funcoup,
-#' #                                           species = "H.sapiens",
-#' #                                           version = "5.0")
-#' #}
+#' \dontrun{
+#'  db_funcoup_df  <- get_annotation_funcoup( ppi_funcoup,
+#'                                            species = "H.sapiens")
+#' }
 
 
 get_annotation_funcoup <- function( ppi_funcoup,
-                                    species,
-                                    version){
+                                    species
+                                    ){
 
   # find database on corresponding species
 
@@ -291,11 +288,10 @@ get_annotation_funcoup <- function( ppi_funcoup,
 #'                                          )
 #'
 #' db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = db_funcoup_df,
-#'                                        species = "H.sapiens",
-#'                                        version = "5.0"
+#'                                        species = "H.sapiens"
 #'                                        )
 #'
-#' db_funcoup_ppi_anno_df <- add_annotation_funcoup(ppi_funcoup = db_funcoup_df,
+#' db_funcoup_ppi_anno_df <- add_annotation_funcoup(  ppi_funcoup = db_funcoup_df,
 #'                                                    anno_df = db_funcoup_anno_df,
 #'                                                    species = "H.sapiens"
 #'                                                    )

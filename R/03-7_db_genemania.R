@@ -16,12 +16,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_genemania_df <- get_networkdata_genemania(
-#'   species = "Homo_sapiens",
-#'   version = "current"
-#' )
-#'
-#' db_genemania_df
+#' db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
+#'                                              version = "current",
+#'                                              get_annotation = FALSE,
+#'                                              add_annotation = FALSE
+#'                                              )
 #' }
 
 get_networkdata_genemania <- function( species = "Homo_sapiens",
@@ -89,16 +88,15 @@ get_networkdata_genemania <- function( species = "Homo_sapiens",
 
   if (get_annotation && is.na(annotation_db)) {
     message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_genemania containing annotation for Uniprot_ and GeneSymbol_.")
+            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n"
+            )
     return(ppis_genemania)
   }
 
   if (get_annotation && !is.na(annotation_db)){
 
     db_genemania_anno_df <- get_annotation_genemania(ppi_genemania = ppis_genemania,
-                                                     species = species,
-                                                     version = version)
+                                                     species = species)
 
     message("...created annotation dataframe")
 
@@ -164,7 +162,6 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #'
 #' @param ppi_genemania variable defined by ppis_genemania in get_networkdata_genemania()
 #' @param species  from which species does the data come from
-#' @param version version of the data files in genemania
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.At.tair.db
@@ -183,17 +180,21 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #'
 #' @examples
 #' \dontrun{
-#' annotation_genemania <- annotation_genemania(ppi_genemania,
-#'                                              species = "Homo_sapiens",
-#'                                              version = "current")
-#' annotation_genemania
+#' db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
+#'                                              version = "current",
+#'                                              get_annotation = FALSE,
+#'                                              add_annotation = FALSE
+#'                                              )
+#'
+#' db_genemania_anno_df <- get_annotation_genemania( ppi_genemania = db_genemania_df,
+#'                                                   species = "Homo_sapiens"
+#'                                                 )
 #' }
 
 
 
 get_annotation_genemania <- function(ppi_genemania,
-                                     species,
-                                     version) {
+                                     species) {
   # find database on corresponding species
 
   if (!(species %in% list_species_genemania)) { # if species is not in the list
@@ -249,8 +250,7 @@ get_annotation_genemania <- function(ppi_genemania,
 #'                                              )
 #'
 #' db_genemania_anno_df <- get_annotation_genemania( ppi_genemania = db_genemania_df,
-#'                                                   species = "Homo_sapiens",
-#'                                                   version = "current"
+#'                                                   species = "Homo_sapiens"
 #'                                                 )
 #'
 #' db_genemania_ppi_anno_df <- add_annotation_genemania( ppi_genemania = db_genemania_df,

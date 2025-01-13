@@ -112,9 +112,8 @@ get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
   if (get_annotation && !is.na(annotation_db)){
 
     db_reactome_anno_df <- get_annotation_reactome( ppi_reactome = ppis_reactome_filtered,
-                                                    species = species,
-                                                    version = version
-                                                  )
+                                                    species = species
+                                                    )
 
     message("...created annotation dataframe")
 
@@ -187,7 +186,6 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #' get_annotation_reactome ()
 #'
 #' @param species  from which species does the data come from
-#' @param version version of the data files in reactome
 #' @param ppi_reactome variable defined by ppis_reactome in get_networkdata_reactome()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -224,8 +222,8 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #' }
 
 get_annotation_reactome <- function(ppi_reactome,
-                                    species,
-                                    version) {
+                                    species
+                                    ) {
 
   # find database on corresponding species
 

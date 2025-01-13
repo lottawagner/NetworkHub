@@ -91,8 +91,7 @@ get_networkdata_pathwaycommons <- function( species = "human",
   if (get_annotation && !is.na(annotation_db)){
 
     db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = ppis_pathwaycommons,
-                                                                species = species,
-                                                                version = version
+                                                                species = species
                                                               )
 
     message("...created annotation dataframe")
@@ -130,9 +129,9 @@ list_db_annotationdbi_pathwaycommons <- c("org.Hs.eg.db")
 
 
 pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommons,
-                                       anno_db_pathwaycommons = list_db_annotationdbi_pathwaycommons,
-                                       row.names = list_species_pathwaycommons
-)
+                                            anno_db_pathwaycommons = list_db_annotationdbi_pathwaycommons,
+                                            row.names = list_species_pathwaycommons
+                                            )
 
 
 # get_annotation_pathwaycommons() --------
@@ -141,7 +140,6 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 #'
 #' @param ppi_pathwaycommons variable defined by ppis_pathwaycommons in get_networkdata_pathwaycommons()
 #' @param species from which species does the data come from
-#' @param version version of the data files in pathwaycommons
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db

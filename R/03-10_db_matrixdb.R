@@ -110,8 +110,7 @@ get_networkdata_matrixdb <- function( species = "human",
   if (get_annotation && !is.na(annotation_db)){
 
     db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = ppis_matrixdb,
-                                                    species = species,
-                                                    version = version
+                                                    species = species
                                                     )
 
     message("...created annotation dataframe")
@@ -159,7 +158,6 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #'
 #' @param ppi_matrixdb variable defined by ppis_matrixdb in get_networkdata_matrixdb()
 #' @param species  from which species does the data come from
-#' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
@@ -180,13 +178,12 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #'                                             )
 #'
 #' db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
-#'                                                 species = "human",
-#'                                                 type = "CORE")
+#'                                                 species = "human")
 #' }
 
 get_annotation_matrixdb <- function(ppi_matrixdb,
-                                    species,
-                                    type) {
+                                    species
+                                    ) {
 
   if (!(species %in% list_species_matrixdb)) { # if species is not in the list
     stop("Species not found as specified by matrixdb,",
@@ -210,7 +207,7 @@ get_annotation_matrixdb <- function(ppi_matrixdb,
     row.names = all_prot_ids
   )
 
-      return(anno_df)
+    return(anno_df)
   }
 
   if (is.na(annotation_db)) {
@@ -247,8 +244,8 @@ get_annotation_matrixdb <- function(ppi_matrixdb,
 #'                                             )
 #'
 #' db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
-#'                                                 species = "human",
-#'                                                 type = "CORE")
+#'                                                 species = "human"
+#'                                                 )
 #'
 #' db_matrixdb_ppi_anno_df <- add_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
 #'                                                     anno_df = db_matrixdb_anno_df,

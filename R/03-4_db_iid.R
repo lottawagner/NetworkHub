@@ -17,12 +17,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_iid_df <- get_networkdata_iid(
-#'   species = "human",
-#'   version = "2021-05"
-#' )
-#'
-#' db_iid_df
+#' db_iid_df <- get_networkdata_iid(species = "human",
+#'                                  version = "2021-05",
+#'                                  get_annotation = FALSE,
+#'                                  add_annotation = FALSE
+#'                                 )
 #' }
 
 get_networkdata_iid <- function( species = "human",
@@ -104,8 +103,8 @@ get_networkdata_iid <- function( species = "human",
   if (get_annotation && !is.na(annotation_db)){
 
     db_iid_anno_df <- get_annotation_iid(ppi_iid = ppis_iid,
-                                           species = species,
-                                           version = version)
+                                           species = species
+                                         )
 
     message("...created annotation dataframe")
 
@@ -209,17 +208,22 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #'
 #'
 #' @examples
-#' #\dontrun{
-#' # annotation_iid<- get_annotation_iid(ppi_iid,
-#' #                                     species = "human",
-#' #                                     version = "2021-05")
-#' #annotation_iid
-#' #}
+#' \dontrun{
+#' db_iid_df <- get_networkdata_iid(species = "human",
+#'                                  version = "2021-05",
+#'                                  get_annotation = FALSE,
+#'                                  add_annotation = FALSE
+#'                                 )
+#'
+#' db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
+#'                                       species = "human"
+#'                                       )
+#' }
 
 
 get_annotation_iid <- function(ppi_iid,
-                               species,
-                               version) {
+                               species
+                               ) {
   # find database on corresponding species
 
   if (!(species %in% list_species_iid)) { # if species is not in the list
@@ -274,8 +278,8 @@ get_annotation_iid <- function(ppi_iid,
 #'                                 )
 #'
 #' db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
-#'                                       species = "human",
-#'                                       version = "2021-05")
+#'                                       species = "human"
+#'                                       )
 #'
 #' db_iid_ppi_anno_df <- add_annotation_iid(ppi_iid = db_iid_df,
 #'                                          anno_df = db_iid_anno_df,

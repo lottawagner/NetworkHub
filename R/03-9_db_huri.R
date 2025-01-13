@@ -96,8 +96,8 @@ get_networkdata_huri <- function( species = "human",
   if (get_annotation && !is.na(annotation_db)){
 
     db_huri_anno_df <- get_annotation_huri(ppi_huri = ppis_huri,
-                                           species = species,
-                                           version = version)
+                                           species = species
+                                           )
 
     message("...created annotation dataframe")
 
@@ -143,7 +143,6 @@ huri_db_annotations <- data.frame(species = list_species_huri,
 #' get_annotation_huri ()
 #'
 #' @param species  from which species does the data come from
-#' @param type different datasets , more information on "http://www.interactome-atlas.org/about/"
 #' @param ppi_huri variable defined by ppis_huri in get_networkdata_huri()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -166,12 +165,12 @@ huri_db_annotations <- data.frame(species = list_species_huri,
 #'
 #' db_huri_anno_df <- get_annotation_huri(ppi_huri = db_huri_df,
 #'                                        species = "human"
-#'                                        type = "HI-union")
+#'                                        )
 #' }
 
 get_annotation_huri <- function(ppi_huri,
-                                species,
-                                type) {
+                                species
+                                ) {
 
   if (!(species %in% list_species_huri)) { # if species is not in the list
     stop("Species not found as specified by huri,",
@@ -230,8 +229,8 @@ get_annotation_huri <- function(ppi_huri,
 #'                                   )
 #'
 #' db_huri_anno_df <- get_annotation_huri(ppi_huri = db_huri_df,
-#'                                        species = "human",
-#'                                        type = "HI-union")
+#'                                        species = "human"
+#'                                        )
 #'
 #' db_huri_ppi_anno_df <- add_annotation_huri(ppi_huri = db_huri_df,
 #'                                            anno_df = db_huri_anno_df,

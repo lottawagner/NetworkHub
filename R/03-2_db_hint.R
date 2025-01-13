@@ -101,8 +101,7 @@ get_networkdata_hint <- function(species,
   if (get_annotation && !is.na(annotation_db)){
 
     db_hint_anno_df <- get_annotation_hint(ppi_hint = ppis_hint,
-                                           species = species,
-                                           version = version)
+                                           species = species)
 
     message("...created annotation dataframe")
 
@@ -167,8 +166,6 @@ hint_db_annotations <- data.frame(species = list_species_hint,
 #'
 #' @param ppi_hint variable defined by ppis_hint in get_networkdata_hint()
 #' @param species  from which species does the data come from
-#' @param version version of the data files in hint
-#' @param type different interaction files provided by hint (all high-quality)
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
@@ -195,15 +192,12 @@ hint_db_annotations <- data.frame(species = list_species_hint,
 #'                                    )
 #'
 #' db_hint_anno_df <- get_annotation_hint(ppi_hint = db_hint_df,
-#'                                        species = "HomoSapiens",
-#'                                        version = "2024-06",
-#'                                        type = "binary")
+#'                                        species = "HomoSapiens")
 #' }
 #'
 get_annotation_hint <- function( ppi_hint,
-                                 species,
-                                 version,
-                                 type){
+                                 species
+                                 ){
 
 # find database on corresponding species
 
@@ -263,9 +257,8 @@ get_annotation_hint <- function( ppi_hint,
 #' )
 #'
 #' db_hint_anno_df <- get_annotation_hint(ppi_hint = db_hint_df,
-#'                                        species = "HomoSapiens",
-#'                                        version = "2024-06",
-#'                                        type = "binary")
+#'                                        species = "HomoSapiens"
+#'                                        )
 #'
 #' db_hint_ppi_anno_df <- add_annotation_hint(ppi_hint = db_hint_df,
 #'                                            anno_df = db_hint_anno_df,
