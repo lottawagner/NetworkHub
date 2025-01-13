@@ -5,6 +5,7 @@
 #' @param species  default value = "9606" - from which species does the data come from
 #' @param version version of the data files in biogrid
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_biogrid
@@ -15,14 +16,17 @@
 #' @examples
 #' \dontrun{
 #' db_biogrid_df <- get_networkdata_biogrid(species = "9606",
-#'                                            version = "4.4.238"
-#'                                            )
+#'                                          version = "4.4.238",
+#'                                          cache = TRUE,
+#'                                          add_annotation = FALSE
+#'                                           )
 #' db_biogrid_df
 #' }
 
 get_networkdata_biogrid <- function(species = "9606",
                                     version = "4.4.238",
                                     cache = TRUE,
+                                    add_annotation = TRUE,
                                     ...) {
 
   # list species is actualized for version biogrid "current" (sept 2024)
@@ -31,9 +35,11 @@ get_networkdata_biogrid <- function(species = "9606",
   # buildup of the resource location for the version and all
   ## elegantly done in another smaller utility function
 
-  rname <- paste0("biogrid_v_",
+  rname <- paste0("biogrid_",
+                  species,
+                  "_v_",
                   version
-  )
+                  )
 
   if (cache) {
     # tries to fetch from the cache
@@ -51,10 +57,9 @@ get_networkdata_biogrid <- function(species = "9606",
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_biogrid
 
     # and cache_NetworkHub to cache the file from the url source
-    network_file <- cache_NetworkHub(
-      rname = rname,
-      fpath = biogrid_url
-    )
+    network_file <- cache_NetworkHub(rname = rname,
+                                     fpath = biogrid_url
+                                     )
   }
 
   # read in the resource, whether cached or freshly downloaded
@@ -73,10 +78,12 @@ get_networkdata_biogrid <- function(species = "9606",
 
   #Filter dataframe for species
   ppis_biogrid_filtered <- ppis_biogrid[(ppis_biogrid$`Organism ID Interactor A` == species ) &
-                                            (ppis_biogrid$`Organism ID Interactor B` == species ),
-  ]
+                                        (ppis_biogrid$`Organism ID Interactor B` == species ),
+                                        ]
 
   # rename columns
+
+  if (add_annotation) {
 
   #Entrez
   colnames(ppis_biogrid_filtered)[colnames(ppis_biogrid_filtered) == "Entrez Gene Interactor A"] <- "Entrez_A"
@@ -91,7 +98,9 @@ get_networkdata_biogrid <- function(species = "9606",
   colnames(ppis_biogrid_filtered)[colnames(ppis_biogrid_filtered) == "Official Symbol Interactor B"] <- "GeneSymbol_B"
 
   return(ppis_biogrid_filtered)
+  }
 
+  return(ppis_biogrid_filtered)
 }
 
 # build_graph_biogrid() -----
