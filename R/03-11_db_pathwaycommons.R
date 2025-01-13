@@ -5,7 +5,8 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in pathwaycommons
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_pathwaycommons
@@ -15,17 +16,18 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_pathwaycommons_df <- get_networkdata_pathwaycommons(
-#'   species = "human",
-#'   version = "v12"
-#' )
-#'
-#' db_pathwaycommons_df
+#' db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
+#'                                                         version = "v12",
+#'                                                         cache = TRUE,
+#'                                                         get_annotation = FALSE,
+#'                                                         add_annotation = FALSE
+#'                                                         )
 #' }
 
 get_networkdata_pathwaycommons <- function( species = "human",
                                        version = "v12",
                                        cache = TRUE,
+                                       get_annotation = TRUE,
                                        add_annotation = TRUE,
                                        ...) {
 
@@ -86,16 +88,38 @@ get_networkdata_pathwaycommons <- function( species = "human",
   annotation_db <-
     pathwaycommons_db_annotations$anno_db_pathwaycommons[match(species, pathwaycommons_db_annotations$species)]
 
-  if (add_annotation) {
-    ppi_pathwaycommons_df_annotated <- annotation_pathwaycommons(ppi_pathwaycommons = ppis_pathwaycommons,
-                                                       species = species,
-                                                       version = version)
-    return(ppi_pathwaycommons_df_annotated)
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = ppis_pathwaycommons,
+                                                                species = species,
+                                                                version = version
+                                                              )
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_pathwaycommons_ppi_anno_df <- add_annotation_pathwaycommons( anno_df = db_pathwaycommons_anno_df,
+                                                                      ppi_pathwaycommons = ppis_pathwaycommons,
+                                                                      species = species
+                                                                    )
+
+      message("...added annotation from *db_pathwaycommons_anno_df* to *db_pathwaycommons_ppi_anno_df*")
+
+      return(db_pathwaycommons_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_pathwaycommons_anno_df)
+    }
   }
 
-  if (!add_annotation) {
-    return(ppis_pathwaycommons)
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
   }
+  return(ppis_pathwaycommons)
 }
 
 # outside of function ----------
@@ -111,9 +135,9 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 )
 
 
-# annotation_pathwaycommons() --------
+# get_annotation_pathwaycommons() --------
 
-#' annotation_pathwaycommons ()
+#' get_annotation_pathwaycommons ()
 #'
 #' @param ppi_pathwaycommons variable defined by ppis_pathwaycommons in get_networkdata_pathwaycommons()
 #' @param species from which species does the data come from
@@ -123,23 +147,27 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 #' @import org.Hs.eg.db
 
 #'
-#' @return ppis_pathwaycommons_annotated
+#' @return ppi_pathwaycommons
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' annotation_pathwaycommons <- annotation_pathwaycommons(ppi_pathwaycommons,
-#'                                                        species = "human",
-#'                                                        version = "v12")
-#' annotation_pathwaycommons
+#' db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
+#'                                                         version = "v12",
+#'                                                         cache = TRUE,
+#'                                                         get_annotation = FALSE,
+#'                                                         add_annotation = FALSE
+#'                                                         )
+#'
+#' db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
+#'                                                             species = "human")
 #' }
 
 
 
-annotation_pathwaycommons <- function(ppi_pathwaycommons,
-                                      species,
-                                      version) {
+get_annotation_pathwaycommons <- function(ppi_pathwaycommons,
+                                          species) {
   # find database on corresponding species
 
   if (!(species %in% list_species_pathwaycommons)) { # if species is not in the list
@@ -149,6 +177,8 @@ annotation_pathwaycommons <- function(ppi_pathwaycommons,
 
   annotation_db <-
     pathwaycommons_db_annotations$anno_db_pathwaycommons[match(species, pathwaycommons_db_annotations$species)]
+
+  if (!is.na(annotation_db)) {
 
   all_prot_ids <- unique(c(ppi_pathwaycommons$GeneSymbol_A, ppi_pathwaycommons$GeneSymbol_B))
   anno_df <- data.frame(
@@ -162,28 +192,72 @@ annotation_pathwaycommons <- function(ppi_pathwaycommons,
     row.names = all_prot_ids
     )
 
+  return(anno_df)
+  }
 
-  ppis_pathwaycommons_annotated <- ppi_pathwaycommons
+  if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_pathwaycommons(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_pathwaycommons containing annotation for Uniprot_ and GeneSymbol_.")
+    return(ppi_pathwaycommons)
+  }
+}
 
+
+# add_annotation_pathwaycommons() --------
+#' add_annotation_pathwaycommons ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in pathwaycommons)
+#' @param ppi_pathwaycommons variable defined by ppis_pathwaycommons in get_networkdata_pathwaycommons()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_pathwaycommons with annotation columns for each interactor (for corresponding species in pathwaycommons)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
+#'                                                         version = "v12",
+#'                                                         cache = TRUE,
+#'                                                         get_annotation = FALSE,
+#'                                                         add_annotation = FALSE
+#'                                                         )
+#'
+#' db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
+#'                                                             species = "human")
+#'
+#' db_pathwaycommons_ppi_anno_df <- add_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
+#'                                                                 anno_df = db_pathwaycommons_anno_df,
+#'                                                                 species = "human"
+#'                                                               )
+#'
+#'}
+
+add_annotation_pathwaycommons <- function(ppi_pathwaycommons,
+                                    anno_df,
+                                    species) {
   #adding Uniprot
-  ppis_pathwaycommons_annotated$Uniprot_A <-
-    anno_df$uniprot_id[match(ppis_pathwaycommons_annotated$GeneSymbol_A, anno_df$genesymbol)]
-  ppis_pathwaycommons_annotated$Uniprot_B <-
-    anno_df$uniprot_id[match(ppis_pathwaycommons_annotated$GeneSymbol_B, anno_df$genesymbol)]
+  ppi_pathwaycommons$Uniprot_A <-
+    anno_df$uniprot_id[match(ppi_pathwaycommons$GeneSymbol_A, anno_df$genesymbol)]
+  ppi_pathwaycommons$Uniprot_B <-
+    anno_df$uniprot_id[match(ppi_pathwaycommons$GeneSymbol_B, anno_df$genesymbol)]
 
   #adding Ensembl
-  ppis_pathwaycommons_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_pathwaycommons_annotated$GeneSymbol_A, anno_df$genesymbol)]
-  ppis_pathwaycommons_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_pathwaycommons_annotated$GeneSymbol_B, anno_df$genesymbol)]
+  ppi_pathwaycommons$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_pathwaycommons$GeneSymbol_A, anno_df$genesymbol)]
+  ppi_pathwaycommons$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_pathwaycommons$GeneSymbol_B, anno_df$genesymbol)]
 
   #adding Entrez
-  ppis_pathwaycommons_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_pathwaycommons_annotated$GeneSymbol_A, anno_df$genesymbol)]
-  ppis_pathwaycommons_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_pathwaycommons_annotated$GeneSymbol_B, anno_df$genesymbol)]
+  ppi_pathwaycommons$Entrez_A <-
+    anno_df$entrez_id[match(ppi_pathwaycommons$GeneSymbol_A, anno_df$genesymbol)]
+  ppi_pathwaycommons$Entrez_B <-
+    anno_df$entrez_id[match(ppi_pathwaycommons$GeneSymbol_B, anno_df$genesymbol)]
 
-  return(ppis_pathwaycommons_annotated)
+  return(ppi_pathwaycommons)
 
 }
 
