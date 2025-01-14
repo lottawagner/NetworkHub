@@ -11,6 +11,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_iid
+#' @return db_iid_ppi_anno_df
+#' @return db_iid_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -202,9 +204,10 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #' @import org.Sc.sgd.db
 #'
 #'
-#'@return ppi_iid
+#' @return ppi_iid
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
@@ -327,7 +330,7 @@ add_annotation_iid <- function(ppi_iid,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
