@@ -11,6 +11,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_stringdb
+#' @return db_stringdb_ppi_anno_df
+#' @return db_stringdb_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -186,6 +188,7 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #' @param cache Default value set to TRUE (automatically checks if the data file is already stored in the cache)
 #'
 #' @return anno_df (for corresponding species in stringdb)
+#'
 #' @export
 #'
 #' @examples
@@ -360,7 +363,7 @@ add_annotation_stringdb <- function(ppi_stringdb,
 #' @importFrom igraph graph.data.frame simplify
 #' @importFrom graphics hist
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
