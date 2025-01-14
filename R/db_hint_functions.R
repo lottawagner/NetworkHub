@@ -11,6 +11,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_hint
+#' @return db_hint_ppi_anno_df
+#' @return db_hint_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -177,9 +179,10 @@ hint_db_annotations <- data.frame(species = list_species_hint,
 #' @import org.Rn.eg.db
 #'
 #'
-#'@return anno_df
+#' @return anno_df
+#' @return ppi_hint
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
