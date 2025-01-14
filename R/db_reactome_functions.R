@@ -12,6 +12,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_reactome
+#' @return db_reactome_ppi_anno_df
+#' @return db_reactome_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -202,9 +204,10 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #' @import org.Sc.sgd.db
 #' @import org.Xl.eg.db
 #'
-#'@return ppi_reactome
+#' @return ppi_reactome
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
@@ -341,7 +344,7 @@ add_annotation_reactome <- function(ppi_reactome,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
