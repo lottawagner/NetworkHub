@@ -10,6 +10,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_genemania
+#' @return db_genemania_ppi_anno_df
+#' @return db_genemania_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -175,6 +177,7 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #' @import org.Sc.sgd.db
 #'
 #' @return ppi_genemania
+#' @return anno_df
 #'
 #' @export
 #'
@@ -298,7 +301,7 @@ add_annotation_genemania <- function(ppi_genemania,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
