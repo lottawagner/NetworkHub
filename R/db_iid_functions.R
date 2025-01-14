@@ -51,7 +51,7 @@ get_networkdata_iid <- function( species = "human",
   rname <- paste0(
     "iid_",
     species,
-    "_v",
+    "_v_",
     version
   ) # definition of the resource name
 
@@ -188,7 +188,6 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #' get_annotation_iid ()
 #'
 #' @param species  from which species does the data come from
-#' @param version version of the data files in iid
 #' @param ppi_iid variable defined by ppis_iid in get_networkdata_iid()
 #'
 #' @importFrom AnnotationDbi mapIds
