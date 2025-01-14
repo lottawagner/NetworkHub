@@ -9,6 +9,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_mint
+#' @return ensembl_entry
+#' @return ppi_mint_df_annotated
 #'
 #' @importFrom vroom vroom
 #' @importFrom stringr str_extract
@@ -151,7 +153,7 @@ list_species_mint <- c ("Homo Sapiens",
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
