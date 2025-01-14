@@ -13,6 +13,8 @@ get_annotation_matrixdb(ppi_matrixdb, species)
 }
 \value{
 ppi_matrixdb
+
+anno_df
 }
 \description{
 get_annotation_matrixdb ()

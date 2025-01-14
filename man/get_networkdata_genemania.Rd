@@ -28,6 +28,10 @@ get_networkdata_genemania(
 }
 \value{
 ppis_genemania
+
+db_genemania_ppi_anno_df
+
+db_genemania_anno_df
 }
 \description{
 get_networkdata_genemania()

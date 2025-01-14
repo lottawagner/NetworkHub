@@ -15,6 +15,8 @@ get_annotation_iid(ppi_iid, species)
 }
 \value{
 ppi_iid
+
+anno_df
 }
 \description{
 get_annotation_iid ()

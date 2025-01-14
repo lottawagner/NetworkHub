@@ -31,6 +31,10 @@ get_networkdata_hint(
 }
 \value{
 ppis_hint
+
+db_hint_ppi_anno_df
+
+db_hint_anno_df
 }
 \description{
 get_networkdata_hint()

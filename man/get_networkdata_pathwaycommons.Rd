@@ -28,6 +28,10 @@ get_networkdata_pathwaycommons(
 }
 \value{
 ppis_pathwaycommons
+
+db_pathwaycommons_ppi_anno_df
+
+db_pathwaycommons_anno_df
 }
 \description{
 get_networkdata_pathwaycommons()

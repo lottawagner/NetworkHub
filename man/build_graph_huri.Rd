@@ -17,6 +17,9 @@ build_graph_huri(
 
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
+\value{
+my_graph
+}
 \description{
 build_graph_huri()
 }

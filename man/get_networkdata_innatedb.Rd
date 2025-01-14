@@ -27,7 +27,11 @@ get_networkdata_innatedb(
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
-ppi_innatedb
+ppis_innatedb
+
+db_innatedb_ppi_anno_df
+
+db_innatedb_anno_df
 }
 \description{
 get_networkdata_innatedb()

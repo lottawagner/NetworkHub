@@ -31,6 +31,10 @@ get_networkdata_matrixdb(
 }
 \value{
 ppis_matrixdb
+
+db_matrixdb_ppi_anno_df
+
+db_matrixdb_anno_df
 }
 \description{
 get_networkdata_matrixdb()

@@ -13,6 +13,8 @@ get_annotation_hint(ppi_hint, species)
 }
 \value{
 anno_df
+
+ppi_hint
 }
 \description{
 get_annotation_hint ()

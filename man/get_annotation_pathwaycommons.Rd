@@ -13,6 +13,8 @@ get_annotation_pathwaycommons(ppi_pathwaycommons, species)
 }
 \value{
 ppi_pathwaycommons
+
+anno_df
 }
 \description{
 get_annotation_pathwaycommons ()

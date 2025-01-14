@@ -25,6 +25,10 @@ get_networkdata_mint(
 }
 \value{
 ppis_mint
+
+ensembl_entry
+
+ppi_mint_df_annotated
 }
 \description{
 get_networkdata_mint()

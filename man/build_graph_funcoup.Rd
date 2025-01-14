@@ -17,6 +17,9 @@ build_graph_funcoup(
 
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
+\value{
+my_graph
+}
 \description{
 build_graph_funcoup()
 }

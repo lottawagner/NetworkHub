@@ -13,6 +13,8 @@ get_annotation_genemania(ppi_genemania, species)
 }
 \value{
 ppi_genemania
+
+anno_df
 }
 \description{
 get_annotation_genemania ()

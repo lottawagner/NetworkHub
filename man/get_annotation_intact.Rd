@@ -13,6 +13,8 @@ get_annotation_intact(ppi_intact, species)
 }
 \value{
 ppi_intact
+
+anno_df
 }
 \description{
 get_annotation_intact ()

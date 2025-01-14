@@ -28,6 +28,10 @@ get_networkdata_iid(
 }
 \value{
 ppis_iid
+
+db_iid_ppi_anno_df
+
+db_iid_anno_df
 }
 \description{
 get_networkdata_iid()

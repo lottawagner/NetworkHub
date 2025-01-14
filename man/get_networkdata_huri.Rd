@@ -28,6 +28,10 @@ get_networkdata_huri(
 }
 \value{
 ppis_huri
+
+db_huri_ppi_anno_df
+
+db_huri_anno_df
 }
 \description{
 get_networkdata_huri()

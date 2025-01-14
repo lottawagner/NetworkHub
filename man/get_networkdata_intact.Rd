@@ -28,6 +28,10 @@ get_networkdata_intact(
 }
 \value{
 ppis_intact
+
+db_intact_ppi_anno_df
+
+db_intact_anno_df
 }
 \description{
 get_networkdata_intact()

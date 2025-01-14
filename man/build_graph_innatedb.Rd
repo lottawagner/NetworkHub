@@ -17,6 +17,9 @@ build_graph_innatedb(
 
 \item{min_score_threshold}{select ppis that are "confident": lpr score (lowest PMID re-use)}
 }
+\value{
+my_graph
+}
 \description{
 build_graph_innatedb()
 }

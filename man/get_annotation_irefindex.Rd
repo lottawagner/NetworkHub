@@ -13,6 +13,8 @@ get_annotation_irefindex(ppi_irefindex, species)
 }
 \value{
 ppi_irefindex
+
+anno_df
 }
 \description{
 get_annotation_irefindex ()

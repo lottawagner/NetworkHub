@@ -12,6 +12,8 @@ get_annotation_funcoup(ppi_funcoup, species)
 \item{species}{from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")}
 }
 \value{
+anno_df
+
 ppi_funcoup
 }
 \description{

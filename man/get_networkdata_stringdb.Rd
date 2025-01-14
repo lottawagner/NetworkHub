@@ -28,6 +28,10 @@ get_networkdata_stringdb(
 }
 \value{
 ppis_stringdb
+
+db_stringdb_ppi_anno_df
+
+db_stringdb_anno_df
 }
 \description{
 get_networkdata_stringdb()

@@ -13,6 +13,8 @@ get_annotation_innatedb(ppi_innatedb, species)
 }
 \value{
 ppi_innatedb
+
+anno_df
 }
 \description{
 get_annotation_innatedb ()

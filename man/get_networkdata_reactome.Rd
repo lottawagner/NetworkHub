@@ -28,6 +28,10 @@ get_networkdata_reactome(
 }
 \value{
 ppis_reactome
+
+db_reactome_ppi_anno_df
+
+db_reactome_anno_df
 }
 \description{
 get_networkdata_reactome()

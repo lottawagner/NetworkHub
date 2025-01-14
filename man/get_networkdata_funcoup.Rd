@@ -32,7 +32,9 @@ get_networkdata_funcoup(
 \value{
 ppis_funcoup
 
-ppis_annotated_funcoup
+db_funcoup_ppi_anno_df
+
+db_funcoup_anno_df
 }
 \description{
 get_networkdata_funcoup()
