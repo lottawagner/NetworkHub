@@ -6,27 +6,30 @@
 #' @param species  from which species does the data come from
 #' @param version version of the data files in iid
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_iid
+#' @return db_iid_ppi_anno_df
+#' @return db_iid_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' db_iid_df <- get_networkdata_iid(
-#'   species = "human",
-#'   version = "2021-05"
-#' )
-#'
-#' db_iid_df
+#' db_iid_df <- get_networkdata_iid(species = "human",
+#'                                  version = "2021-05",
+#'                                  get_annotation = FALSE,
+#'                                  add_annotation = FALSE
+#'                                 )
 #' }
 
-get_networkdata_iid <- function( species,
+get_networkdata_iid <- function( species = "human",
                                  version = "2021-05",
                                  cache = TRUE,
+                                 get_annotation = TRUE,
                                  add_annotation = TRUE,
                                  ...) {
 
@@ -92,24 +95,45 @@ get_networkdata_iid <- function( species,
   annotation_db <-
       iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
 
-  if (add_annotation && !is.na(annotation_db)) {
-    ppi_iid_df_annotated <- annotation_iid(ppi_iid = ppis_iid,
-                                             species = species,
-                                             version = version)
-    return(ppi_iid_df_annotated)
-  }
-
-  if (add_annotation && is.na(annotation_db)) {
+  if (get_annotation && is.na(annotation_db)) {
     message("Annotation database for the species is not implemented yet.\n",
             "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_iid only containing annotation columns for Uniprot_A/B & GeneSymbol_A/B.")
+            "You will get ppis_iid containing annotation for Uniprot_ and GeneSymbol_.")
     return(ppis_iid)
   }
 
-  if (!add_annotation) {
-      return(ppis_iid)
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_iid_anno_df <- get_annotation_iid(ppi_iid = ppis_iid,
+                                           species = species
+                                         )
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_iid_ppi_anno_df <- add_annotation_iid(anno_df = db_iid_anno_df,
+                                                 ppi_iid = ppis_iid,
+                                                 species = species
+      )
+      message("...added annotation from *db_iid_anno_df* to *db_iid_ppi_anno_df*")
+
+      return(db_iid_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_iid_anno_df)
+    }
   }
+
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
+  }
+  return(ppis_iid)
 }
+
 
 # outside of function ----------
 
@@ -159,9 +183,9 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 )
 
 
-# annotation_iid() --------
+# get_annotation_iid() --------
 
-#' annotation_iid ()
+#' get_annotation_iid ()
 #'
 #' @param species  from which species does the data come from
 #' @param version version of the data files in iid
@@ -180,23 +204,29 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #' @import org.Sc.sgd.db
 #'
 #'
-#'@return ppis_iid_annotated
+#' @return ppi_iid
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
-#' #\dontrun{
-#' # annotation_iid<- annotation_iid(ppi_iid,
-#' #               species = "human",
-#' #               version = "2021-05")
-#' #annotation_iid
-#' #}
+#' \dontrun{
+#' db_iid_df <- get_networkdata_iid(species = "human",
+#'                                  version = "2021-05",
+#'                                  get_annotation = FALSE,
+#'                                  add_annotation = FALSE
+#'                                 )
+#'
+#' db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
+#'                                       species = "human"
+#'                                       )
+#' }
 
 
-annotation_iid <- function(ppi_iid,
-                           species,
-                           version) {
+get_annotation_iid <- function(ppi_iid,
+                               species
+                               ) {
   # find database on corresponding species
 
   if (!(species %in% list_species_iid)) { # if species is not in the list
@@ -218,29 +248,68 @@ annotation_iid <- function(ppi_iid,
       row.names = all_prot_ids
     )
 
-
-    ppis_iid_annotated <- ppi_iid
-
-    #adding Ensembl
-    ppis_iid_annotated$Ensembl_A <-
-      anno_df$ensembl_id[match(ppis_iid_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_iid_annotated$Ensembl_B <-
-      anno_df$ensembl_id[match(ppis_iid_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    #adding Entrez
-    ppis_iid_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_iid_annotated$Uniprot_A, anno_df$uniprot_id)]
-    ppis_iid_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_iid_annotated$Uniprot_B, anno_df$uniprot_id)]
-
-    return(ppis_iid_annotated)
+    return(anno_df)
   }
 
-
   if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_iid containing annotation for Uniprot_ and GeneSymbol_.")
     return(ppi_iid)
   }
 }
+
+# add_annotation_iid() --------
+#' add_annotation_iid ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in iid)
+#' @param ppi_iid variable defined by ppis_iid in get_networkdata_iid()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_iid with annotation columns for each interactor (for corresponding species in iid)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_iid_df <- get_networkdata_iid(species = "human",
+#'                                  version = "2021-05",
+#'                                  get_annotation = FALSE,
+#'                                  add_annotation = FALSE
+#'                                 )
+#'
+#' db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
+#'                                       species = "human"
+#'                                       )
+#'
+#' db_iid_ppi_anno_df <- add_annotation_iid(ppi_iid = db_iid_df,
+#'                                          anno_df = db_iid_anno_df,
+#'                                          species = "human"
+#'                                          )
+#'
+#'}
+
+add_annotation_iid <- function(ppi_iid,
+                               anno_df,
+                               species) {
+
+    #adding Ensembl
+    ppi_iid$Ensembl_A <-
+      anno_df$ensembl_id[match(ppi_iid$Uniprot_A, anno_df$uniprot_id)]
+    ppi_iid$Ensembl_B <-
+      anno_df$ensembl_id[match(ppi_iid$Uniprot_B, anno_df$uniprot_id)]
+
+    #adding Entrez
+    ppi_iid$Entrez_A <-
+      anno_df$entrez_id[match(ppi_iid$Uniprot_A, anno_df$uniprot_id)]
+    ppi_iid$Entrez_B <-
+      anno_df$entrez_id[match(ppi_iid$Uniprot_B, anno_df$uniprot_id)]
+
+    return(ppi_iid)
+}
+
 
 #output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
@@ -261,7 +330,7 @@ annotation_iid <- function(ppi_iid,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples

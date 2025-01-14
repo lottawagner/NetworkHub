@@ -7,25 +7,31 @@
 #' @param species  default value = "taxid:9606(Homo sapiens)" - from which species does the data come from
 #' @param version version of the data files in reactome
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with six columns (GeneSymbol,Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_reactome
+#' @return db_reactome_ppi_anno_df
+#' @return db_reactome_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' db_reactome_df <- get_networkdata_reactome(species = "taxid:9606(Homo sapiens)",
-#'                                            version = "current"
+#' db_reactome_df <- get_networkdata_reactome( species = "taxid:9606(Homo sapiens)",
+#'                                             version = "current",
+#'                                             cache = TRUE,
+#'                                             get_annotation = FALSE,
+#'                                             add_annotation = FALSE
 #'                                            )
-#' db_reactome_df
 #' }
 
 get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
                                      version = "current",
                                      cache = TRUE,
+                                     get_annotation = TRUE,
                                      add_annotation = TRUE,
                                      ...) {
 
@@ -105,17 +111,37 @@ get_networkdata_reactome <- function(species = "taxid:9606(Homo sapiens)",
 
 
 
-  if (add_annotation) {
+  if (get_annotation && !is.na(annotation_db)){
 
-    ppi_reactome_filtered_annotated <- annotation_reactome(ppi_reactome = ppis_reactome_filtered,
-                                                           species = species,
-                                                           version = version)
-    return(ppi_reactome_filtered_annotated)
+    db_reactome_anno_df <- get_annotation_reactome( ppi_reactome = ppis_reactome_filtered,
+                                                    species = species
+                                                    )
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_reactome_ppi_anno_df <- add_annotation_reactome( anno_df = db_reactome_anno_df,
+                                                          ppi_reactome = ppis_reactome_filtered,
+                                                          species = species
+                                                        )
+
+      message("...added annotation from *db_reactome_anno_df* to *db_reactome_ppi_anno_df*")
+
+      return(db_reactome_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_reactome_anno_df)
+    }
   }
 
-  if (!add_annotation) {
-    return(ppis_reactome_filtered)
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
   }
+  return(ppis_reactome_filtered)
 }
 
 
@@ -157,12 +183,11 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 )
 
 
-# annotation_reactome() --------
+# get_annotation_reactome() --------
 
-#' annotation_reactome ()
+#' get_annotation_reactome ()
 #'
 #' @param species  from which species does the data come from
-#' @param version version of the data files in reactome
 #' @param ppi_reactome variable defined by ppis_reactome in get_networkdata_reactome()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -179,23 +204,30 @@ reactome_db_annotations <- data.frame(species = list_species_reactome,
 #' @import org.Sc.sgd.db
 #' @import org.Xl.eg.db
 #'
-#'@return ppis_reactome_annotated
+#' @return ppi_reactome
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
 #' \dontrun{
-#' annotation_reactome <- annotation_reactome(ppi_reactome,
-#'                                            species = "taxid:9606(Homo sapiens)",
-#'                                            version = "current")
-#' annotation_reactome
+#' db_reactome_df <- get_networkdata_reactome( species = "taxid:9606(Homo sapiens)",
+#'                                             version = "current",
+#'                                             cache = TRUE,
+#'                                             get_annotation = FALSE,
+#'                                             add_annotation = FALSE
+#'                                            )
+#'
+#' db_reactome_anno_df <- get_annotation_reactome( ppi_reactome = db_reactome_df,
+#'                                                 species = "taxid:9606(Homo sapiens)"
+#'                                                 )
 #' }
 
-annotation_reactome <- function(ppi_reactome,
-                                species,
-                                version)
-                                {
+get_annotation_reactome <- function(ppi_reactome,
+                                    species
+                                    ) {
+
   # find database on corresponding species
 
   if (!(species %in% list_species_reactome)) { # if species is not in the list
@@ -206,6 +238,7 @@ annotation_reactome <- function(ppi_reactome,
   annotation_db <-
     reactome_db_annotations$anno_db_reactome[match(species, reactome_db_annotations$species)]
 
+  if (!is.na(annotation_db)) {
 
   all_prot_ids <- unique(na.omit(c(ppi_reactome$Uniprot_A, ppi_reactome$Uniprot_B)))
 
@@ -228,27 +261,74 @@ annotation_reactome <- function(ppi_reactome,
                         row.names = all_prot_ids
                         )
 
-  ppis_reactome_annotated <- ppi_reactome
+  return(anno_df)
+  }
+
+  if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_reactome(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_reactome containing annotation for Uniprot_ and GeneSymbol_.")
+    return(ppi_reactome)
+  }
+}
+
+
+# add_annotation_reactome() --------
+#' add_annotation_reactome ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in reactome)
+#' @param ppi_reactome variable defined by ppis_reactome in get_networkdata_reactome()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_reactome with annotation columns for each interactor (for corresponding species in reactome)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_reactome_df <- get_networkdata_reactome( species = "taxid:9606(Homo sapiens)",
+#'                                             version = "current",
+#'                                             cache = TRUE,
+#'                                             get_annotation = FALSE,
+#'                                             add_annotation = FALSE
+#'                                            )
+#'
+#' db_reactome_anno_df <- get_annotation_reactome( ppi_reactome = db_reactome_df,
+#'                                                 species = "taxid:9606(Homo sapiens)"
+#'                                                 )
+#'
+#' db_reactome_ppi_anno_df <- add_annotation_reactome( ppi_reactome = db_reactome_df,
+#'                                                     anno_df = db_reactome_anno_df,
+#'                                                     species = "taxid:9606(Homo sapiens)"
+#'                                                     )
+#'
+#'}
+
+add_annotation_reactome <- function(ppi_reactome,
+                                    anno_df,
+                                    species) {
 
   #adding GeneSymbol
-  ppis_reactome_annotated$GeneSymbol_A <-
-    anno_df$gene_symbol[match(ppis_reactome_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_reactome_annotated$GeneSymbol_B <-
-    anno_df$gene_symbol[match(ppis_reactome_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_reactome$GeneSymbol_A <-
+    anno_df$gene_symbol[match(ppi_reactome$Uniprot_A, anno_df$uniprot_id)]
+  ppi_reactome$GeneSymbol_B <-
+    anno_df$gene_symbol[match(ppi_reactome$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Ensembl
-  ppis_reactome_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_reactome_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_reactome_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_reactome_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_reactome$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_reactome$Uniprot_A, anno_df$uniprot_id)]
+  ppi_reactome$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_reactome$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Entrez
-  ppis_reactome_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_reactome_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_reactome_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_reactome_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_reactome$Entrez_A <-
+    anno_df$entrez_id[match(ppi_reactome$Uniprot_A, anno_df$uniprot_id)]
+  ppi_reactome$Entrez_B <-
+    anno_df$entrez_id[match(ppi_reactome$Uniprot_B, anno_df$uniprot_id)]
 
-  return(ppis_reactome_annotated)
+  return(ppi_reactome)
 }
 
 
@@ -264,7 +344,7 @@ annotation_reactome <- function(ppi_reactome,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples

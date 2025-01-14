@@ -4,13 +4,15 @@
 #'
 #' @param species  from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
 #' @param version version of the data files in funcoup
-#' @param type TODO
+#' @param type compact or full file
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with four columns (Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_funcoup
-#' @return ppis_annotated_funcoup
+#' @return db_funcoup_ppi_anno_df
+#' @return db_funcoup_anno_df
 #'
 #' @importFrom vroom vroom
 #'
@@ -18,17 +20,24 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens", version = "5.0", type = "compact")
+#' db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens",
+#'                                          version = "6.0",
+#'                                          type = "compact",
+#'                                          cache = TRUE,
+#'                                          get_annotation = FALSE,
+#'                                          add_annotation = FALSE
+#'                                          )
 #' db_funcoup_df
 #' }
 #'
 
 get_networkdata_funcoup <- function(species = "H.sapiens",
-                                 version = "5.0",
-                                 type = c("compact", "full"),
-                                 cache = TRUE,
-                                 add_annotation = TRUE,
-                                 ...) {
+                                    version = "6.0",
+                                    type = c("compact", "full"),
+                                    cache = TRUE,
+                                    get_annotation = TRUE,
+                                    add_annotation = TRUE,
+                                    ...) {
 
 
 
@@ -49,8 +58,10 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     "funcoup_",
     species,
     "_v",
-    version
-  ) # definition of the resource name
+    version,
+    "_",
+    type
+    ) # definition of the resource name
 
   #TODO problem with caching what is happening? it is always downloading again (3x)
   if (cache) {
@@ -66,7 +77,8 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     funcoup_url <-
       urlmaker_funcoup(
         species = species,
-        version = version
+        version = version,
+        type = type
       ) # if there is no entry for the corresponding file in the cache, we create the url using urlmaker_funcoup
 
     # and cache_NetworkHub to cache the file from the url source
@@ -83,31 +95,49 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   message(dim(ppis_funcoup))
   #colnames(ppis_funcoup)
 
-  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "2:Gene1"] <- "Ensembl_A"
-  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "3:Gene2"] <- "Ensembl_B"
+  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "0:ProteinA"] <- "Uniprot_A"
+  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "1:ProteinB"] <- "Uniprot_B"
 
   annotation_db <-
     funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
 
-  if (add_annotation && !is.na(annotation_db)) {
-    ppis_funcoup_df_annotated <- annotation_funcoup(ppi_funcoup = ppis_funcoup,
-                                             species = species,
-                                             version = version)
-    message(dim(ppis_funcoup_df_annotated))
-    return(ppis_funcoup_df_annotated)
-  }
 
-  if (add_annotation && is.na(annotation_db)) {
+  if (get_annotation && is.na(annotation_db)) {
     message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_funcoup only containing annotation columns for Ensembl_.")
+            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n"
+            )
     return(ppis_funcoup)
   }
 
-  if (!add_annotation) {
-    return(ppis_funcoup)
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = ppis_funcoup,
+                                                 species = species)
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_funcoup_ppi_anno_df <- add_annotation_funcoup(anno_df = db_funcoup_anno_df,
+                                                       ppi_funcoup = ppis_funcoup,
+                                                       species = species)
+
+      message("...added annotation from *db_funcoup_anno_df* to *db_funcoup_ppi_anno_df*")
+
+      return(db_funcoup_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_funcoup_anno_df)
+    }
   }
 
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
+  }
+  return(ppis_funcoup)
 }
 
 
@@ -163,12 +193,11 @@ funcoup_db_annotations <- data.frame(
 )
 
 
-# annotation_funcoup() --------
+# get_annotation_funcoup() --------
 
-#' annotation_funcoup ()
+#' get_annotation_funcoup ()
 #'
 #' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
-#' @param version version of the data files in funcoup
 #' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -187,21 +216,21 @@ funcoup_db_annotations <- data.frame(
 #' @import org.Sc.sgd.db
 #' @import org.Ss.eg.db
 #'
-#' @return ppis_funcoup_annotated
+#' @return anno_df
+#' @return ppi_funcoup
+#'
 #' @export
 #'
 #' @examples
-#' #\dontrun{
-#' # annotation_funcoup <- annotation_funcoup(ppi_funcoup,
-#' #                    species = "H.sapiens",
-#' #                    version = "5.0")
-#' #annotation_funcoup
-#' #}
+#' \dontrun{
+#'  db_funcoup_df  <- get_annotation_funcoup( ppi_funcoup,
+#'                                            species = "H.sapiens")
+#' }
 
 
-annotation_funcoup <- function(ppi_funcoup,
-                            species,
-                            version){
+get_annotation_funcoup <- function( ppi_funcoup,
+                                    species
+                                    ){
 
   # find database on corresponding species
 
@@ -216,45 +245,85 @@ annotation_funcoup <- function(ppi_funcoup,
 
   if (!is.na(annotation_db)) {
 
-    all_gene_ids <- unique(c(ppi_funcoup$Ensembl_A, ppi_funcoup$Ensembl_B))
+    all_prot_ids <- unique(c(ppi_funcoup$Uniprot_A , ppis_funcoup$Uniprot_B))
 
     anno_df <- data.frame(
-      ensembl_id = all_gene_ids,
+      uniprot_id = all_prot_ids,
       gene_symbol = mapIds(
-        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "SYMBOL", multiVals = "first"),
-      uniprot_id = mapIds(
-        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "UNIPROT", multiVals = "first"),
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL", multiVals = "first"),
+      ensembl_id = mapIds(
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL", multiVals = "first"),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_gene_ids, keytype = "ENSEMBL", column = "ENTREZID", multiVals = "first"),
-      row.names = all_gene_ids
+        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID", multiVals = "first"),
+      row.names = all_prot_ids
     )
 
-    ppis_funcoup_annotated <- ppi_funcoup
-
-    #adding GeneSymbol
-    ppis_funcoup_annotated$GeneSymbol_A <-
-      anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_funcoup_annotated$GeneSymbol_B <-
-      anno_df$gene_symbol[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-    #adding Uniprot
-    ppis_funcoup_annotated$Uniprot_A <-
-      anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_funcoup_annotated$Uniprot_B <-
-      anno_df$uniprot_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-    #adding Entrez
-    ppis_funcoup_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_funcoup_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_funcoup_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-    #TODO maybe create a dataframe that only contains 8 columns (GeneSymbol_A/B, uniprot A/B, Ensmebl A/B, Entrez A/B)?
-  return(ppis_funcoup_annotated)
+    return(anno_df)
   }
 
   if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n")
     return(ppi_funcoup)
   }
+}
 
+#add_annotation_funcoup () -------------
+#' add_annotation_funcoup ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in funcoup)
+#' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_funcoup with annotation columns for each interactor (for corresponding species in funcoup)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_funcoup_df <- get_networkdata_funcoup( species = "H.sapiens",
+#'                                           version = "5.0",
+#'                                           cache = TRUE,
+#'                                           get_annotation = FALSE,
+#'                                           add_annotation = FALSE
+#'                                          )
+#'
+#' db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = db_funcoup_df,
+#'                                        species = "H.sapiens"
+#'                                        )
+#'
+#' db_funcoup_ppi_anno_df <- add_annotation_funcoup(  ppi_funcoup = db_funcoup_df,
+#'                                                    anno_df = db_funcoup_anno_df,
+#'                                                    species = "H.sapiens"
+#'                                                    )
+#'
+#'}
+
+add_annotation_funcoup <- function(ppi_funcoup,
+                                   anno_df,
+                                   species) {
+
+    ppi_funcoup <- ppi_funcoup
+
+    #adding GeneSymbol
+    ppi_funcoup$GeneSymbol_A <-
+      anno_df$gene_symbol[match(ppi_funcoup$Uniprot_A, anno_df$uniprot_id)]
+    ppi_funcoup$GeneSymbol_B <-
+      anno_df$gene_symbol[match(ppi_funcoup$Uniprot_B, anno_df$uniprot_id)]
+    #adding Uniprot
+    ppi_funcoup$Ensembl_A <-
+      anno_df$ensembl_id[match(ppi_funcoup$Uniprot_A, anno_df$uniprot_id)]
+    ppi_funcoup$Ensembl_B <-
+      anno_df$ensembl_id[match(ppi_funcoup$Uniprot_B, anno_df$uniprot_id)]
+    #adding Entrez
+    ppi_funcoup$Entrez_A <-
+      anno_df$entrez_id[match(ppi_funcoup$Uniprot_A, anno_df$uniprot_id)]
+    ppi_funcoup$Entrez_B <-
+      anno_df$entrez_id[match(ppi_funcoup$Uniprot_B, anno_df$uniprot_id)]
+
+    return(ppi_funcoup)
 }
 
 
@@ -269,7 +338,7 @@ annotation_funcoup <- function(ppi_funcoup,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples

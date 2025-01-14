@@ -6,21 +6,26 @@
 #' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
 #' @param version version of the data files in MatrixDB
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with (GeneSymbol, Uniprot ID and Entrez_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_matrixdb
+#' @return db_matrixdb_ppi_anno_df
+#' @return db_matrixdb_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' db_matrixdb_df <- get_networkdata_matrixdb(
-#'   species = "human",
-#'   type = "CORE",
-#'   version = "4_0"
-#' )
+#' db_matrixdb_df <- get_networkdata_matrixdb( species = "human",
+#'                                             type = "CORE",
+#'                                             version = "4_0",
+#'                                             cache = TRUE,
+#'                                             get_annotation = FALSE,
+#'                                             add_annotation = FALSE
+#'                                           )
 #'
 #' db_matrixdb_df
 #' }
@@ -29,6 +34,7 @@ get_networkdata_matrixdb <- function( species = "human",
                                       type = "CORE",
                                       version = "4_0",
                                       cache = TRUE,
+                                      get_annotation = TRUE,
                                       add_annotation = TRUE,
                                       ...) {
   # MatrixDB 4.0 (2024-09-01)
@@ -103,19 +109,37 @@ get_networkdata_matrixdb <- function( species = "human",
   annotation_db <-
     matrixdb_db_annotations$anno_db_matrixdb[match(species, matrixdb_db_annotations$species)]
 
-  if (add_annotation) {
-    ppi_matrixdb_df_annotated <- annotation_matrixdb(ppi_matrixdb = ppis_matrixdb,
-                                                     species = species,
-                                                     type = type)
+  if (get_annotation && !is.na(annotation_db)){
 
-    return(ppi_matrixdb_df_annotated)
+    db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = ppis_matrixdb,
+                                                    species = species
+                                                    )
 
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_matrixdb_ppi_anno_df <- add_annotation_matrixdb( anno_df = db_matrixdb_anno_df,
+                                                          ppi_matrixdb = ppis_matrixdb,
+                                                          species = species
+                                                          )
+
+      message("...added annotation from *db_matrixdb_anno_df* to *db_matrixdb_ppi_anno_df*")
+
+      return(db_matrixdb_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_matrixdb_anno_df)
+    }
   }
 
-  # no annotation
-  if (!add_annotation) {
-    return(ppis_matrixdb)
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
   }
+  return(ppis_matrixdb)
 }
 
 # outside of function ----------
@@ -130,34 +154,39 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
                                  row.names = list_species_matrixdb
 )
 
-# annotation_matrixdb() --------
+# get_annotation_matrixdb() --------
 
-#' annotation_matrixdb ()
+#' get_annotation_matrixdb ()
 #'
 #' @param ppi_matrixdb variable defined by ppis_matrixdb in get_networkdata_matrixdb()
 #' @param species  from which species does the data come from
-#' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
-#' @param ... further arguments passed to or from other methods
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
 #'
-#'@return ppis_matrixdb_annotated
+#' @return ppi_matrixdb
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
-#' #\dontrun{
-#' #annotation_matrixdb <- annotation_matrixdb(ppi_matrixdb, species = "human", type = "CORE")
-#' #annotation_matrixdb
-#' #}
+#' \dontrun{
+#' db_matrixdb_df <- get_networkdata_matrixdb( species = "human",
+#'                                             type = "CORE",
+#'                                             version = "4_0",
+#'                                             cache = TRUE,
+#'                                             get_annotation = FALSE,
+#'                                             add_annotation = FALSE
+#'                                             )
+#'
+#' db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
+#'                                                 species = "human")
+#' }
 
-annotation_matrixdb <- function(ppi_matrixdb,
-                                species,
-                                type,
-                                ...) {
-  # find database on corresponding species
+get_annotation_matrixdb <- function(ppi_matrixdb,
+                                    species
+                                    ) {
 
   if (!(species %in% list_species_matrixdb)) { # if species is not in the list
     stop("Species not found as specified by matrixdb,",
@@ -167,6 +196,7 @@ annotation_matrixdb <- function(ppi_matrixdb,
   annotation_db <-
     matrixdb_db_annotations$anno_db_matrixdb[match(species, matrixdb_db_annotations$species)]
 
+  if (!is.na(annotation_db)) {
 
   all_prot_ids <- unique(c(ppi_matrixdb$Uniprot_A, ppi_matrixdb$Uniprot_B) [!is.na(c(ppi_matrixdb$Uniprot_A, ppi_matrixdb$Uniprot_B))])
   anno_df <- data.frame(
@@ -180,29 +210,76 @@ annotation_matrixdb <- function(ppi_matrixdb,
     row.names = all_prot_ids
   )
 
+    return(anno_df)
+  }
 
-  ppis_matrixdb_annotated <- ppi_matrixdb
+  if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_matrixdb(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_matrixdb containing annotation for Uniprot_ and GeneSymbol_.")
+    return(ppi_matrixdb)
+  }
+}
+
+
+
+# add_annotation_matrixdb() --------
+#' add_annotation_matrixdb ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in matrixdb)
+#' @param ppi_matrixdb variable defined by ppis_matrixdb in get_networkdata_matrixdb()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_matrixdb with annotation columns for each interactor (for corresponding species in matrixdb)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_matrixdb_df <- get_networkdata_matrixdb( species = "human",
+#'                                             type = "CORE",
+#'                                             version = "4_0",
+#'                                             cache = TRUE,
+#'                                             get_annotation = FALSE,
+#'                                             add_annotation = FALSE
+#'                                             )
+#'
+#' db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
+#'                                                 species = "human"
+#'                                                 )
+#'
+#' db_matrixdb_ppi_anno_df <- add_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
+#'                                                     anno_df = db_matrixdb_anno_df,
+#'                                                     species = "human"
+#'                                                     )
+#'
+#'}
+
+add_annotation_matrixdb <- function(ppi_matrixdb,
+                                anno_df,
+                                species) {
 
   #adding GeneSymbol
-  ppis_matrixdb_annotated$GeneSymbol_A <-
-    anno_df$genesymbol[match(ppis_matrixdb_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_matrixdb_annotated$GeneSymbol_B <-
-    anno_df$genesymbol[match(ppis_matrixdb_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_matrixdb$GeneSymbol_A <-
+    anno_df$genesymbol[match(ppi_matrixdb$Uniprot_A, anno_df$uniprot_id)]
+  ppi_matrixdb$GeneSymbol_B <-
+    anno_df$genesymbol[match(ppi_matrixdb$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Ensembl
-  ppis_matrixdb_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_matrixdb_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_matrixdb_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_matrixdb_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_matrixdb$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_matrixdb$Uniprot_A, anno_df$uniprot_id)]
+  ppi_matrixdb$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_matrixdb$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Entrez
-  ppis_matrixdb_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_matrixdb_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_matrixdb_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_matrixdb_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_matrixdb$Entrez_A <-
+    anno_df$entrez_id[match(ppi_matrixdb$Uniprot_A, anno_df$uniprot_id)]
+  ppi_matrixdb$Entrez_B <-
+    anno_df$entrez_id[match(ppi_matrixdb$Uniprot_B, anno_df$uniprot_id)]
 
-  return(ppis_matrixdb_annotated)
-
+  return(ppi_matrixdb)
 }
 
 # build_graph_matrixdb() -----
@@ -215,7 +292,7 @@ annotation_matrixdb <- function(ppi_matrixdb,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples

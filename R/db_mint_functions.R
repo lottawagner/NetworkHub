@@ -134,25 +134,12 @@ get_networkdata_mint <- function(species,
   }
 }
 
-
-
 # outside of function ----------
 
 list_species_mint <- c ("Homo Sapiens",
                         "Mus Musculus",
                         "Drosophila Melanogaster",
                         "Saccharomyces Cerevisiae")
-
-
-
-
-
-
-
-
-
-
-
 
 # build_graph_mint() -----
 

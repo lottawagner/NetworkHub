@@ -5,10 +5,13 @@
 #' @param species  from which species does the data come from (default human because currently only human data provided from huri)
 #' @param type different datasets , more information on "http://www.interactome-atlas.org/about/" , c("HI-union", "Lit-BM")
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with six columns (GeneSymbol, Uniprot ID and Entrez_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_huri
+#' @return db_huri_ppi_anno_df
+#' @return db_huri_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -26,6 +29,7 @@
 get_networkdata_huri <- function( species = "human",
                                   type = "HI-union",
                                   cache = TRUE,
+                                  get_annotation = TRUE,
                                   add_annotation = TRUE,
                                   ...) {
 
@@ -91,18 +95,38 @@ get_networkdata_huri <- function( species = "human",
   annotation_db <-
     huri_db_annotations$anno_db_huri[match(species, huri_db_annotations$species)]
 
-  if (add_annotation) {
-    ppi_huri_df_annotated <- annotation_huri(ppi_huri = ppis_huri,
-                                           species = species,
-                                           type = type)
-    return(ppi_huri_df_annotated)
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_huri_anno_df <- get_annotation_huri(ppi_huri = ppis_huri,
+                                           species = species
+                                           )
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_huri_ppi_anno_df <- add_annotation_huri(anno_df = db_huri_anno_df,
+                                                 ppi_huri = ppis_huri,
+                                                 species = species
+      )
+      message("...added annotation from *db_huri_anno_df* to *db_huri_ppi_anno_df*")
+
+      return(db_huri_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_huri_anno_df)
+    }
   }
 
-  # no annotation
-  if (!add_annotation) {
-    return(ppis_huri)
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
   }
+  return(ppis_huri)
 }
+
 
 # outside of function ----------
 
@@ -112,40 +136,43 @@ list_db_annotationdbi_huri <- c("org.Hs.eg.db")
 
 
 huri_db_annotations <- data.frame(species = list_species_huri,
-                                 anno_db_huri = list_db_annotationdbi_huri,
-                                 row.names = list_species_huri
+                                  anno_db_huri = list_db_annotationdbi_huri,
+                                  row.names = list_species_huri
 )
 
-# annotation_huri() --------
+# get_annotation_huri() --------
 
-#' annotation_huri ()
+#' get_annotation_huri ()
 #'
 #' @param species  from which species does the data come from
-#' @param type different datasets , more information on "http://www.interactome-atlas.org/about/"
 #' @param ppi_huri variable defined by ppis_huri in get_networkdata_huri()
-#' @param add_annotation expanding the dataframe with six columns (GeneSymbol, Uniprot ID and Entrez_ID)
-#' @param ... further arguments passed to or from other methods
 #'
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
 #'
-#'@return ppis_huri_annotated
+#'@return anno_df
+#'@return ppi_huri
 #'
 #'@export
 #'
 #'
 #' @examples
-#' # \dontrun{
-#' # annotation_huri <- annotation_huri(ppi_huri, species = "human", type = "HI-union")
-#' # annotation_huri
-#' #}
+#' \dontrun{
+#' db_huri_df <- get_networkdata_huri(species = "human",
+#'                                    type = "HI-union",
+#'                                    cache = TRUE,
+#'                                    get_annotation = FALSE,
+#'                                    add_annotation = FALSE
+#'                                   )
+#'
+#' db_huri_anno_df <- get_annotation_huri(ppi_huri = db_huri_df,
+#'                                        species = "human"
+#'                                        )
+#' }
 
-annotation_huri <- function(ppi_huri,
-                           species,
-                           type,
-                           add_annotation = TRUE,
-                           ...) {
-  # find database on corresponding species
+get_annotation_huri <- function(ppi_huri,
+                                species
+                                ) {
 
   if (!(species %in% list_species_huri)) { # if species is not in the list
     stop("Species not found as specified by huri,",
@@ -168,46 +195,76 @@ annotation_huri <- function(ppi_huri,
       row.names = all_prot_ids
     )
 
-
-    ppis_huri_annotated <- ppi_huri
-
-    #adding GeneSymbol
-    ppis_huri_annotated$GeneSymbol_A <-
-      anno_df$genesymbol[match(ppis_huri_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_huri_annotated$GeneSymbol_B <-
-      anno_df$genesymbol[match(ppis_huri_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-    #adding Uniprot
-    ppis_huri_annotated$Uniprot_A <-
-      anno_df$uniprot_id[match(ppis_huri_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_huri_annotated$Uniprot_B <-
-      anno_df$uniprot_id[match(ppis_huri_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-    #adding Entrez
-    ppis_huri_annotated$Entrez_A <-
-      anno_df$entrez_id[match(ppis_huri_annotated$Ensembl_A, anno_df$ensembl_id)]
-    ppis_huri_annotated$Entrez_B <-
-      anno_df$entrez_id[match(ppis_huri_annotated$Ensembl_B, anno_df$ensembl_id)]
-
-    return(ppis_huri_annotated)
+    return(anno_df)
   }
 
-
   if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_huri(..., add_annotation = FALSE, ...)\n",
+            "You will get ppis_huri containing annotation for Uniprot_ and GeneSymbol_.")
     return(ppi_huri)
   }
 }
 
 
 
+# add_annotation_huri() --------
+#' add_annotation_huri ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in huri)
+#' @param ppi_huri variable defined by ppis_huri in get_networkdata_huri()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_huri with annotation columns for each interactor (for corresponding species in huri)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_huri_df <- get_networkdata_huri(species = "human",
+#'                                    type = "HI-union",
+#'                                    cache = TRUE,
+#'                                    get_annotation = FALSE,
+#'                                    add_annotation = FALSE
+#'                                   )
+#'
+#' db_huri_anno_df <- get_annotation_huri(ppi_huri = db_huri_df,
+#'                                        species = "human"
+#'                                        )
+#'
+#' db_huri_ppi_anno_df <- add_annotation_huri(ppi_huri = db_huri_df,
+#'                                            anno_df = db_huri_anno_df,
+#'                                            species = "human"
+#'                                            )
+#'
+#'}
 
+add_annotation_huri <- function(ppi_huri,
+                                anno_df,
+                                species) {
 
+    #adding GeneSymbol
+    ppi_huri$GeneSymbol_A <-
+      anno_df$genesymbol[match(ppi_huri$Ensembl_A, anno_df$ensembl_id)]
+    ppi_huri$GeneSymbol_B <-
+      anno_df$genesymbol[match(ppi_huri$Ensembl_B, anno_df$ensembl_id)]
 
+    #adding Uniprot
+    ppi_huri$Uniprot_A <-
+      anno_df$uniprot_id[match(ppi_huri$Ensembl_A, anno_df$ensembl_id)]
+    ppi_huri$Uniprot_B <-
+      anno_df$uniprot_id[match(ppi_huri$Ensembl_B, anno_df$ensembl_id)]
 
+    #adding Entrez
+    ppi_huri$Entrez_A <-
+      anno_df$entrez_id[match(ppi_huri$Ensembl_A, anno_df$ensembl_id)]
+    ppi_huri$Entrez_B <-
+      anno_df$entrez_id[match(ppi_huri$Ensembl_B, anno_df$ensembl_id)]
 
-
-
-#
+    return(ppi_huri)
+}
 
 
 # build_graph_huri() -----
@@ -220,7 +277,7 @@ annotation_huri <- function(ppi_huri,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples

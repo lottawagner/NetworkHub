@@ -5,7 +5,8 @@
 #' @param species  default value = "taxid:9606(human)|taxid:9606(Homo sapiens)" - from which species does the data come from
 #' @param version default value = "current" version of the data files in intact
 #' @param cache default value set to TRUE (automatically checks if the data file is already stored in the cache)
-#' @param add_annotation expanding the dataframe with six columns (GeneSymbol,Entrez_ID and Ensembl_ID)
+#' @param get_annotation creation of an annotation dataframe using AnnotationDbi packages, default value set to TRUE
+#' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_intact
@@ -15,24 +16,29 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_intact_df <- get_networkdata_intact(species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
-#'                                            version =  "current"
-#'                                            )
-#' db_intact_df
+#' db_intact_df <- get_networkdata_intact( species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
+#'                                         version = "current",
+#'                                         cache = TRUE,
+#'                                         get_annotation = FALSE,
+#'                                         add_annotation = FALSE
+#'                                         )
 #' }
 
 get_networkdata_intact <- function(species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
                                    version = "current",
                                    cache = TRUE,
+                                   get_annotation = TRUE,
                                    add_annotation = TRUE,
                                     ...) {
   # UPDATEVERSION
 
   # buildup of the resource location for the version
 
-  rname <- paste0("intact_v_",
+  rname <- paste0("intact_",
+                  species,
+                  "_v_",
                   version
-                 )
+                  )
 
   if (cache) {
     # tries to fetch from the cache
@@ -91,24 +97,43 @@ get_networkdata_intact <- function(species = "taxid:9606(human)|taxid:9606(Homo 
   #Confidence score
   ppis_intact_filtered$`Confidence value(s)` <- str_extract(ppis_intact_filtered$`Confidence value(s)`, "intact-miscore:([0-9\\.]+)")
   ppis_intact_filtered$`Confidence value(s)`<- gsub("intact-miscore:", "", ppis_intact_filtered$`Confidence value(s)`)
-  if (add_annotation) {
 
-    if (!(species %in% list_common_species_intact)) { # if species is not in the list
-      stop("Species not in `list_common_species_intact`!",
-           "Annotation for this species is not provided") # stop function and print
-    }
-
-    ppis_intact_filtered_annotated <- annotation_intact(ppi_intact = ppis_intact_filtered,
-                                                        species = species,
-                                                        version = version)
-    message("...added annotation :)")
-    return(ppis_intact_filtered_annotated)
-  }
-
-  if (!add_annotation){
+  if (get_annotation && is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_intact(..., add_annotation = FALSE, ...)\n")
     return(ppis_intact_filtered)
   }
 
+  if (get_annotation && !is.na(annotation_db)){
+
+    db_intact_anno_df <- get_annotation_intact( ppi_intact = ppis_intact_filtered,
+                                                    species = species)
+
+    message("...created annotation dataframe")
+
+    if (add_annotation) {
+
+      db_intact_ppi_anno_df <- add_annotation_intact( anno_df = db_intact_anno_df,
+                                                          ppi_intact = ppis_intact_filtered,
+                                                          species = species
+      )
+
+      message("...added annotation from *db_intact_anno_df* to *db_intact_ppi_anno_df*")
+
+      return(db_intact_ppi_anno_df)
+    }
+
+    if (!add_annotation){
+      return(db_intact_anno_df)
+    }
+  }
+
+  if (!get_annotation) {
+    if (add_annotation){
+      stop("get_annotation must be = TRUE in order to add_annotation")
+    }
+  }
+  return(ppis_intact_filtered)
 }
 
 
@@ -150,12 +175,11 @@ intact_db_annotations <- data.frame(species = list_common_species_intact,
                                     )
 
 
-# annotation_intact() --------
+# get_annotation_intact() --------
 
-#' annotation_intact ()
+#' get_annotation_intact ()
 #'
 #' @param species  from which species does the data come from
-#' @param version version of the data files in intact
 #' @param ppi_intact variable defined by ppis_intact in get_networkdata_intact()
 #'
 #' @importFrom AnnotationDbi mapIds
@@ -174,25 +198,33 @@ intact_db_annotations <- data.frame(species = list_common_species_intact,
 #' @import org.Ss.eg.db
 #' @import org.Xl.eg.db
 #'
-#'@return ppis_intact_annotated
+#'@return ppi_intact
 #'
 #'@export
 #'
 #'
 #' @examples
 #' \dontrun{
-#' annotation_intact <- annotation_intact(ppi_intact,
-#'                                        species = "taxid:9606(Homo sapiens)",
-#'                                        version = "current")
-#' annotation_intact
+#' db_intact_df <- get_networkdata_intact( species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
+#'                                         version = "current",
+#'                                         cache = TRUE,
+#'                                         get_annotation = FALSE,
+#'                                         add_annotation = FALSE
+#'                                         )
+#'
+#' db_intact_anno_df <- get_annotation_intact( ppi_intact = db_intact_df,
+#'                                             species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
+#'                                             )
 #' }
 
-annotation_intact <- function(ppi_intact,
-                              species,
-                              version){
+get_annotation_intact <- function(ppi_intact,
+                                  species
+                                  ){
 
   annotation_db <-
     intact_db_annotations$anno_db_intact[match(species, intact_db_annotations$species)]
+
+  if (!is.na(annotation_db)) {
 
   #create a list that contains all uniprot ids (but not NA)
   all_prot_ids <- unique(na.omit(c(ppi_intact$Uniprot_A, ppi_intact$Uniprot_B)))
@@ -214,29 +246,75 @@ annotation_intact <- function(ppi_intact,
                                              column = "ENTREZID"
                         ),
                         row.names = all_prot_ids
-  )
+                        )
+  return(anno_df)
+  }
 
-  ppis_intact_annotated <- ppi_intact
+  if (is.na(annotation_db)) {
+    message("Annotation database for the species is not implemented yet.\n",
+            "Next time define add_annotation in get_networkdata_intact(..., add_annotation = FALSE, ...)\n"
+            )
+    return(ppi_intact)
+  }
+}
+
+
+# add_annotation_intact() --------
+#' add_annotation_intact ()
+#'
+#' @param anno_df annotation dataframe (for corresponding species in intact)
+#' @param ppi_intact variable defined by ppis_intact in get_networkdata_intact()
+#' @param species  from which species does the data come from
+#'
+#'
+#' @return ppi_intact with annotation columns for each interactor (for corresponding species in intact)
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' db_intact_df <- get_networkdata_intact( species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
+#'                                         version = "current",
+#'                                         cache = TRUE,
+#'                                         get_annotation = FALSE,
+#'                                         add_annotation = FALSE
+#'                                         )
+#'
+#' db_intact_anno_df <- get_annotation_intact( ppi_intact = db_intact_df,
+#'                                             species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
+#'                                             )
+#'
+#' db_intact_ppi_anno_df <- add_annotation_intact( ppi_intact = db_intact_df,
+#'                                                 anno_df = db_intact_anno_df,
+#'                                                 species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
+#'                                                  )
+#'
+#'}
+
+add_annotation_intact <- function( ppi_intact,
+                                   anno_df,
+                                   species) {
 
   #adding GeneSymbol
-  ppis_intact_annotated$GeneSymbol_A <-
-    anno_df$gene_symbol[match(ppis_intact_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_intact_annotated$GeneSymbol_B <-
-    anno_df$gene_symbol[match(ppis_intact_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_intact$GeneSymbol_A <-
+    anno_df$gene_symbol[match(ppi_intact$Uniprot_A, anno_df$uniprot_id)]
+  ppi_intact$GeneSymbol_B <-
+    anno_df$gene_symbol[match(ppi_intact$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Ensembl
-  ppis_intact_annotated$Ensembl_A <-
-    anno_df$ensembl_id[match(ppis_intact_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_intact_annotated$Ensembl_B <-
-    anno_df$ensembl_id[match(ppis_intact_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_intact$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_intact$Uniprot_A, anno_df$uniprot_id)]
+  ppi_intact$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_intact$Uniprot_B, anno_df$uniprot_id)]
 
   #adding Entrez
-  ppis_intact_annotated$Entrez_A <-
-    anno_df$entrez_id[match(ppis_intact_annotated$Uniprot_A, anno_df$uniprot_id)]
-  ppis_intact_annotated$Entrez_B <-
-    anno_df$entrez_id[match(ppis_intact_annotated$Uniprot_B, anno_df$uniprot_id)]
+  ppi_intact$Entrez_A <-
+    anno_df$entrez_id[match(ppi_intact$Uniprot_A, anno_df$uniprot_id)]
+  ppi_intact$Entrez_B <-
+    anno_df$entrez_id[match(ppi_intact$Uniprot_B, anno_df$uniprot_id)]
 
-  return(ppis_intact_annotated)
+  return(ppi_intact)
 }
 
 
