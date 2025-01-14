@@ -10,6 +10,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_pathwaycommons
+#' @return db_pathwaycommons_ppi_anno_df
+#' @return db_pathwaycommons_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -146,6 +148,7 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 
 #'
 #' @return ppi_pathwaycommons
+#' @return anno_df
 #'
 #' @export
 #'
@@ -278,7 +281,7 @@ add_annotation_pathwaycommons <- function(ppi_pathwaycommons,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
