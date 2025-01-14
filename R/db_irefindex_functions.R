@@ -9,7 +9,9 @@
 #' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
-#' @return ppi_irefindex
+#' @return ppis_irefindex
+#' @return db_irefindex_ppi_anno_df
+#' @return db_irefindex_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -208,6 +210,7 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'
 #'
 #' @return ppi_irefindex
+#' @return anno_df
 #'
 #' @export
 #'
@@ -332,7 +335,7 @@ add_annotation_irefindex <- function(ppi_irefindex,
 
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
