@@ -11,7 +11,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_funcoup
-#' @return ppis_annotated_funcoup
+#' @return db_funcoup_ppi_anno_df
+#' @return db_funcoup_anno_df
 #'
 #' @importFrom vroom vroom
 #'
@@ -215,7 +216,9 @@ funcoup_db_annotations <- data.frame(
 #' @import org.Sc.sgd.db
 #' @import org.Ss.eg.db
 #'
+#' @return anno_df
 #' @return ppi_funcoup
+#'
 #' @export
 #'
 #' @examples
@@ -335,7 +338,7 @@ add_annotation_funcoup <- function(ppi_funcoup,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
