@@ -10,6 +10,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_intact
+#' @return db_intact_ppi_anno_df
+#' @return db_intact_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -198,9 +200,10 @@ intact_db_annotations <- data.frame(species = list_common_species_intact,
 #' @import org.Ss.eg.db
 #' @import org.Xl.eg.db
 #'
-#'@return ppi_intact
+#' @return ppi_intact
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
@@ -330,7 +333,7 @@ add_annotation_intact <- function( ppi_intact,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
