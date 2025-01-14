@@ -9,7 +9,9 @@
 #' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
-#' @return ppi_innatedb
+#' @return ppis_innatedb
+#' @return db_innatedb_ppi_anno_df
+#' @return db_innatedb_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -179,12 +181,11 @@ innatedb_db_annotations <- data.frame(species = list_species_innatedb,
 #' @importFrom stats na.omit
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
-
 #'
-#'@return ppi_innatedb
+#' @return ppi_innatedb
+#' @return anno_df
 #'
-#'@export
-#'
+#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -318,7 +319,7 @@ add_annotation_innatedb <- function(ppi_innatedb,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
