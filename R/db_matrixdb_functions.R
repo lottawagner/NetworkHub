@@ -11,6 +11,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_matrixdb
+#' @return db_matrixdb_ppi_anno_df
+#' @return db_matrixdb_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -162,9 +164,10 @@ matrixdb_db_annotations <- data.frame(species = list_species_matrixdb,
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
 #'
-#'@return ppi_matrixdb
+#' @return ppi_matrixdb
+#' @return anno_df
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
@@ -289,7 +292,7 @@ add_annotation_matrixdb <- function(ppi_matrixdb,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
