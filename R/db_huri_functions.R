@@ -10,6 +10,8 @@
 #' @param ... 	further arguments passed to or from other methods
 #'
 #' @return ppis_huri
+#' @return db_huri_ppi_anno_df
+#' @return db_huri_anno_df
 #'
 #' @importFrom vroom vroom
 #' @export
@@ -275,7 +277,7 @@ add_annotation_huri <- function(ppi_huri,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
