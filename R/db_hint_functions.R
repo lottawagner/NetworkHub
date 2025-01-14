@@ -300,7 +300,7 @@ add_annotation_hint <- function(ppi_hint,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return my_graph
 #' @export
 #'
 #' @examples
