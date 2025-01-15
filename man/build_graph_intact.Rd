@@ -26,14 +26,17 @@ build_graph_intact()
 \examples{
 \dontrun{
 
-db_intact_df <- get_networkdata_intact(species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
-                                       version =  "current")
+db_intact_df <- get_networkdata_intact(
+  species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
+  version = "current"
+)
 
-db_intact_graph <- build_graph_intact(graph_data = db_intact_df,
-                                        output_format = "igraph",
-                                        min_score_threshold = "0.35")
-db_intact_graph #list of 17490
+db_intact_graph <- build_graph_intact(
+  graph_data = db_intact_df,
+  output_format = "igraph",
+  min_score_threshold = "0.35"
+)
+db_intact_graph # list of 17490
 }
-
 
 }

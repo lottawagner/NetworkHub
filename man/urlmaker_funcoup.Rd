@@ -24,8 +24,10 @@ url returns the corresponding url set by params
 urlmaker_funcoup()
 }
 \examples{
-url_funcoup <- urlmaker_funcoup(version = "6.0",
-                                species = "B.taurus",
-                                type = "full")
+url_funcoup <- urlmaker_funcoup(
+  version = "6.0",
+  species = "B.taurus",
+  type = "full"
+)
 url_funcoup
 }

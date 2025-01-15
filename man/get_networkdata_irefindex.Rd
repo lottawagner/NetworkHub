@@ -38,11 +38,12 @@ get_networkdata_irefindex()
 }
 \examples{
 \dontrun{
-db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
-                                             version = "08-28-2023",
-                                             get_annotation = FALSE,
-                                             add_annotation = FALSE
-                                             )
+db_irefindex_df <- get_networkdata_irefindex(
+  species = "Homo sapiens",
+  version = "08-28-2023",
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 db_irefindex_df
 }
 }

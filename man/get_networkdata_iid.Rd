@@ -38,10 +38,11 @@ get_networkdata_iid()
 }
 \examples{
 \dontrun{
-db_iid_df <- get_networkdata_iid(species = "human",
-                                 version = "2021-05",
-                                 get_annotation = FALSE,
-                                 add_annotation = FALSE
-                                )
+db_iid_df <- get_networkdata_iid(
+  species = "human",
+  version = "2021-05",
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 }
 }

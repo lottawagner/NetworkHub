@@ -18,31 +18,30 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
-#'                                                         version = "v12",
-#'                                                         cache = TRUE,
-#'                                                         get_annotation = FALSE,
-#'                                                         add_annotation = FALSE
-#'                                                         )
+#' db_pathwaycommons_df <- get_networkdata_pathwaycommons(
+#'   species = "human",
+#'   version = "v12",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #' }
-
-get_networkdata_pathwaycommons <- function( species = "human",
-                                       version = "v12",
-                                       cache = TRUE,
-                                       get_annotation = TRUE,
-                                       add_annotation = TRUE,
-                                       ...) {
-
-
-
+get_networkdata_pathwaycommons <- function(species = "human",
+                                           version = "v12",
+                                           cache = TRUE,
+                                           get_annotation = TRUE,
+                                           add_annotation = TRUE,
+                                           ...) {
   # list species is actualized for version pathwaycommons "2021-05"
   # UPDATEVERSION
 
   # check that the value for species is listed in pathwaycommons
 
   if (!(species %in% list_species_pathwaycommons)) { # if species is not in the list
-    stop("Species not found as specified by pathwaycommons,",
-         "please check some valid entries by running `list_species_pathwaycommons`") # stop function and print
+    stop(
+      "Species not found as specified by pathwaycommons,",
+      "please check some valid entries by running `list_species_pathwaycommons`"
+    ) # stop function and print
   }
 
   # buildup of the resource location for the version and all
@@ -79,44 +78,44 @@ get_networkdata_pathwaycommons <- function( species = "human",
 
   # read in the resource, whether cached or freshly downloaded
   ppis_pathwaycommons <- vroom::vroom(network_file)
-  #ppis_pathwaycommons <- head(read.delim(network_file, sep = " "))
+  # ppis_pathwaycommons <- head(read.delim(network_file, sep = " "))
   #
   message(dim(ppis_pathwaycommons))
 
-  #GeneSymbol
+  # GeneSymbol
   colnames(ppis_pathwaycommons)[colnames(ppis_pathwaycommons) == "PARTICIPANT_A"] <- "GeneSymbol_A"
   colnames(ppis_pathwaycommons)[colnames(ppis_pathwaycommons) == "PARTICIPANT_B"] <- "GeneSymbol_B"
 
   annotation_db <-
     pathwaycommons_db_annotations$anno_db_pathwaycommons[match(species, pathwaycommons_db_annotations$species)]
 
-  if (get_annotation && !is.na(annotation_db)){
-
-    db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = ppis_pathwaycommons,
-                                                                species = species
-                                                              )
+  if (get_annotation && !is.na(annotation_db)) {
+    db_pathwaycommons_anno_df <- get_annotation_pathwaycommons(
+      ppi_pathwaycommons = ppis_pathwaycommons,
+      species = species
+    )
 
     message("...created annotation dataframe")
 
     if (add_annotation) {
-
-      db_pathwaycommons_ppi_anno_df <- add_annotation_pathwaycommons( anno_df = db_pathwaycommons_anno_df,
-                                                                      ppi_pathwaycommons = ppis_pathwaycommons,
-                                                                      species = species
-                                                                    )
+      db_pathwaycommons_ppi_anno_df <- add_annotation_pathwaycommons(
+        anno_df = db_pathwaycommons_anno_df,
+        ppi_pathwaycommons = ppis_pathwaycommons,
+        species = species
+      )
 
       message("...added annotation from *db_pathwaycommons_anno_df* to *db_pathwaycommons_ppi_anno_df*")
 
       return(db_pathwaycommons_ppi_anno_df)
     }
 
-    if (!add_annotation){
+    if (!add_annotation) {
       return(db_pathwaycommons_anno_df)
     }
   }
 
   if (!get_annotation) {
-    if (add_annotation){
+    if (add_annotation) {
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
@@ -130,10 +129,11 @@ list_species_pathwaycommons <- c("human")
 list_db_annotationdbi_pathwaycommons <- c("org.Hs.eg.db")
 
 
-pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommons,
-                                            anno_db_pathwaycommons = list_db_annotationdbi_pathwaycommons,
-                                            row.names = list_species_pathwaycommons
-                                            )
+pathwaycommons_db_annotations <- data.frame(
+  species = list_species_pathwaycommons,
+  anno_db_pathwaycommons = list_db_annotationdbi_pathwaycommons,
+  row.names = list_species_pathwaycommons
+)
 
 
 # get_annotation_pathwaycommons() --------
@@ -154,52 +154,61 @@ pathwaycommons_db_annotations <- data.frame(species = list_species_pathwaycommon
 #'
 #' @examples
 #' \dontrun{
-#' db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
-#'                                                         version = "v12",
-#'                                                         cache = TRUE,
-#'                                                         get_annotation = FALSE,
-#'                                                         add_annotation = FALSE
-#'                                                         )
+#' db_pathwaycommons_df <- get_networkdata_pathwaycommons(
+#'   species = "human",
+#'   version = "v12",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
-#'                                                             species = "human")
+#' db_pathwaycommons_anno_df <- get_annotation_pathwaycommons(
+#'   ppi_pathwaycommons = db_pathwaycommons_df,
+#'   species = "human"
+#' )
 #' }
-
-
-
 get_annotation_pathwaycommons <- function(ppi_pathwaycommons,
                                           species) {
   # find database on corresponding species
 
   if (!(species %in% list_species_pathwaycommons)) { # if species is not in the list
-    stop("Species not found as specified by pathwaycommons,",
-         "please check some valid entries by running `list_species_pathwaycommons`") # stop function and print
+    stop(
+      "Species not found as specified by pathwaycommons,",
+      "please check some valid entries by running `list_species_pathwaycommons`"
+    ) # stop function and print
   }
 
   annotation_db <-
     pathwaycommons_db_annotations$anno_db_pathwaycommons[match(species, pathwaycommons_db_annotations$species)]
 
   if (!is.na(annotation_db)) {
-
-  all_prot_ids <- unique(c(ppi_pathwaycommons$GeneSymbol_A, ppi_pathwaycommons$GeneSymbol_B))
-  anno_df <- data.frame(
-    genesymbol = all_prot_ids,
-    uniprot_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "UNIPROT"),
-    ensembl_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "ENSEMBL"),
-    entrez_id = mapIds(
-      get(annotation_db), keys = all_prot_ids, keytype = "SYMBOL", column = "ENTREZID"),
-    row.names = all_prot_ids
+    all_prot_ids <- unique(c(ppi_pathwaycommons$GeneSymbol_A, ppi_pathwaycommons$GeneSymbol_B))
+    anno_df <- data.frame(
+      genesymbol = all_prot_ids,
+      uniprot_id = mapIds(
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "SYMBOL", column = "UNIPROT"
+      ),
+      ensembl_id = mapIds(
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "SYMBOL", column = "ENSEMBL"
+      ),
+      entrez_id = mapIds(
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "SYMBOL", column = "ENTREZID"
+      ),
+      row.names = all_prot_ids
     )
 
-  return(anno_df)
+    return(anno_df)
   }
 
   if (is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_pathwaycommons(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_pathwaycommons containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_pathwaycommons(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_pathwaycommons containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppi_pathwaycommons)
   }
 }
@@ -220,46 +229,47 @@ get_annotation_pathwaycommons <- function(ppi_pathwaycommons,
 #'
 #' @examples
 #' \dontrun{
-#' db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
-#'                                                         version = "v12",
-#'                                                         cache = TRUE,
-#'                                                         get_annotation = FALSE,
-#'                                                         add_annotation = FALSE
-#'                                                         )
+#' db_pathwaycommons_df <- get_networkdata_pathwaycommons(
+#'   species = "human",
+#'   version = "v12",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
-#'                                                             species = "human")
+#' db_pathwaycommons_anno_df <- get_annotation_pathwaycommons(
+#'   ppi_pathwaycommons = db_pathwaycommons_df,
+#'   species = "human"
+#' )
 #'
-#' db_pathwaycommons_ppi_anno_df <- add_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
-#'                                                                 anno_df = db_pathwaycommons_anno_df,
-#'                                                                 species = "human"
-#'                                                               )
-#'
-#'}
-
+#' db_pathwaycommons_ppi_anno_df <- add_annotation_pathwaycommons(
+#'   ppi_pathwaycommons = db_pathwaycommons_df,
+#'   anno_df = db_pathwaycommons_anno_df,
+#'   species = "human"
+#' )
+#' }
 add_annotation_pathwaycommons <- function(ppi_pathwaycommons,
-                                    anno_df,
-                                    species) {
-  #adding Uniprot
+                                          anno_df,
+                                          species) {
+  # adding Uniprot
   ppi_pathwaycommons$Uniprot_A <-
     anno_df$uniprot_id[match(ppi_pathwaycommons$GeneSymbol_A, anno_df$genesymbol)]
   ppi_pathwaycommons$Uniprot_B <-
     anno_df$uniprot_id[match(ppi_pathwaycommons$GeneSymbol_B, anno_df$genesymbol)]
 
-  #adding Ensembl
+  # adding Ensembl
   ppi_pathwaycommons$Ensembl_A <-
     anno_df$ensembl_id[match(ppi_pathwaycommons$GeneSymbol_A, anno_df$genesymbol)]
   ppi_pathwaycommons$Ensembl_B <-
     anno_df$ensembl_id[match(ppi_pathwaycommons$GeneSymbol_B, anno_df$genesymbol)]
 
-  #adding Entrez
+  # adding Entrez
   ppi_pathwaycommons$Entrez_A <-
     anno_df$entrez_id[match(ppi_pathwaycommons$GeneSymbol_A, anno_df$genesymbol)]
   ppi_pathwaycommons$Entrez_B <-
     anno_df$entrez_id[match(ppi_pathwaycommons$GeneSymbol_B, anno_df$genesymbol)]
 
   return(ppi_pathwaycommons)
-
 }
 
 
@@ -292,35 +302,41 @@ add_annotation_pathwaycommons <- function(ppi_pathwaycommons,
 #'   version = "v12"
 #' )
 #'
-#' db_pathwaycommons_graph <- build_graph_pathwaycommons(graph_data = db_pathwaycommons_df,
-#'                                         output_format = "igraph")
-#' db_pathwaycommons_graph #list of 60434
+#' db_pathwaycommons_graph <- build_graph_pathwaycommons(
+#'   graph_data = db_pathwaycommons_df,
+#'   output_format = "igraph"
+#' )
+#' db_pathwaycommons_graph # list of 60434
 #' }
 #'
-#'
-
-
-build_graph_pathwaycommons <- function (graph_data,
-                                        output_format = "igraph",
-                                        min_score_threshold = NULL){
-
-  #check on the clumns in your ppi data file
+build_graph_pathwaycommons <- function(graph_data,
+                                       output_format = "igraph",
+                                       min_score_threshold = NULL) {
+  # check on the clumns in your ppi data file
   colnames(graph_data)
 
   graph_data_processed <- graph_data
 
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
-                      to = graph_data_processed$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data_processed$GeneSymbol_A,
+    to = graph_data_processed$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
-                                    graph_data_processed$GeneSymbol_B)),
-                      label = unique(c(graph_data_processed$GeneSymbol_A,
-                                       graph_data_processed$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {
@@ -330,7 +346,4 @@ build_graph_pathwaycommons <- function (graph_data,
   }
   # simplify by avoiding multiple entries?
   ## could make it smaller and easier to handle, without losing too much/at all in info
-
 }
-
-

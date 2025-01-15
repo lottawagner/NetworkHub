@@ -18,31 +18,30 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
-#'                                              version = "08-28-2023",
-#'                                              get_annotation = FALSE,
-#'                                              add_annotation = FALSE
-#'                                              )
+#' db_irefindex_df <- get_networkdata_irefindex(
+#'   species = "Homo sapiens",
+#'   version = "08-28-2023",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #' db_irefindex_df
 #' }
-
 get_networkdata_irefindex <- function(species = "Homo sapiens",
                                       version = "08-28-2023",
                                       cache = TRUE,
                                       get_annotation = TRUE,
                                       add_annotation = TRUE,
                                       ...) {
-
-
-
   # list species is actualized for version irefindex "2021-05"
   # UPDATEVERSION
 
   # check that the value for species is listed in irefindex
 
   if (!(species %in% list_species_irefindex)) { # if species is not in the list
-    stop("Species not found as specified by irefindex,",
-         "please check some valid entries by running `list_species_irefindex`") # stop function and print
+    stop(
+      "Species not found as specified by irefindex,",
+      "please check some valid entries by running `list_species_irefindex`"
+    ) # stop function and print
   }
 
   # buildup of the resource location for the version and all
@@ -82,27 +81,27 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
 
   # read in the resource, whether cached or freshly downloaded
   ppis_irefindex <- vroom::vroom(network_file)
-  #ppis_irefindex <- head(read.delim(network_file, sep = " "))
+  # ppis_irefindex <- head(read.delim(network_file, sep = " "))
   #
   message(dim(ppis_irefindex))
 
-  #Uniprot
+  # Uniprot
   colnames(ppis_irefindex)[colnames(ppis_irefindex) == "#uidA"] <- "Uniprot_A"
   colnames(ppis_irefindex)[colnames(ppis_irefindex) == "uidB"] <- "Uniprot_B"
-  #remove complex and refseq entries
+  # remove complex and refseq entries
   rows_to_remove_1 <- grep("^complex:", ppis_irefindex$Uniprot_A)
   rows_to_remove_2 <- grep("^refseq:", ppis_irefindex$Uniprot_A)
   ppis_irefindex <- ppis_irefindex[-rows_to_remove_1, ]
   ppis_irefindex <- ppis_irefindex[-rows_to_remove_2, ]
 
-  #remove "uniprotdb:" description for each entry
+  # remove "uniprotdb:" description for each entry
   ppis_irefindex$Uniprot_A <- str_extract(ppis_irefindex$Uniprot_A, "uniprotkb:([A-Z0-9]+)")
   ppis_irefindex$Uniprot_A <- gsub("uniprotkb:", "", ppis_irefindex$Uniprot_A)
   ppis_irefindex$Uniprot_B <- str_extract(ppis_irefindex$Uniprot_B, "uniprotkb:([A-Z0-9]+)")
   ppis_irefindex$Uniprot_B <- gsub("uniprotkb:", "", ppis_irefindex$Uniprot_B)
   ppis_irefindex <- ppis_irefindex[!is.na(ppis_irefindex$Uniprot_A) & !is.na(ppis_irefindex$Uniprot_B), ]
 
-  #Confidence score
+  # Confidence score
   ppis_irefindex$confidence <- str_extract(ppis_irefindex$confidence, "lpr:([0-9\\.]+)")
   ppis_irefindex$confidence <- gsub("lpr:", "", ppis_irefindex$confidence)
 
@@ -111,37 +110,40 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
     irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
 
   if (get_annotation && is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_irefindex(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_irefindex containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_irefindex(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_irefindex containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppis_irefindex)
   }
 
-  if (get_annotation && !is.na(annotation_db)){
-
-    db_irefindex_anno_df <- get_annotation_irefindex(ppi_irefindex = ppis_irefindex,
-                                                     species = species)
+  if (get_annotation && !is.na(annotation_db)) {
+    db_irefindex_anno_df <- get_annotation_irefindex(
+      ppi_irefindex = ppis_irefindex,
+      species = species
+    )
 
     message("...created annotation dataframe")
 
     if (add_annotation) {
-
-      db_irefindex_ppi_anno_df <- add_annotation_irefindex(anno_df = db_irefindex_anno_df,
-                                                           ppi_irefindex = ppis_irefindex,
-                                                           species = species
-                                                          )
+      db_irefindex_ppi_anno_df <- add_annotation_irefindex(
+        anno_df = db_irefindex_anno_df,
+        ppi_irefindex = ppis_irefindex,
+        species = species
+      )
       message("...added annotation from *db_irefindex_anno_df* to *db_irefindex_ppi_anno_df*")
 
       return(db_irefindex_ppi_anno_df)
     }
 
-    if (!add_annotation){
+    if (!add_annotation) {
       return(db_irefindex_anno_df)
     }
   }
 
   if (!get_annotation) {
-    if (add_annotation){
+    if (add_annotation) {
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
@@ -152,44 +154,49 @@ get_networkdata_irefindex <- function(species = "Homo sapiens",
 
 # outside of function ----------
 
-list_species_irefindex <- c ( "Homo sapiens",
-                              "Mus musculus",
-                              "Saccharomyces cerevisiae S288C",
-                              "Escherichia",
-                              "Rattus norvegicus",
-                              "Saccharomyces cerevisiae",
-                              "Drosophila melanogaster",
-                              "Caenorhabditis elegans"
-                            )
+list_species_irefindex <- c(
+  "Homo sapiens",
+  "Mus musculus",
+  "Saccharomyces cerevisiae S288C",
+  "Escherichia",
+  "Rattus norvegicus",
+  "Saccharomyces cerevisiae",
+  "Drosophila melanogaster",
+  "Caenorhabditis elegans"
+)
 
-species_id_irefindex <- c(  "9606",
-                            "10090",
-                            "559292",
-                            "562",
-                            "10116",
-                            "4932",
-                            "7227",
-                            "6239")
-
-
-
-
-list_db_annotationdbi_irefindex <- c("org.Hs.eg.db",
-                                     "org.Mm.eg.db",
-                                     "org.Sc.sgd.db",
-                                     "org.EcK12.eg.db",
-                                     "org.Rn.eg.db",
-                                     "org.Sc.sgd.db",
-                                     "org.Dm.eg.db",
-                                     "org.Ce.eg.db"
-                                     )
+species_id_irefindex <- c(
+  "9606",
+  "10090",
+  "559292",
+  "562",
+  "10116",
+  "4932",
+  "7227",
+  "6239"
+)
 
 
-irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefindex,
-                                       species_id = species_id_irefindex,
-                                       anno_db_irefindex = list_db_annotationdbi_irefindex,
-                                       row.names = list_species_irefindex
-                                      )
+
+
+list_db_annotationdbi_irefindex <- c(
+  "org.Hs.eg.db",
+  "org.Mm.eg.db",
+  "org.Sc.sgd.db",
+  "org.EcK12.eg.db",
+  "org.Rn.eg.db",
+  "org.Sc.sgd.db",
+  "org.Dm.eg.db",
+  "org.Ce.eg.db"
+)
+
+
+irefindex_db_annotations <- data.frame(
+  species_irefindex = list_species_irefindex,
+  species_id = species_id_irefindex,
+  anno_db_irefindex = list_db_annotationdbi_irefindex,
+  row.names = list_species_irefindex
+)
 
 # get_annotation_irefindex() --------
 
@@ -217,23 +224,20 @@ irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefinde
 #'
 #' @examples
 #' \dontrun{
-#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
-#'                                              version = "08-28-2023",
-#'                                              get_annotation = FALSE,
-#'                                              add_annotation = FALSE
-#'                                              )
+#' db_irefindex_df <- get_networkdata_irefindex(
+#'   species = "Homo sapiens",
+#'   version = "08-28-2023",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_irefindex_anno_df <- get_annotation_irefindex( ppi_irefindex = db_irefindex_df,
-#'                                                   species = "Homo sapiens"
-#'                                                 )
+#' db_irefindex_anno_df <- get_annotation_irefindex(
+#'   ppi_irefindex = db_irefindex_df,
+#'   species = "Homo sapiens"
+#' )
 #' }
-
-
-
 get_annotation_irefindex <- function(ppi_irefindex,
                                      species) {
-
-
   # find database for corresponding species
   annotation_db <- irefindex_db_annotations$anno_db_irefindex[match(species, irefindex_db_annotations$species_irefindex)]
 
@@ -243,11 +247,17 @@ get_annotation_irefindex <- function(ppi_irefindex,
     anno_df <- data.frame(
       uniprot_id = all_prot_ids,
       genesymbol = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"
+      ),
       ensembl_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"
+      ),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"
+      ),
       row.names = all_prot_ids
     )
 
@@ -255,9 +265,11 @@ get_annotation_irefindex <- function(ppi_irefindex,
   }
 
   if (is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_irefindex(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_irefindex containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_irefindex(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_irefindex containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppi_irefindex)
   }
 }
@@ -277,50 +289,47 @@ get_annotation_irefindex <- function(ppi_irefindex,
 #'
 #' @examples
 #' \dontrun{
-#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
-#'                                              version = "08-28-2023",
-#'                                              get_annotation = FALSE,
-#'                                              add_annotation = FALSE
-#'                                              )
+#' db_irefindex_df <- get_networkdata_irefindex(
+#'   species = "Homo sapiens",
+#'   version = "08-28-2023",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_irefindex_anno_df <- get_annotation_irefindex( ppi_irefindex = db_irefindex_df,
-#'                                                   species = "Homo sapiens"
-#'                                                 )
+#' db_irefindex_anno_df <- get_annotation_irefindex(
+#'   ppi_irefindex = db_irefindex_df,
+#'   species = "Homo sapiens"
+#' )
 #'
-#' db_irefindex_ppi_anno_df <- add_annotation_irefindex( ppi_irefindex = db_irefindex_df,
-#'                                                       anno_df = db_irefindex_anno_df,
-#'                                                       species = "Homo sapiens"
-#'                                                     )
-#'
-#'}
-
+#' db_irefindex_ppi_anno_df <- add_annotation_irefindex(
+#'   ppi_irefindex = db_irefindex_df,
+#'   anno_df = db_irefindex_anno_df,
+#'   species = "Homo sapiens"
+#' )
+#' }
 add_annotation_irefindex <- function(ppi_irefindex,
-                               anno_df,
-                               species) {
-
-
-  #adding GeneSymbol
+                                     anno_df,
+                                     species) {
+  # adding GeneSymbol
   ppi_irefindex$GeneSymbol_A <-
     anno_df$genesymbol[match(ppi_irefindex$Uniprot_A, anno_df$uniprot_id)]
   ppi_irefindex$GeneSymbol_B <-
     anno_df$genesymbol[match(ppi_irefindex$Uniprot_B, anno_df$uniprot_id)]
 
 
-  #adding Ensembl
+  # adding Ensembl
   ppi_irefindex$Ensembl_A <-
     anno_df$ensembl_id[match(ppi_irefindex$Uniprot_A, anno_df$uniprot_id)]
   ppi_irefindex$Ensembl_B <-
     anno_df$ensembl_id[match(ppi_irefindex$Uniprot_B, anno_df$uniprot_id)]
 
-  #adding Entrez
+  # adding Entrez
   ppi_irefindex$Entrez_A <-
     anno_df$entrez_id[match(ppi_irefindex$Uniprot_A, anno_df$uniprot_id)]
   ppi_irefindex$Entrez_B <-
     anno_df$entrez_id[match(ppi_irefindex$Uniprot_B, anno_df$uniprot_id)]
 
   return(ppi_irefindex)
-
-
 }
 
 
@@ -341,24 +350,24 @@ add_annotation_irefindex <- function(ppi_irefindex,
 #' @examples
 #' \dontrun{
 #'
-#' db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
-#'                                              version = "08-28-2023")
+#' db_irefindex_df <- get_networkdata_irefindex(
+#'   species = "Homo sapiens",
+#'   version = "08-28-2023"
+#' )
 #'
-#' db_irefindex_graph <- build_graph_irefindex(graph_data = db_irefindex_df,
-#'                                             output_format = "igraph",
-#'                                             min_score_threshold = "100")
+#' db_irefindex_graph <- build_graph_irefindex(
+#'   graph_data = db_irefindex_df,
+#'   output_format = "igraph",
+#'   min_score_threshold = "100"
+#' )
 #'
-#' db_irefindex_graph #list of 5798 (score = 100)
+#' db_irefindex_graph # list of 5798 (score = 100)
 #' }
 #'
-#'
-
-
-build_graph_irefindex <- function (graph_data,
+build_graph_irefindex <- function(graph_data,
                                   output_format = "igraph",
-                                  min_score_threshold = NULL){
-
-  #check on the clumns in your ppi data file
+                                  min_score_threshold = NULL) {
+  # check on the clumns in your ppi data file
   colnames(graph_data)
 
   graph_data$confidence <- as.numeric(graph_data$confidence)
@@ -366,25 +375,33 @@ build_graph_irefindex <- function (graph_data,
   # Erstelle das Histogramm mit 50 bins (breaks)
   hist(graph_data$confidence, breaks = 50)
 
-  #select ppi data >= minimal score
-  if (!is.null(min_score_threshold)){
+  # select ppi data >= minimal score
+  if (!is.null(min_score_threshold)) {
     graph_data_processed <- graph_data[graph_data$confidence <= min_score_threshold, ]
   } else {
     graph_data_processed <- graph_data
   }
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data)
   dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
-                      to = graph_data_processed$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data_processed$GeneSymbol_A,
+    to = graph_data_processed$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
-                                    graph_data_processed$GeneSymbol_B)),
-                      label = unique(c(graph_data_processed$GeneSymbol_A,
-                                       graph_data_processed$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {
@@ -394,8 +411,4 @@ build_graph_irefindex <- function (graph_data,
   }
   # simplify by avoiding multiple entries?
   ## could make it smaller and easier to handle, without losing too much/at all in info
-
 }
-
-
-

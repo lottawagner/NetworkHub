@@ -21,19 +21,20 @@ get_annotation_hippie()
 }
 \examples{
 
-db_hippie_df <- get_networkdata_hippie(species = "Homo_sapiens",
-                                       version = "current",
-                                       cache = TRUE,
-                                       get_annotation = FALSE,
-                                       add_annotation = FALSE
-                                       )
+db_hippie_df <- get_networkdata_hippie(
+  species = "Homo_sapiens",
+  version = "current",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_hippie_anno_df <- get_annotation_hippie(ppi_hippie = db_hippie_df,
-                                           species = "Homo_sapiens",
-                                           version = "current"
-                                           )
+db_hippie_anno_df <- get_annotation_hippie(
+  ppi_hippie = db_hippie_df,
+  species = "Homo_sapiens",
+  version = "current"
+)
 
 # returns a dataframe containing #TODO rows and #TODO columns
-
 
 }

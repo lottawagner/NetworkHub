@@ -26,15 +26,18 @@ build_graph_irefindex()
 \examples{
 \dontrun{
 
-db_irefindex_df <- get_networkdata_irefindex(species = "Homo sapiens",
-                                             version = "08-28-2023")
+db_irefindex_df <- get_networkdata_irefindex(
+  species = "Homo sapiens",
+  version = "08-28-2023"
+)
 
-db_irefindex_graph <- build_graph_irefindex(graph_data = db_irefindex_df,
-                                            output_format = "igraph",
-                                            min_score_threshold = "100")
+db_irefindex_graph <- build_graph_irefindex(
+  graph_data = db_irefindex_df,
+  output_format = "igraph",
+  min_score_threshold = "100"
+)
 
-db_irefindex_graph #list of 5798 (score = 100)
+db_irefindex_graph # list of 5798 (score = 100)
 }
-
 
 }

@@ -21,21 +21,23 @@ add_annotation_funcoup ()
 }
 \examples{
 \dontrun{
-db_funcoup_df <- get_networkdata_funcoup( species = "H.sapiens",
-                                          version = "5.0",
-                                          cache = TRUE,
-                                          get_annotation = FALSE,
-                                          add_annotation = FALSE
-                                         )
+db_funcoup_df <- get_networkdata_funcoup(
+  species = "H.sapiens",
+  version = "5.0",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_funcoup_anno_df <- get_annotation_funcoup(ppi_funcoup = db_funcoup_df,
-                                       species = "H.sapiens"
-                                       )
+db_funcoup_anno_df <- get_annotation_funcoup(
+  ppi_funcoup = db_funcoup_df,
+  species = "H.sapiens"
+)
 
-db_funcoup_ppi_anno_df <- add_annotation_funcoup(  ppi_funcoup = db_funcoup_df,
-                                                   anno_df = db_funcoup_anno_df,
-                                                   species = "H.sapiens"
-                                                   )
-
+db_funcoup_ppi_anno_df <- add_annotation_funcoup(
+  ppi_funcoup = db_funcoup_df,
+  anno_df = db_funcoup_anno_df,
+  species = "H.sapiens"
+)
 }
 }

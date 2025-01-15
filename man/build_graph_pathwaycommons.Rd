@@ -31,10 +31,11 @@ db_pathwaycommons_df <- get_networkdata_pathwaycommons(
   version = "v12"
 )
 
-db_pathwaycommons_graph <- build_graph_pathwaycommons(graph_data = db_pathwaycommons_df,
-                                        output_format = "igraph")
-db_pathwaycommons_graph #list of 60434
+db_pathwaycommons_graph <- build_graph_pathwaycommons(
+  graph_data = db_pathwaycommons_df,
+  output_format = "igraph"
+)
+db_pathwaycommons_graph # list of 60434
 }
-
 
 }

@@ -21,21 +21,23 @@ add_annotation_intact ()
 }
 \examples{
 \dontrun{
-db_intact_df <- get_networkdata_intact( species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
-                                        version = "current",
-                                        cache = TRUE,
-                                        get_annotation = FALSE,
-                                        add_annotation = FALSE
-                                        )
+db_intact_df <- get_networkdata_intact(
+  species = "taxid:9606(human)|taxid:9606(Homo sapiens)",
+  version = "current",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_intact_anno_df <- get_annotation_intact( ppi_intact = db_intact_df,
-                                            species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
-                                            )
+db_intact_anno_df <- get_annotation_intact(
+  ppi_intact = db_intact_df,
+  species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
+)
 
-db_intact_ppi_anno_df <- add_annotation_intact( ppi_intact = db_intact_df,
-                                                anno_df = db_intact_anno_df,
-                                                species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
-                                                 )
-
+db_intact_ppi_anno_df <- add_annotation_intact(
+  ppi_intact = db_intact_df,
+  anno_df = db_intact_anno_df,
+  species = "taxid:9606(human)|taxid:9606(Homo sapiens)"
+)
 }
 }

@@ -21,14 +21,17 @@ get_annotation_pathwaycommons ()
 }
 \examples{
 \dontrun{
-db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
-                                                        version = "v12",
-                                                        cache = TRUE,
-                                                        get_annotation = FALSE,
-                                                        add_annotation = FALSE
-                                                        )
+db_pathwaycommons_df <- get_networkdata_pathwaycommons(
+  species = "human",
+  version = "v12",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_pathwaycommons_anno_df <- get_annotation_pathwaycommons( ppi_pathwaycommons = db_pathwaycommons_df,
-                                                            species = "human")
+db_pathwaycommons_anno_df <- get_annotation_pathwaycommons(
+  ppi_pathwaycommons = db_pathwaycommons_df,
+  species = "human"
+)
 }
 }

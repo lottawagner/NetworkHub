@@ -41,13 +41,14 @@ get_networkdata_funcoup()
 }
 \examples{
 \dontrun{
-db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens",
-                                         version = "6.0",
-                                         type = "compact",
-                                         cache = TRUE,
-                                         get_annotation = FALSE,
-                                         add_annotation = FALSE
-                                         )
+db_funcoup_df <- get_networkdata_funcoup(
+  species = "H.sapiens",
+  version = "6.0",
+  type = "compact",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 db_funcoup_df
 }
 

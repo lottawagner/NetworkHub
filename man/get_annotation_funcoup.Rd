@@ -21,7 +21,8 @@ get_annotation_funcoup ()
 }
 \examples{
 \dontrun{
- db_funcoup_df  <- get_annotation_funcoup( ppi_funcoup,
-                                           species = "H.sapiens")
+db_funcoup_df <- get_annotation_funcoup(ppi_funcoup,
+  species = "H.sapiens"
+)
 }
 }

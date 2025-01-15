@@ -31,10 +31,11 @@ db_huri_df <- get_networkdata_huri(
   type = "HI-union"
 )
 
-db_huri_graph <- build_graph_huri(graph_data = db_huri_df,
-                                        output_format = "igraph")
-db_huri_graph #list of 9024
+db_huri_graph <- build_graph_huri(
+  graph_data = db_huri_df,
+  output_format = "igraph"
+)
+db_huri_graph # list of 9024
 }
-
 
 }

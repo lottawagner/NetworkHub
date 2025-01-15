@@ -1,13 +1,12 @@
-
 # What's inside ?
 # 1. For each database one/more functions that help to identify the variables in the corresponding url_maker function
 # 2. For each database one function to create an url to download/cache the data from the db
 # -> Why? because using an url where you have to define the version, species and some other variables, the user can easily access the data without the need of google search
 
 # Comment on comments
-#UPDATEVERSION - for databases where version is not defined in url
-#SPECIESDEFINITION - for databases where species is not defined in url
-#CURRENTVERSION - for databases only providing data for current version (no archive)
+# UPDATEVERSION - for databases where version is not defined in url
+# SPECIESDEFINITION - for databases where species is not defined in url
+# CURRENTVERSION - for databases only providing data for current version (no archive)
 
 
 # STRINGDB -----
@@ -26,21 +25,24 @@
 #' @importFrom utils read.delim
 #'
 #' @examples
-#' url_stringdb <- urlmaker_stringdb(type = "PPI",
-#'                                   species = "Homo sapiens",
-#'                                   version = "12.0")
+#' url_stringdb <- urlmaker_stringdb(
+#'   type = "PPI",
+#'   species = "Homo sapiens",
+#'   version = "12.0"
+#' )
 #'
 #' url_stringdb
 urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
                               species = "Homo sapiens",
                               version = "12.0") {
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
-  stopifnot(is.character(species))                  # make sure to type in a species name as character
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
-
-  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
-                                 version)
+  url_species_stringdb <- sprintf(
+    "https://stringdb-downloads.org/download/species.v%s.txt",
+    version
+  )
 
   # read.delim the data from the species text file (columns separated using a delimiter)
   df_species <- read.delim(url(url_species_stringdb))
@@ -48,8 +50,10 @@ urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
 
   # check that the value for species is listed in StringDB
   if (!(species %in% info_species$official_name_NCBI)) {
-    stop("Species not found as specified by STRINGDB, ",
-         "please check some valid entries by running `info_species_stringdb()`")
+    stop(
+      "Species not found as specified by STRINGDB, ",
+      "please check some valid entries by running `info_species_stringdb()`"
+    )
   }
 
   # match the information about the species (id, name) with the corresponding data file (PPI/protein info)
@@ -67,7 +71,6 @@ urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
       species_id,
       version
     )
-
   } else if (type == "protein_info") {
     url <- sprintf(
       "https://stringdb-downloads.org/download/protein.aliases.v%s/%s.protein.aliases.v%s.txt.gz",
@@ -82,7 +85,7 @@ urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
 
 # HINT ------------------------------------------
 
-#links:
+# links:
 # binary: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_binary_hq.txt
 # cocomplex: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_cocomp_hq.txt
 # https://hint.yulab.org/download-raw/2024-06/SaccharomycesCerevisiae_binary_hq.txt
@@ -105,41 +108,47 @@ urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
 #' @export
 #'
 #' @examples
-#' url_hint <- urlmaker_hint( type = "binary",
-#'                            species = "HomoSapiens",
-#'                            version = "2024-06")
-#'url_hint
+#' url_hint <- urlmaker_hint(
+#'   type = "binary",
+#'   species = "HomoSapiens",
+#'   version = "2024-06"
+#' )
+#' url_hint
 urlmaker_hint <- function(type = "binary", # default value for type = "binary"
                           species = "HomoSapiens", # default value for species #UPDATEVERSION
                           version) { # version is always written as year - month ( 2024-06, 2020-08, ...) #UPDATEVERSION
 
   # avoid errors
-  stopifnot(is.character(species))  # make sure to type in a species name as character
-  stopifnot(is.character(version))  # make sure to type in a version as character
-  stopifnot(length(version) == 1)   # make sure to type in a version with the length == 1
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
 
   # define the opportunities for species in HINT
 
-  list_species_hint <- c("HomoSapiens",
-                         "SaccharomycesCerevisiae",
-                         "SchizosaccharomycesPombe",
-                         "MusMusculus",
-                         "DrosophilaMelanogaster",
-                         "CaenorhabditisElegans",
-                         "ArabidopsisThaliana",
-                         "EscherichiaColi",
-                         "RattusNorvegicus",
-                         "OryzaSativa")
+  list_species_hint <- c(
+    "HomoSapiens",
+    "SaccharomycesCerevisiae",
+    "SchizosaccharomycesPombe",
+    "MusMusculus",
+    "DrosophilaMelanogaster",
+    "CaenorhabditisElegans",
+    "ArabidopsisThaliana",
+    "EscherichiaColi",
+    "RattusNorvegicus",
+    "OryzaSativa"
+  )
 
-                          # list species is actualized for version HINT "2024-06"
-                          # UPDATEVERSION
+  # list species is actualized for version HINT "2024-06"
+  # UPDATEVERSION
 
   # check that the value for species is listed in HINT
 
   if (!(species %in% list_species_hint)) { # if species is not in the list
-    stop("Species not found as specified by HINT,",
-         "please check some valid entries by running `list_species_hint`") # stop function and print
+    stop(
+      "Species not found as specified by HINT,",
+      "please check some valid entries by running `list_species_hint`"
+    ) # stop function and print
   }
 
   # define the opportunities for the four interaction types in HINT:
@@ -155,15 +164,16 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 
   # create the url depending on the type, version and species
 
-  url <- sprintf("https://hint.yulab.org/download-raw/%s/%s_%s_hq.txt",
-                 version,
-                 species,
-                 type)
+  url <- sprintf(
+    "https://hint.yulab.org/download-raw/%s/%s_%s_hq.txt",
+    version,
+    species,
+    type
+  )
 
 
   # return value is "url"
   return(url)
-
 }
 
 
@@ -182,17 +192,19 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 #' @export
 #'
 #' @examples
-#' url_funcoup <- urlmaker_funcoup(version = "6.0",
-#'                                 species = "B.taurus",
-#'                                 type = "full")
+#' url_funcoup <- urlmaker_funcoup(
+#'   version = "6.0",
+#'   species = "B.taurus",
+#'   type = "full"
+#' )
 #' url_funcoup
 urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as type "5.0"
                              species = "H.sapiens", # default value = "H.sapiens", value as type first letter (capital) of first name, full second name with small letters
-                             type = c("compact", "full")) { #for current version compact recommended, for older versions only full possible
+                             type = c("compact", "full")) { # for current version compact recommended, for older versions only full possible
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(version)) # make sure to type in a version as character
-  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   # define the opportunities for species in FunCoup 5.0
 
@@ -202,174 +214,195 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
 
   # current version is stored on website in download folder #UPDATEVERSION
   if (version == "6.0") {
-
-    list_species_funcoup_6.0 <- c( "A.thaliana",
-                                   "B.subtilis",
-                                   "B.taurus",
-                                   "C.elegans",
-                                   "C.familiaris",
-                                   "C.intestinalis",
-                                   "D.discoideum",
-                                   "D.melanogatser",
-                                   "D.rerio",
-                                   "E.coli",
-                                   "G.gallus",
-                                   "H.sapiens",
-                                   "M.jannaschii",
-                                   "M.musculus",
-                                   "M.tuberculosis",
-                                   "O.sativa",
-                                   "P.falciparum",
-                                   "R.norvegicus",
-                                   "S.cerevisiae",
-                                   "S.pombe",
-                                   "S.scrofa",
-                                   "S.solfataricus",
-                                   "SARS-CoV-2"
+    list_species_funcoup_6.0 <- c(
+      "A.thaliana",
+      "B.subtilis",
+      "B.taurus",
+      "C.elegans",
+      "C.familiaris",
+      "C.intestinalis",
+      "D.discoideum",
+      "D.melanogatser",
+      "D.rerio",
+      "E.coli",
+      "G.gallus",
+      "H.sapiens",
+      "M.jannaschii",
+      "M.musculus",
+      "M.tuberculosis",
+      "O.sativa",
+      "P.falciparum",
+      "R.norvegicus",
+      "S.cerevisiae",
+      "S.pombe",
+      "S.scrofa",
+      "S.solfataricus",
+      "SARS-CoV-2"
     )
 
-    if (!species %in% list_species_funcoup_6.0){
-      stop("Species not found as specified by Funcoup version 6.0,",
-           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    if (!species %in% list_species_funcoup_6.0) {
+      stop(
+        "Species not found as specified by Funcoup version 6.0,",
+        "please check some valid entries on the webiste 'https://funcoup.org/archive/'"
+      )
     }
 
-    url <- sprintf("https://funcoup.org/download/network&FC%s_%s_%s.gz",
-                  version,
-                  species,
-                  type)
+    url <- sprintf(
+      "https://funcoup.org/download/network&FC%s_%s_%s.gz",
+      version,
+      species,
+      type
+    )
   }
 
   if (version == "5.0") {
+    list_species_funcoup_5.0 <- c(
+      "A.thaliana",
+      "B.subtilis",
+      "B.taurus",
+      "C.elegans",
+      "C.familiaris",
+      "C.intestinalis",
+      "D.melanogatser",
+      "D.rerio",
+      "E.coli",
+      "G.gallus",
+      "H.sapiens",
+      "M.jannaschii",
+      "M.musculus",
+      "O.sativa",
+      "P.falciparum",
+      "R.norvegicus",
+      "S.cerevisiae",
+      "S.pombe",
+      "S.scrofa",
+      "S.solfataricus"
+    )
 
-    list_species_funcoup_5.0 <- c( "A.thaliana",
-                                   "B.subtilis",
-                                   "B.taurus",
-                                   "C.elegans",
-                                   "C.familiaris",
-                                   "C.intestinalis",
-                                   "D.melanogatser",
-                                   "D.rerio",
-                                   "E.coli",
-                                   "G.gallus",
-                                   "H.sapiens",
-                                   "M.jannaschii",
-                                   "M.musculus",
-                                   "O.sativa",
-                                   "P.falciparum",
-                                   "R.norvegicus",
-                                   "S.cerevisiae",
-                                   "S.pombe",
-                                   "S.scrofa",
-                                   "S.solfataricus"
-                                  )
-
-    if (!species %in% list_species_funcoup_5.0){
-      stop("Species not found as specified by Funcoup version 5.0,",
-           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    if (!species %in% list_species_funcoup_5.0) {
+      stop(
+        "Species not found as specified by Funcoup version 5.0,",
+        "please check some valid entries on the webiste 'https://funcoup.org/archive/'"
+      )
     }
 
-    url <- sprintf("https://funcoup.org/download/archive&FC%s_%s_%s.gz",
-                  version,
-                  species,
-                  type)
+    url <- sprintf(
+      "https://funcoup.org/download/archive&FC%s_%s_%s.gz",
+      version,
+      species,
+      type
+    )
 
-  # archived versions are in archive folder #UPDATEVERSION
+    # archived versions are in archive folder #UPDATEVERSION
   }
 
-  if ( version == "4.1" || version == "4.0"){
-
-    list_species_funcoup_4._ <- c( "A.thaliana",
-                                   "B.subtilis",
-                                   "B.taurus",
-                                   "C.elegans",
-                                   "C.familiaris",
-                                   "C.intestinalis",
-                                   "D.melanogatser",
-                                   "D.rerio",
-                                   "E.coli",
-                                   "G.gallus",
-                                   "H.sapiens",
-                                   "M.musculus",
-                                   "O.sativa",
-                                   "P.falciparum",
-                                   "R.norvegicus",
-                                   "S.cerevisiae",
-                                   "S.pombe"
-                                  )
-    if (!species %in% list_species_funcoup_4._){
-      stop("Species not found as specified by Funcoup version 4.0 or 4.1,",
-           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+  if (version == "4.1" || version == "4.0") {
+    list_species_funcoup_4._ <- c(
+      "A.thaliana",
+      "B.subtilis",
+      "B.taurus",
+      "C.elegans",
+      "C.familiaris",
+      "C.intestinalis",
+      "D.melanogatser",
+      "D.rerio",
+      "E.coli",
+      "G.gallus",
+      "H.sapiens",
+      "M.musculus",
+      "O.sativa",
+      "P.falciparum",
+      "R.norvegicus",
+      "S.cerevisiae",
+      "S.pombe"
+    )
+    if (!species %in% list_species_funcoup_4._) {
+      stop(
+        "Species not found as specified by Funcoup version 4.0 or 4.1,",
+        "please check some valid entries on the webiste 'https://funcoup.org/archive/'"
+      )
     }
 
-    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_full.gz",
-                   version,
-                   version,
-                   species)
+    url <- sprintf(
+      "https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_full.gz",
+      version,
+      version,
+      species
+    )
 
-    if ( type == "compact" ) {
+    if (type == "compact") {
       message("NOTE: For version 4.0 & 4.1: Only the full datafile is provided by funcoup.")
     }
   }
 
 
   if (version == "3.0") {
+    list_species_funcoup_3.0 <- c(
+      "A.thaliana",
+      "C.elegans",
+      "C.familiaris",
+      "C.intestinalis",
+      "D.melanogatser",
+      "D.rerio",
+      "G.gallus",
+      "H.sapiens",
+      "M.jannaschii",
+      "M.musculus",
+      "P.falciparum",
+      "R.norvegicus",
+      "S.cerevisiae"
+    )
 
-    list_species_funcoup_3.0 <- c( "A.thaliana",
-                                   "C.elegans",
-                                   "C.familiaris",
-                                   "C.intestinalis",
-                                   "D.melanogatser",
-                                   "D.rerio",
-                                   "G.gallus",
-                                   "H.sapiens",
-                                   "M.jannaschii",
-                                   "M.musculus",
-                                   "P.falciparum",
-                                   "R.norvegicus",
-                                   "S.cerevisiae"
-                                  )
 
-
-    if (!species %in% list_species_funcoup_3.0){
-        stop("Species not found as specified by Funcoup version 3.0,",
-             "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    if (!species %in% list_species_funcoup_3.0) {
+      stop(
+        "Species not found as specified by Funcoup version 3.0,",
+        "please check some valid entries on the webiste 'https://funcoup.org/archive/'"
+      )
     }
 
-    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_%s.gz",
-                   version,
-                   version,
-                   species,
-                   type)
+    url <- sprintf(
+      "https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=FC%s_%s_%s.gz",
+      version,
+      version,
+      species,
+      type
+    )
   }
 
 
-  if ( version == "2.0") {
+  if (version == "2.0") {
+    list_species_funcoup_2.0 <- c(
+      "athaliana",
+      "celegans",
+      "cfamiliaris",
+      "cintestinalis",
+      "dmelanogaster",
+      "drerio",
+      "ggallus",
+      "hsapiens",
+      "mmusculus",
+      "rnorvegicus",
+      "scerevisiae"
+    )
 
-    list_species_funcoup_2.0 <- c("athaliana",
-                                  "celegans",
-                                  "cfamiliaris",
-                                  "cintestinalis",
-                                  "dmelanogaster",
-                                  "drerio",
-                                  "ggallus",
-                                  "hsapiens",
-                                  "mmusculus",
-                                  "rnorvegicus",
-                                  "scerevisiae")
 
-
-    if (!species %in% list_species_funcoup_2.0){
-      stop("Species not found as specified by Funcoup version 2.0,",
-           "please check some valid entries on the webiste 'https://funcoup.org/archive/'")
+    if (!species %in% list_species_funcoup_2.0) {
+      stop(
+        "Species not found as specified by Funcoup version 2.0,",
+        "please check some valid entries on the webiste 'https://funcoup.org/archive/'"
+      )
     }
 
-    url <- sprintf("https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=%s.%s.pfc01.tsv.gz",
-                   version,
-                   species,
-                   type)
+    url <- sprintf(
+      "https://funcoup.org/archive/download.action?type=archive&instanceID=24480085&version=FunCoup-%s&fileName=%s.%s.pfc01.tsv.gz",
+      version,
+      species,
+      type
+    )
   }
 
-  if ( version == "1.0") {
+  if (version == "1.0") {
     stop("No url provided by NetworkHub for version 1.0")
   }
 
@@ -401,43 +434,49 @@ urlmaker_iid <- function(species = "human", #
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(version)) # make sure to type in a version as character
-  stopifnot(length(version) == 1 ) # make sure to type in a version with the length == 1
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
 
   # define the opportunities for species in IID
 
-  list_species_iid <- c ("alpaca",
-                         "cat",
-                         "chicken",
-                         "cow",
-                         "dog",
-                         "duck",
-                         "fly",
-                         "guinea_pig",
-                         "horse",
-                         "human",
-                         "mouse",
-                         "pig",
-                         "rabbit",
-                         "rat",
-                         "sheep",
-                         "turkey",
-                         "worm",
-                         "yeast")
-                          # list species is actualized for version IID version 2021-05
-                          # UPDATEVERSION
+  list_species_iid <- c(
+    "alpaca",
+    "cat",
+    "chicken",
+    "cow",
+    "dog",
+    "duck",
+    "fly",
+    "guinea_pig",
+    "horse",
+    "human",
+    "mouse",
+    "pig",
+    "rabbit",
+    "rat",
+    "sheep",
+    "turkey",
+    "worm",
+    "yeast"
+  )
+  # list species is actualized for version IID version 2021-05
+  # UPDATEVERSION
 
   # check that the value for species is listed in IID
-  if (!species %in% list_species_iid){
-    stop("Species not found as specified by IID,",
-         "please check some valid entries of `list_species_iid` and on the webiste 'https://iid.ophid.utoronto.ca/search_by_proteins/'")
+  if (!species %in% list_species_iid) {
+    stop(
+      "Species not found as specified by IID,",
+      "please check some valid entries of `list_species_iid` and on the webiste 'https://iid.ophid.utoronto.ca/search_by_proteins/'"
+    )
   }
 
   # create the url depending on the species
-  url <- sprintf("https://iid.ophid.utoronto.ca/static/download/%s_annotated_PPIs.txt.gz",
-  species)
+  url <- sprintf(
+    "https://iid.ophid.utoronto.ca/static/download/%s_annotated_PPIs.txt.gz",
+    species
+  )
 
-  #return the url for IID and the corresponding species
+  # return the url for IID and the corresponding species
   return(url)
 }
 
@@ -455,45 +494,55 @@ urlmaker_iid <- function(species = "human", #
 #' @export
 #'
 #' @examples
-#' url_irefindex <- urlmaker_irefindex(species = "Homo sapiens",
-#'                                     version = "08-28-2023")
+#' url_irefindex <- urlmaker_irefindex(
+#'   species = "Homo sapiens",
+#'   version = "08-28-2023"
+#' )
 #' url_irefindex
 urlmaker_irefindex <- function(species,
-                               version = "08-28-2023"){ #default value for version = "08-28-2023" #UPDATEVERSION
+                               version = "08-28-2023") { # default value for version = "08-28-2023" #UPDATEVERSION
 
-  stopifnot(is.character(species))                  # make sure to type in a species name as character
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   # create a list that contains species names and corresponding IDs
 
-  list_species_irefindex <- c ( "Homo sapiens",
-                                "Mus musculus",
-                                "Saccharomyces cerevisiae S288C",
-                                "Escherichia",
-                                "Rattus norvegicus",
-                                "Saccharomyces cerevisiae",
-                                "Drosophila melanogaster",
-                                "Caenorhabditis elegans")
+  list_species_irefindex <- c(
+    "Homo sapiens",
+    "Mus musculus",
+    "Saccharomyces cerevisiae S288C",
+    "Escherichia",
+    "Rattus norvegicus",
+    "Saccharomyces cerevisiae",
+    "Drosophila melanogaster",
+    "Caenorhabditis elegans"
+  )
 
-  species_id_irefindex <- c(  "9606",
-                              "10090",
-                              "559292",
-                              "562",
-                              "10116",
-                              "4932",
-                              "7227",
-                              "6239")
+  species_id_irefindex <- c(
+    "9606",
+    "10090",
+    "559292",
+    "562",
+    "10116",
+    "4932",
+    "7227",
+    "6239"
+  )
 
 
-  irefindex_db_annotations <- data.frame(species_irefindex = list_species_irefindex,
-                                         species_id = species_id_irefindex,
-                                         row.names = list_species_irefindex)
+  irefindex_db_annotations <- data.frame(
+    species_irefindex = list_species_irefindex,
+    species_id = species_id_irefindex,
+    row.names = list_species_irefindex
+  )
 
   # check that the value for species is listed in iRefIndex
   if (!species %in% list_species_irefindex) {
-    stop("Species not found as specified by iRefIndex, ",
-         "please check some valid entries in info_species_irefindex_id or on the website 'https://irefindex.vib.be/wiki/index.php/README_MITAB2.6_for_iRefIndex_20.0#Column_number:_29_.28Host_organism_taxid.29`")
+    stop(
+      "Species not found as specified by iRefIndex, ",
+      "please check some valid entries in info_species_irefindex_id or on the website 'https://irefindex.vib.be/wiki/index.php/README_MITAB2.6_for_iRefIndex_20.0#Column_number:_29_.28Host_organism_taxid.29`"
+    )
   }
 
   # fetch the species_id from info_species_irefindex
@@ -501,9 +550,11 @@ urlmaker_irefindex <- function(species,
   species_id <- species_row$species_id
 
   # create the url for iRefIndex depending on species_id and version
-  url <- sprintf("https://storage.googleapis.com/irefindex-data/archive/release_20.0/psi_mitab/MITAB2.6/%s.mitab.%s.txt.zip",
-                 species_id,
-                 version)
+  url <- sprintf(
+    "https://storage.googleapis.com/irefindex-data/archive/release_20.0/psi_mitab/MITAB2.6/%s.mitab.%s.txt.zip",
+    species_id,
+    version
+  )
   # return the url
   return(url)
 }
@@ -522,37 +573,42 @@ urlmaker_irefindex <- function(species,
 #' @examples
 #' url_mint <- urlmaker_mint(species = "Homo Sapiens")
 #' url_mint
+urlmaker_mint <- function(species = "Homo Sapiens", # default value = "Homo Sapiens"
+                          version = "current") { # default value = current , can not fetch previous versions #CURRENTVERSION
 
-urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sapiens"
-                           version = "current") { # default value = current , can not fetch previous versions #CURRENTVERSION
-
-  stopifnot(is.character(species))                  # make sure to type in a species name as character
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
 
   # create a list that contains species names and corresponding names in the url
 
-  info_species_mint <- list( "all organisms" = "*",
-                        "Homo Sapiens" = "species:human",
-                        "Mus Musculus" = "species:mouse",
-                        "Drosophila Melanogaster" = "species:fruit%20fly",
-                        "Saccharomyces Cerevisiae" = "species:yeast")
+  info_species_mint <- list(
+    "all organisms" = "*",
+    "Homo Sapiens" = "species:human",
+    "Mus Musculus" = "species:mouse",
+    "Drosophila Melanogaster" = "species:fruit%20fly",
+    "Saccharomyces Cerevisiae" = "species:yeast"
+  )
 
   # check that the value for species is listed in MINT
   if (!species %in% names(info_species_mint)) {
-    stop("Species not found as specified by MINT, ",
-         "please check some valid entries in info_species_mint or on the website 'https://mint.bio.uniroma2.it/index.php/download/'")
-    }
+    stop(
+      "Species not found as specified by MINT, ",
+      "please check some valid entries in info_species_mint or on the website 'https://mint.bio.uniroma2.it/index.php/download/'"
+    )
+  }
 
 
   # fetch the species_name from info_species_mint
   species_name <- info_species_mint[[species]]
 
   # create the url for MINT depending on version and species_name
-  url <- sprintf( "http://www.ebi.ac.uk/Tools/webservices/psicquic/mint/webservices/%s/search/query/%s",
-                  version,
-                  species_name)
+  url <- sprintf(
+    "http://www.ebi.ac.uk/Tools/webservices/psicquic/mint/webservices/%s/search/query/%s",
+    version,
+    species_name
+  )
 
   # return the url
   return(url)
@@ -570,48 +626,56 @@ urlmaker_mint <- function (species = "Homo Sapiens", # default value = "Homo Sap
 #' @export
 #'
 #' @examples
-#' url_genemania <- urlmaker_genemania(species = "Homo_sapiens",
-#'                                     version = "current")
+#' url_genemania <- urlmaker_genemania(
+#'   species = "Homo_sapiens",
+#'   version = "current"
+#' )
 #' url_genemania
-urlmaker_genemania <- function ( species = "Homo_sapiens",
-                                 version = "current") { #default value = "current"
+urlmaker_genemania <- function(species = "Homo_sapiens",
+                               version = "current") { # default value = "current"
 
-  stopifnot(is.character(species))                  # make sure to type in a species name as character
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  stopifnot(is.character(species)) # make sure to type in a species name as character
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
 
   # create a list of all species in GeneMania
 
-  info_species_genemania <- c("Arabidopsis_thaliana",
-                              "Caenorhabditis_elegans",
-                              "Danio_rerio",
-                              "Drosophila_melanogaster",
-                              "Escherichia_coli",
-                              "Homo_sapiens",
-                              "Mus_musculus",
-                              "Rattus_norvegicus",
-                              "Saccharomyces_cerevisiae")
+  info_species_genemania <- c(
+    "Arabidopsis_thaliana",
+    "Caenorhabditis_elegans",
+    "Danio_rerio",
+    "Drosophila_melanogaster",
+    "Escherichia_coli",
+    "Homo_sapiens",
+    "Mus_musculus",
+    "Rattus_norvegicus",
+    "Saccharomyces_cerevisiae"
+  )
 
   # make sure that files stored in archive have another value in url
-  if (version == "current")
+  if (version == "current") {
     archive <- ""
-
-  else
+  } else {
     archive <- "archive/"
+  }
 
   # check that the value for species is listed in GeneMania
-  if (! species %in% info_species_genemania) {
-    stop("Species not found as specified by GeneMania, ",
-         "please check some valid entries in info_species_genemania or on the website 'https://genemania.org/data/current/'")
+  if (!species %in% info_species_genemania) {
+    stop(
+      "Species not found as specified by GeneMania, ",
+      "please check some valid entries in info_species_genemania or on the website 'https://genemania.org/data/current/'"
+    )
   }
 
 
   # create the link depending on the version and species
-  url <- sprintf("https://genemania.org/data/%s%s/%s.COMBINED/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt",
-                 archive,
-                 version,
-                 species)
+  url <- sprintf(
+    "https://genemania.org/data/%s%s/%s.COMBINED/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt",
+    archive,
+    version,
+    species
+  )
 
   # return the url
   return(url)
@@ -632,11 +696,13 @@ urlmaker_genemania <- function ( species = "Homo_sapiens",
 #'
 #' @examples
 #'
-#' url_huri <- urlmaker_huri(species = "human",
-#'                           type = "HI-union")
+#' url_huri <- urlmaker_huri(
+#'   species = "human",
+#'   type = "HI-union"
+#' )
 #' url_huri
-urlmaker_huri <- function (species = "human", # default value human, because this database only provides human data
-                           type = c("HI-union", "Lit-BM")) { #recommended value = "HI-union", because it contains nearly all data from HuRi
+urlmaker_huri <- function(species = "human", # default value human, because this database only provides human data
+                          type = c("HI-union", "Lit-BM")) { # recommended value = "HI-union", because it contains nearly all data from HuRi
 
 
 
@@ -644,8 +710,10 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
   stopifnot(is.character(type))
 
   if (species != "human") { # if species is not in the list
-    stop("Species not found as specified by HuRi,",
-         "HuRi only contains data for 'human'") # stop function and print
+    stop(
+      "Species not found as specified by HuRi,",
+      "HuRi only contains data for 'human'"
+    ) # stop function and print
   }
 
   # the datafile "HI-union" is an aggregate of all PPIs identified in
@@ -657,12 +725,13 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
   # Yang-16
   # Test space screens-19
 
-  url <- sprintf("http://www.interactome-atlas.org/data/%s.tsv",
-                 type)
+  url <- sprintf(
+    "http://www.interactome-atlas.org/data/%s.tsv",
+    type
+  )
 
 
   return(url)
-
 }
 
 
@@ -688,9 +757,9 @@ urlmaker_huri <- function (species = "human", # default value human, because thi
 #' # https://matrixdb.univ-lyon1.fr/downloads/matrixdb_all_4_0.tab.zip
 urlmaker_matrixdb <- function(species = "human",
                               type = c("all", "CORE"),
-                              version = "4_0"){ #UPDATEVERSION
+                              version = "4_0") { # UPDATEVERSION
 
-  stopifnot(is.character(species))                  # make sure to type in a species name as character
+  stopifnot(is.character(species)) # make sure to type in a species name as character
 
   # check that the value for species is listed in MatrixDB
   if (species != "human") {
@@ -698,12 +767,13 @@ urlmaker_matrixdb <- function(species = "human",
          MatrixDB only provide data for 'human'")
   }
 
-  url <- sprintf("https://matrixdb.univ-lyon1.fr/downloads/matrixdb_%s_%s.tab.zip",
-                 type,
-                 version)
+  url <- sprintf(
+    "https://matrixdb.univ-lyon1.fr/downloads/matrixdb_%s_%s.tab.zip",
+    type,
+    version
+  )
 
   return(url)
-
 }
 
 
@@ -724,26 +794,29 @@ urlmaker_matrixdb <- function(species = "human",
 #'
 #' url_pc <- urlmaker_pathwaycommons()
 #' url_pc
-urlmaker_pathwaycommons<- function( species = "human", #default value = "human", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
+urlmaker_pathwaycommons <- function(species = "human", # default value = "human", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
                                     version = "v12") { # default value = "v12", because in "v14" not all datafiles are updated already #UPDATEVERSION
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(version)) # make sure to type in a version as character
-  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   # check that the value for species is listed in PathwayCommons
   if (species != "human") { # if species is not in the list
-    stop("Species not found as specified by PathwayCommons,",
-         " PathwayCommons only contains data for 'Homo sapiens'") # stop function and print
+    stop(
+      "Species not found as specified by PathwayCommons,",
+      " PathwayCommons only contains data for 'Homo sapiens'"
+    ) # stop function and print
   }
 
   # create url depending on the version
-  url <- sprintf("https://download.baderlab.org/PathwayCommons/PC2/%s/PathwayCommons12.All.hgnc.txt.gz",
-                 version)
+  url <- sprintf(
+    "https://download.baderlab.org/PathwayCommons/PC2/%s/PathwayCommons12.All.hgnc.txt.gz",
+    version
+  )
 
   # return the url
-  return (url)
-
+  return(url)
 }
 
 
@@ -765,28 +838,33 @@ urlmaker_pathwaycommons<- function( species = "human", #default value = "human",
 #'
 #' @examples
 #'
-#' url_hippie <- urlmaker_hippie(species = "Homo_sapiens",
-#'                             version = "current")
+#' url_hippie <- urlmaker_hippie(
+#'   species = "Homo_sapiens",
+#'   version = "current"
+#' )
 #' url_hippie
 #'
-urlmaker_hippie <- function (species = "Homo_sapiens", # default value human, because this database only provides human data
-                             version = "current" ){ #default value current
+urlmaker_hippie <- function(species = "Homo_sapiens", # default value human, because this database only provides human data
+                            version = "current") { # default value current
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(version)) # make sure to type in a version as character
-  stopifnot(length(version) == 1)  # make sure to type in a version with the length == 1
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   if (species != "Homo_sapiens") { # if species is not in the list
-    stop("Species not found as specified by HIPPIE,",
-         "HIPPIE only contains data for 'Homo_sapiens'") # stop function and print
+    stop(
+      "Species not found as specified by HIPPIE,",
+      "HIPPIE only contains data for 'Homo_sapiens'"
+    ) # stop function and print
   }
 
-  url <- sprintf("https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/HIPPIE-%s.mitab.txt",
-                 version)
+  url <- sprintf(
+    "https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/HIPPIE-%s.mitab.txt",
+    version
+  )
 
 
   return(url)
-
 }
 
 
@@ -801,11 +879,10 @@ urlmaker_hippie <- function (species = "Homo_sapiens", # default value human, be
 #' @examples
 #' url_reactome <- urlmaker_reactome()
 #' url_reactome
+urlmaker_reactome <- function(version = "current") { # SPECIESDEFINITION
 
-urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
-
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.psi-mitab.txt"
   return(url)
@@ -827,12 +904,12 @@ urlmaker_reactome <- function(version = "current"){ #SPECIESDEFINITION
 #' url_innatedb <- urlmaker_innatedb()
 #' url_innatedb
 urlmaker_innatedb <- function(url = url,
-                              version = "5.4"){ # default value = "5.4" #UPDATEVERSION
+                              version = "5.4") { # default value = "5.4" #UPDATEVERSION
 
   url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
 
   return(url)
-}  #SPECIESDEFINITION
+} # SPECIESDEFINITION
 
 
 # BIOGRID - SPECIESDEFINITION -------------------------------------
@@ -847,20 +924,20 @@ urlmaker_innatedb <- function(url = url,
 #' @examples
 #' url_biogrid <- urlmaker_biogrid()
 #' url_biogrid
-
 urlmaker_biogrid <- function(version = "4.4.238") { # default value = "4.4.238" (October 2024) #SPECIESDEFINITION
 
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
-  #create the url to download a zip file for ALL species depending on the version
-  url <- sprintf("https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ALL-%s.tab3.zip",
-                 version,
-                 version)
+  # create the url to download a zip file for ALL species depending on the version
+  url <- sprintf(
+    "https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-%s/BIOGRID-ALL-%s.tab3.zip",
+    version,
+    version
+  )
 
-  #return the url
-  return (url)
-
+  # return the url
+  return(url)
 }
 
 
@@ -877,23 +954,24 @@ urlmaker_biogrid <- function(version = "4.4.238") { # default value = "4.4.238" 
 #' @examples
 #' url_intact <- urlmaker_intact(version = "current")
 #' url_intact
-
 urlmaker_intact <- function(version = "current") { # default value for version, because Intact provides this file only for current (August 2024 = 2024-05-23 18:09	6.6G)
 
-  stopifnot(is.character(version))                  # make sure to type in a version as character
-  stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
+  stopifnot(is.character(version)) # make sure to type in a version as character
+  stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   # as there is only the current version of this file we can't change the link so we need
-  if (!version == "current")
+  if (!version == "current") {
     stop("make sure that you use the current version of the intact.txt file, as there is only one url")
+  }
 
   # create url depending on version
-  url <- sprintf("https://ftp.ebi.ac.uk/pub/databases/intact/%s/psimitab/intact.zip",
-                 version)
+  url <- sprintf(
+    "https://ftp.ebi.ac.uk/pub/databases/intact/%s/psimitab/intact.zip",
+    version
+  )
 
-  #return the url
+  # return the url
   return(url)
-
 }
 
 
@@ -939,40 +1017,23 @@ urlmaker_intact <- function(version = "current") { # default value for version, 
 #' @examples
 #' url_cpdb <- urlmaker_cpdb(species = "human")
 #' url_cpdb
-urlmaker_cpdb <- function (species = "human") { #default value = human because at the moment (05.08.2024) only human
+urlmaker_cpdb <- function(species = "human") { # default value = human because at the moment (05.08.2024) only human
 
   list_species_cpdb <- c("human", "mouse", "yeast")
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
 
   if (!(species %in% list_species_cpdb)) { # if species is not in the list
-    stop("Species not found as specified by CPDB,",
-         "CPDB only contains data for 'human', 'mouse' and 'yeast'") # stop function and print
+    stop(
+      "Species not found as specified by CPDB,",
+      "CPDB only contains data for 'human', 'mouse' and 'yeast'"
+    ) # stop function and print
   }
 
 
-  url <- sprintf("http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
-                 species)
+  url <- sprintf(
+    "http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
+    species
+  )
   return(url)
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

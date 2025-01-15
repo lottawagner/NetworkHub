@@ -26,15 +26,17 @@ build_graph_innatedb()
 \examples{
 \dontrun{
 
-db_innatedb_df <- get_networkdata_innatedb(species = "taxid:9606(Human)",
-                                           version = "5.4"
-                                           )
+db_innatedb_df <- get_networkdata_innatedb(
+  species = "taxid:9606(Human)",
+  version = "5.4"
+)
 
-db_innatedb_graph <- build_graph_innatedb(graph_data = db_innatedb_df,
-                                          output_format = "igraph",
-                                          min_score_threshold = "20" )
-db_innatedb_graph #list of 690 (score = 10) 1835 (score = 20)
+db_innatedb_graph <- build_graph_innatedb(
+  graph_data = db_innatedb_df,
+  output_format = "igraph",
+  min_score_threshold = "20"
+)
+db_innatedb_graph # list of 690 (score = 10) 1835 (score = 20)
 }
-
 
 }
