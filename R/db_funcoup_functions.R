@@ -10,9 +10,7 @@
 #' @param add_annotation adding annotation to ppi dataframe, default value set to TRUE
 #' @param ... 	further arguments passed to or from other methods
 #'
-#' @return ppis_funcoup
-#' @return db_funcoup_ppi_anno_df
-#' @return db_funcoup_anno_df
+#' @return A data frame containing the PPI information in tabular format
 #'
 #' @importFrom vroom vroom
 #'
