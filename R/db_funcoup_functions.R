@@ -86,14 +86,14 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
   }
 
   # read in the resource, whether cached or freshly downloaded
-  ppis_funcoup <- vroom::vroom(network_file)
-  # ppis_funcoup <- head(read.delim(network_file, sep = "\t"))
+  ppi_funcoup <- vroom::vroom(network_file)
+  # ppi_funcoup <- head(read.delim(network_file, sep = "\t"))
 
-  message(dim(ppis_funcoup))
-  # colnames(ppis_funcoup)
+  message(dim(ppi_funcoup))
+  # colnames(ppi_funcoup)
 
-  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "0:ProteinA"] <- "Uniprot_A"
-  colnames(ppis_funcoup)[colnames(ppis_funcoup) == "1:ProteinB"] <- "Uniprot_B"
+  colnames(ppi_funcoup)[colnames(ppi_funcoup) == "0:ProteinA"] <- "Uniprot_A"
+  colnames(ppi_funcoup)[colnames(ppi_funcoup) == "1:ProteinB"] <- "Uniprot_B"
 
   annotation_db <-
     funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
@@ -104,12 +104,12 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
       "Annotation database for the species is not implemented yet.\n",
       "Next time define add_annotation in get_networkdata_funcoup(..., add_annotation = FALSE, ...)\n"
     )
-    return(ppis_funcoup)
+    return(ppi_funcoup)
   }
 
   if (get_annotation && !is.na(annotation_db)) {
     db_funcoup_anno_df <- get_annotation_funcoup(
-      ppi_funcoup = ppis_funcoup,
+      ppi_funcoup = ppi_funcoup,
       species = species
     )
 
@@ -118,7 +118,7 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
     if (add_annotation) {
       db_funcoup_ppi_anno_df <- add_annotation_funcoup(
         anno_df = db_funcoup_anno_df,
-        ppi_funcoup = ppis_funcoup,
+        ppi_funcoup = ppi_funcoup,
         species = species
       )
 
@@ -137,7 +137,7 @@ get_networkdata_funcoup <- function(species = "H.sapiens",
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
-  return(ppis_funcoup)
+  return(ppi_funcoup)
 }
 
 
@@ -202,7 +202,7 @@ funcoup_db_annotations <- data.frame(
 #' get_annotation_funcoup ()
 #'
 #' @param species from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")
-#' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
+#' @param ppi_funcoup variable defined by ppi_funcoup in get_networkdata_funcoup()
 #'
 #' @importFrom AnnotationDbi mapIds
 #'
@@ -247,7 +247,7 @@ get_annotation_funcoup <- function(ppi_funcoup,
     funcoup_db_annotations$anno_db_funcoup[match(species, funcoup_db_annotations$species)]
 
   if (!is.na(annotation_db)) {
-    all_prot_ids <- unique(c(ppi_funcoup$Uniprot_A, ppis_funcoup$Uniprot_B))
+    all_prot_ids <- unique(c(ppi_funcoup$Uniprot_A, ppi_funcoup$Uniprot_B))
 
     anno_df <- data.frame(
       uniprot_id = all_prot_ids,
@@ -282,7 +282,7 @@ get_annotation_funcoup <- function(ppi_funcoup,
 #' add_annotation_funcoup ()
 #'
 #' @param anno_df annotation dataframe (for corresponding species in funcoup)
-#' @param ppi_funcoup variable defined by ppis_funcoup in get_networkdata_funcoup()
+#' @param ppi_funcoup variable defined by ppi_funcoup in get_networkdata_funcoup()
 #' @param species  from which species does the data come from
 #'
 #'

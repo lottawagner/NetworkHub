@@ -7,7 +7,7 @@
 add_annotation_funcoup(ppi_funcoup, anno_df, species)
 }
 \arguments{
-\item{ppi_funcoup}{variable defined by ppis_funcoup in get_networkdata_funcoup()}
+\item{ppi_funcoup}{variable defined by ppi_funcoup in get_networkdata_funcoup()}
 
 \item{anno_df}{annotation dataframe (for corresponding species in funcoup)}
 

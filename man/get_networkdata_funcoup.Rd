@@ -30,11 +30,7 @@ get_networkdata_funcoup(
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
-ppis_funcoup
-
-db_funcoup_ppi_anno_df
-
-db_funcoup_anno_df
+A data frame containing the PPI information in tabular format
 }
 \description{
 get_networkdata_funcoup()
