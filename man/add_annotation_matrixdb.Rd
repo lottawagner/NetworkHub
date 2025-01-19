@@ -21,22 +21,24 @@ add_annotation_matrixdb ()
 }
 \examples{
 \dontrun{
-db_matrixdb_df <- get_networkdata_matrixdb( species = "human",
-                                            type = "CORE",
-                                            version = "4_0",
-                                            cache = TRUE,
-                                            get_annotation = FALSE,
-                                            add_annotation = FALSE
-                                            )
+db_matrixdb_df <- get_networkdata_matrixdb(
+  species = "human",
+  type = "CORE",
+  version = "4_0",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_matrixdb_anno_df <- get_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
-                                                species = "human"
-                                                )
+db_matrixdb_anno_df <- get_annotation_matrixdb(
+  ppi_matrixdb = db_matrixdb_df,
+  species = "human"
+)
 
-db_matrixdb_ppi_anno_df <- add_annotation_matrixdb( ppi_matrixdb = db_matrixdb_df,
-                                                    anno_df = db_matrixdb_anno_df,
-                                                    species = "human"
-                                                    )
-
+db_matrixdb_ppi_anno_df <- add_annotation_matrixdb(
+  ppi_matrixdb = db_matrixdb_df,
+  anno_df = db_matrixdb_anno_df,
+  species = "human"
+)
 }
 }

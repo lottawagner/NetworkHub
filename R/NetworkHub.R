@@ -7,5 +7,4 @@ get_networkdata <- function(network_source,
                             version,
                             cache = TRUE) {
   # do the right dispatches...
-
 }

@@ -1,4 +1,3 @@
-
 # get_networkdata_iid() -----------
 
 #' get_networkdata_iid()
@@ -19,30 +18,29 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_iid_df <- get_networkdata_iid(species = "human",
-#'                                  version = "2021-05",
-#'                                  get_annotation = FALSE,
-#'                                  add_annotation = FALSE
-#'                                 )
+#' db_iid_df <- get_networkdata_iid(
+#'   species = "human",
+#'   version = "2021-05",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #' }
-
-get_networkdata_iid <- function( species = "human",
-                                 version = "2021-05",
-                                 cache = TRUE,
-                                 get_annotation = TRUE,
-                                 add_annotation = TRUE,
-                                 ...) {
-
-
-
+get_networkdata_iid <- function(species = "human",
+                                version = "2021-05",
+                                cache = TRUE,
+                                get_annotation = TRUE,
+                                add_annotation = TRUE,
+                                ...) {
   # list species is actualized for version iid "2021-05"
   # UPDATEVERSION
 
   # check that the value for species is listed in iid
 
   if (!(species %in% list_species_iid)) { # if species is not in the list
-    stop("Species not found as specified by iid,",
-         "please check some valid entries by running `list_species_iid`") # stop function and print
+    stop(
+      "Species not found as specified by iid,",
+      "please check some valid entries by running `list_species_iid`"
+    ) # stop function and print
   }
 
   # buildup of the resource location for the version and all
@@ -80,54 +78,56 @@ get_networkdata_iid <- function( species = "human",
 
   # read in the resource, whether cached or freshly downloaded
   ppis_iid <- vroom::vroom(network_file)
-  #ppis_iid <- head(read.delim(network_file, sep = " "))
+  # ppis_iid <- head(read.delim(network_file, sep = " "))
   #
   message(dim(ppis_iid))
 
-  #Uniprot
+  # Uniprot
   colnames(ppis_iid)[colnames(ppis_iid) == "uniprot1"] <- "Uniprot_A"
   colnames(ppis_iid)[colnames(ppis_iid) == "uniprot2"] <- "Uniprot_B"
 
-  #GeneSymbol
+  # GeneSymbol
   colnames(ppis_iid)[colnames(ppis_iid) == "symbol1"] <- "GeneSymbol_A"
   colnames(ppis_iid)[colnames(ppis_iid) == "symbol2"] <- "GeneSymbol_B"
 
   annotation_db <-
-      iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
+    iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
 
   if (get_annotation && is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_iid containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_iid containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppis_iid)
   }
 
-  if (get_annotation && !is.na(annotation_db)){
-
-    db_iid_anno_df <- get_annotation_iid(ppi_iid = ppis_iid,
-                                           species = species
-                                         )
+  if (get_annotation && !is.na(annotation_db)) {
+    db_iid_anno_df <- get_annotation_iid(
+      ppi_iid = ppis_iid,
+      species = species
+    )
 
     message("...created annotation dataframe")
 
     if (add_annotation) {
-
-      db_iid_ppi_anno_df <- add_annotation_iid(anno_df = db_iid_anno_df,
-                                                 ppi_iid = ppis_iid,
-                                                 species = species
+      db_iid_ppi_anno_df <- add_annotation_iid(
+        anno_df = db_iid_anno_df,
+        ppi_iid = ppis_iid,
+        species = species
       )
       message("...added annotation from *db_iid_anno_df* to *db_iid_ppi_anno_df*")
 
       return(db_iid_ppi_anno_df)
     }
 
-    if (!add_annotation){
+    if (!add_annotation) {
       return(db_iid_anno_df)
     }
   }
 
   if (!get_annotation) {
-    if (add_annotation){
+    if (add_annotation) {
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
@@ -137,49 +137,53 @@ get_networkdata_iid <- function( species = "human",
 
 # outside of function ----------
 
-list_species_iid <- c ("alpaca",
-                       "cat",
-                       "chicken",
-                       "cow",
-                       "dog",
-                       "duck",
-                       "fly",
-                       "guinea_pig",
-                       "horse",
-                       "human",
-                       "mouse",
-                       "pig",
-                       "rabbit",
-                       "rat",
-                       "sheep",
-                       "turkey",
-                       "worm",
-                       "yeast")
+list_species_iid <- c(
+  "alpaca",
+  "cat",
+  "chicken",
+  "cow",
+  "dog",
+  "duck",
+  "fly",
+  "guinea_pig",
+  "horse",
+  "human",
+  "mouse",
+  "pig",
+  "rabbit",
+  "rat",
+  "sheep",
+  "turkey",
+  "worm",
+  "yeast"
+)
 
-list_db_annotationdbi_iid <- c(NA,
-                               NA,
-                               "org.Gg.eg.db",
-                               "org.Bt.eg.db",
-                               "org.Cf.eg.db",
-                               NA,
-                               "org.Dm.eg.db",
-                               NA,
-                               NA,
-                               "org.Hs.eg.db",
-                               "org.Mm.eg.db",
-                               "org.Ss.eg.db",
-                               NA,
-                               "org.Rn.eg.db",
-                               NA,
-                               NA,
-                               "org.Ce.eg.db",
-                               "org.Sc.sgd.db"
-                              )
+list_db_annotationdbi_iid <- c(
+  NA,
+  NA,
+  "org.Gg.eg.db",
+  "org.Bt.eg.db",
+  "org.Cf.eg.db",
+  NA,
+  "org.Dm.eg.db",
+  NA,
+  NA,
+  "org.Hs.eg.db",
+  "org.Mm.eg.db",
+  "org.Ss.eg.db",
+  NA,
+  "org.Rn.eg.db",
+  NA,
+  NA,
+  "org.Ce.eg.db",
+  "org.Sc.sgd.db"
+)
 
 
-iid_db_annotations <- data.frame(species = list_species_iid,
-                                  anno_db_iid = list_db_annotationdbi_iid,
-                                  row.names = list_species_iid
+iid_db_annotations <- data.frame(
+  species = list_species_iid,
+  anno_db_iid = list_db_annotationdbi_iid,
+  row.names = list_species_iid
 )
 
 
@@ -211,39 +215,44 @@ iid_db_annotations <- data.frame(species = list_species_iid,
 #'
 #' @examples
 #' \dontrun{
-#' db_iid_df <- get_networkdata_iid(species = "human",
-#'                                  version = "2021-05",
-#'                                  get_annotation = FALSE,
-#'                                  add_annotation = FALSE
-#'                                 )
+#' db_iid_df <- get_networkdata_iid(
+#'   species = "human",
+#'   version = "2021-05",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
-#'                                       species = "human"
-#'                                       )
+#' db_iid_anno_df <- get_annotation_iid(
+#'   ppi_iid = db_iid_df,
+#'   species = "human"
+#' )
 #' }
-
-
 get_annotation_iid <- function(ppi_iid,
-                               species
-                               ) {
+                               species) {
   # find database on corresponding species
 
   if (!(species %in% list_species_iid)) { # if species is not in the list
-    stop("Species not found as specified by iid,",
-         "please check some valid entries by running `list_species_iid`") # stop function and print
+    stop(
+      "Species not found as specified by iid,",
+      "please check some valid entries by running `list_species_iid`"
+    ) # stop function and print
   }
 
   annotation_db <-
-      iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
+    iid_db_annotations$anno_db_iid[match(species, iid_db_annotations$species)]
 
   if (!is.na(annotation_db)) {
     all_prot_ids <- unique(c(ppi_iid$Uniprot_A, ppi_iid$Uniprot_B))
     anno_df <- data.frame(
       uniprot_id = all_prot_ids,
       ensembl_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"
+      ),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"
+      ),
       row.names = all_prot_ids
     )
 
@@ -251,9 +260,11 @@ get_annotation_iid <- function(ppi_iid,
   }
 
   if (is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_iid containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_iid(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_iid containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppi_iid)
   }
 }
@@ -273,44 +284,44 @@ get_annotation_iid <- function(ppi_iid,
 #'
 #' @examples
 #' \dontrun{
-#' db_iid_df <- get_networkdata_iid(species = "human",
-#'                                  version = "2021-05",
-#'                                  get_annotation = FALSE,
-#'                                  add_annotation = FALSE
-#'                                 )
+#' db_iid_df <- get_networkdata_iid(
+#'   species = "human",
+#'   version = "2021-05",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
-#'                                       species = "human"
-#'                                       )
+#' db_iid_anno_df <- get_annotation_iid(
+#'   ppi_iid = db_iid_df,
+#'   species = "human"
+#' )
 #'
-#' db_iid_ppi_anno_df <- add_annotation_iid(ppi_iid = db_iid_df,
-#'                                          anno_df = db_iid_anno_df,
-#'                                          species = "human"
-#'                                          )
-#'
-#'}
-
+#' db_iid_ppi_anno_df <- add_annotation_iid(
+#'   ppi_iid = db_iid_df,
+#'   anno_df = db_iid_anno_df,
+#'   species = "human"
+#' )
+#' }
 add_annotation_iid <- function(ppi_iid,
                                anno_df,
                                species) {
+  # adding Ensembl
+  ppi_iid$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_iid$Uniprot_A, anno_df$uniprot_id)]
+  ppi_iid$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_iid$Uniprot_B, anno_df$uniprot_id)]
 
-    #adding Ensembl
-    ppi_iid$Ensembl_A <-
-      anno_df$ensembl_id[match(ppi_iid$Uniprot_A, anno_df$uniprot_id)]
-    ppi_iid$Ensembl_B <-
-      anno_df$ensembl_id[match(ppi_iid$Uniprot_B, anno_df$uniprot_id)]
+  # adding Entrez
+  ppi_iid$Entrez_A <-
+    anno_df$entrez_id[match(ppi_iid$Uniprot_A, anno_df$uniprot_id)]
+  ppi_iid$Entrez_B <-
+    anno_df$entrez_id[match(ppi_iid$Uniprot_B, anno_df$uniprot_id)]
 
-    #adding Entrez
-    ppi_iid$Entrez_A <-
-      anno_df$entrez_id[match(ppi_iid$Uniprot_A, anno_df$uniprot_id)]
-    ppi_iid$Entrez_B <-
-      anno_df$entrez_id[match(ppi_iid$Uniprot_B, anno_df$uniprot_id)]
-
-    return(ppi_iid)
+  return(ppi_iid)
 }
 
 
-#output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
+# output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
 
 
@@ -335,36 +346,43 @@ add_annotation_iid <- function(ppi_iid,
 #' @examples
 #' \dontrun{
 #'
-#' db_iid_df <- get_networkdata_iid(species = "human",
-#'                                  version = "2021-05"
-#'                                  )
+#' db_iid_df <- get_networkdata_iid(
+#'   species = "human",
+#'   version = "2021-05"
+#' )
 #'
-#' db_iid_graph <- build_graph_iid(graph_data = db_iid_df,
-#'                                 output_format = "igraph")
-#' db_iid_graph #list of 19552
+#' db_iid_graph <- build_graph_iid(
+#'   graph_data = db_iid_df,
+#'   output_format = "igraph"
+#' )
+#' db_iid_graph # list of 19552
 #' }
 #'
-#'
-
-
-build_graph_iid <- function (graph_data,
-                             output_format = "igraph",
-                             min_score_threshold = NULL){
-
-  #check on the columns in your ppi data file
+build_graph_iid <- function(graph_data,
+                            output_format = "igraph",
+                            min_score_threshold = NULL) {
+  # check on the columns in your ppi data file
   colnames(graph_data)
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data)
 
-  edges <- data.frame(from = graph_data$GeneSymbol_A,
-                      to = graph_data$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data$GeneSymbol_A,
+    to = graph_data$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data$GeneSymbol_A,
-                                    graph_data$GeneSymbol_B)),
-                      label = unique(c(graph_data$GeneSymbol_A,
-                                       graph_data$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data$GeneSymbol_A,
+      graph_data$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data$GeneSymbol_A,
+      graph_data$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {
@@ -374,7 +392,4 @@ build_graph_iid <- function (graph_data,
   }
   # simplify by avoiding multiple entries?
   ## could make it smaller and easier to handle, without losing too much/at all in info
-
 }
-
-

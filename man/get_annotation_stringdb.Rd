@@ -21,12 +21,12 @@ get_annotation_stringdb()
 }
 \examples{
 
-db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-                                               version = "12.0",
-                                               cache = TRUE
-                                               )
+db_stringdb_anno_df <- get_annotation_stringdb(
+  species = "Homo sapiens",
+  version = "12.0",
+  cache = TRUE
+)
 
 # returns a dataframe containing 19699 rows and 5 columns
-
 
 }

@@ -1,4 +1,3 @@
-
 # get_networkdata_stringdb() ---------
 
 #' get_networkdata_stringdb()
@@ -19,12 +18,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_string_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                          version = "12.0",
-#'                                          cache = TRUE,
-#'                                          get_annotation = FALSE,
-#'                                          add_annotation = FALSE
-#'                                         )
+#' db_string_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #' db_string_df
 #' }
 #'
@@ -33,13 +33,14 @@ get_networkdata_stringdb <- function(species,
                                      cache = TRUE,
                                      get_annotation = TRUE,
                                      add_annotation = TRUE,
-                                     ...){
-
+                                     ...) {
   # matching for the species...
   species_id <- NULL # looking for the corresponding id in the following
 
-  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
-                                  version)
+  url_species_stringdb <- sprintf(
+    "https://stringdb-downloads.org/download/species.v%s.txt",
+    version
+  )
 
   # read.delim the data from the species text file (columns separated using a delimiter)
   info_species <- read.delim(url(url_species_stringdb))
@@ -47,8 +48,9 @@ get_networkdata_stringdb <- function(species,
     match(species, info_species$official_name_NCBI) # matching the species to the corresponding entry in the info_species file column official_name_NCBI
   ]
 
-  if (is.null(species_id))
+  if (is.null(species_id)) {
     stop("No match found!")
+  }
 
   # buildup of the resource location for the version and all
   ## elegantly done in another smaller utility function
@@ -92,91 +94,94 @@ get_networkdata_stringdb <- function(species,
 
   # rename columns
 
-  #Ensembl
+  # Ensembl
   colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein1"] <- "Ensembl_Prot_A"
   colnames(ppis_stringdb)[colnames(ppis_stringdb) == "protein2"] <- "Ensembl_Prot_B"
   ppis_stringdb$Ensembl_Prot_A <- str_extract(ppis_stringdb$Ensembl_Prot_A, "(EN[S][A-Z0-9]+)")
   ppis_stringdb$Ensembl_Prot_B <- str_extract(ppis_stringdb$Ensembl_Prot_B, "(EN[S][A-Z0-9]+)")
 
   if (get_annotation) {
-
     if (!(species %in% list_common_species_stringdb)) { # if species is not in the list
-      stop("Species not in `list_common_species_stringdb`!",
-           "Annotation for this species is not provided") # stop function and print
+      stop(
+        "Species not in `list_common_species_stringdb`!",
+        "Annotation for this species is not provided"
+      ) # stop function and print
     }
 
-    db_stringdb_anno_df <- get_annotation_stringdb(species = species,
-                                                   version = "12.0",
-                                                   cache = TRUE
-                                                  )
+    db_stringdb_anno_df <- get_annotation_stringdb(
+      species = species,
+      version = "12.0",
+      cache = TRUE
+    )
 
     message("...created annotation dataframe")
 
 
     if (add_annotation) {
-
-      db_stringdb_ppi_anno_df <- add_annotation_stringdb(anno_df = db_stringdb_anno_df,
-                                                         ppi_stringdb = ppis_stringdb,
-                                                         species = species
+      db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+        anno_df = db_stringdb_anno_df,
+        ppi_stringdb = ppis_stringdb,
+        species = species
       )
       message("...added annotation from *db_stringdb_anno_df* to *db_stringdb_ppi_anno_df*")
 
       return(db_stringdb_ppi_anno_df)
-
     }
 
-    if (!add_annotation){
+    if (!add_annotation) {
       return(db_stringdb_anno_df)
     }
-
   }
 
   if (!get_annotation) {
-    if (add_annotation){
+    if (add_annotation) {
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
 
   return(ppis_stringdb)
-
 }
 
 
 
-list_common_species_stringdb<- c("Arabidopsis thaliana",
-                                "Bos taurus",
-                                "Caenorhabditis elegans",
-                                "Canis familiaris",
-                                "Drosophila melanogaster",
-                                "Escherichia coli",
-                                "Gallus gallus",
-                                "Homo sapiens",
-                                "Mus musculus",
-                                "Rattus norvegicus",
-                                "Saccharomyces cerevisiae",
-                                "Sus scrofa",
-                                "Xenopus laevis")
-
-
-list_db_annotationdbi_stringdb <- c("org.At.tair.db",
-                                  "org.Bt.eg.db",
-                                  "org.Ce.eg.db",
-                                  "org.Cf.eg.db",
-                                  "org.Dm.eg.db",
-                                  "org.EcK12.eg.db",
-                                  "org.Gg.eg.db",
-                                  "org.Hs.eg.db",
-                                  "org.Mm.eg.db",
-                                  "org.Rn.eg.db",
-                                  "org.Sc.sgd.db",
-                                  "org.Ss.eg.db",
-                                  "org.Xl.eg.db"
+list_common_species_stringdb <- c(
+  "Arabidopsis thaliana",
+  "Bos taurus",
+  "Caenorhabditis elegans",
+  "Canis familiaris",
+  "Drosophila melanogaster",
+  "Escherichia coli",
+  "Gallus gallus",
+  "Homo sapiens",
+  "Mus musculus",
+  "Rattus norvegicus",
+  "Saccharomyces cerevisiae",
+  "Sus scrofa",
+  "Xenopus laevis"
 )
 
 
-stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
-                                    anno_db_stringdb = list_db_annotationdbi_stringdb,
-                                    row.names = list_common_species_stringdb
+list_db_annotationdbi_stringdb <- c(
+  "org.At.tair.db",
+  "org.Bt.eg.db",
+  "org.Ce.eg.db",
+  "org.Cf.eg.db",
+  "org.Dm.eg.db",
+  "org.EcK12.eg.db",
+  "org.Gg.eg.db",
+  "org.Hs.eg.db",
+  "org.Mm.eg.db",
+  "org.Rn.eg.db",
+  "org.Sc.sgd.db",
+  "org.Ss.eg.db",
+  "org.Xl.eg.db"
+)
+
+
+stringdb_db_annotations <- data.frame(
+  species = list_common_species_stringdb,
+  anno_db_stringdb = list_db_annotationdbi_stringdb,
+  row.names = list_common_species_stringdb
 )
 
 # get_annotation_stringdb() ------
@@ -193,20 +198,22 @@ stringdb_db_annotations <- data.frame(species = list_common_species_stringdb,
 #'
 #' @examples
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-#'                                                version = "12.0",
-#'                                                cache = TRUE
-#'                                                )
+#' db_stringdb_anno_df <- get_annotation_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE
+#' )
 #'
 #' # returns a dataframe containing 19699 rows and 5 columns
-#'
 #'
 get_annotation_stringdb <- function(species,
                                     version,
                                     cache = TRUE) {
   # matching for the species...
-  url_species_stringdb <- sprintf("https://stringdb-downloads.org/download/species.v%s.txt",
-                                  version)
+  url_species_stringdb <- sprintf(
+    "https://stringdb-downloads.org/download/species.v%s.txt",
+    version
+  )
 
   # read.delim the data from the species text file (columns separated using a delimiter)
   info_species <- read.delim(url(url_species_stringdb))
@@ -267,9 +274,9 @@ get_annotation_stringdb <- function(species,
     df_ensembl$alias[match(anno_df$protein_id, df_ensembl$`#string_protein_id`)]
   anno_df$gene_symbol <-
     df_genesymbol$alias[match(anno_df$protein_id, df_genesymbol$`#string_protein_id`)]
-  anno_df$entrez_id  <-
+  anno_df$entrez_id <-
     df_entrez$alias[match(anno_df$protein_id, df_entrez$`#string_protein_id`)]
-  anno_df$uniprot_id  <-
+  anno_df$uniprot_id <-
     df_uniprot$alias[match(anno_df$protein_id, df_uniprot$`#string_protein_id`)]
 
   anno_df$protein_id <- str_extract(anno_df$protein_id, "(EN[S][A-Z0-9]+)")
@@ -287,66 +294,64 @@ get_annotation_stringdb <- function(species,
 #' @param species  from which species does the data come from
 #'
 #'
-#'@return ppi_stringdb with annotation columns for each interactor (for corresponding species in stringdb)
+#' @return ppi_stringdb with annotation columns for each interactor (for corresponding species in stringdb)
 #'
-#'@export
+#' @export
 #'
 #'
 #' @examples
 #' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = FALSE,
-#'                                            add_annotation = FALSE
-#'                                           )
+#' db_stringdb_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-#'                                                version = "12.0",
-#'                                                cache = TRUE
-#'                                                )
+#' db_stringdb_anno_df <- get_annotation_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE
+#' )
 #'
-#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                    anno_df = db_stringdb_anno_df,
-#'                                                    species = "Homo sapiens"
-#'                                                    )
-#'
-#'}
-
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+#'   ppi_stringdb = db_stringdb_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   species = "Homo sapiens"
+#' )
+#' }
 add_annotation_stringdb <- function(ppi_stringdb,
                                     anno_df,
-                                    species
-                                    ) {
-
+                                    species) {
   ppi_stringdb <- ppi_stringdb
 
-  #adding Ensembl
+  # adding Ensembl
   ppi_stringdb$Ensembl_A <-
     anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$Ensembl_B <-
     anno_df$ensembl_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
-  #adding GeneSymbol
+  # adding GeneSymbol
   ppi_stringdb$GeneSymbol_A <-
     anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$GeneSymbol_B <-
     anno_df$gene_symbol[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
-  #adding Entrez
+  # adding Entrez
   ppi_stringdb$Entrez_A <-
     anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$Entrez_B <-
     anno_df$entrez_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
-  #adding Uniprot
+  # adding Uniprot
   ppi_stringdb$Uniprot_A <-
     anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_A, anno_df$protein_id)]
   ppi_stringdb$Uniprot_B <-
     anno_df$uniprot_id[match(ppi_stringdb$Ensembl_Prot_B, anno_df$protein_id)]
 
   return(ppi_stringdb)
-
 }
 
 
@@ -369,25 +374,25 @@ add_annotation_stringdb <- function(ppi_stringdb,
 #' @examples
 #' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = TRUE,
-#'                                            add_annotation = TRUE
-#'                                           )
+#' db_stringdb_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = TRUE,
+#'   add_annotation = TRUE
+#' )
 #'
-#' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_df,
-#'                                                   output_format = "igraph",
-#'                                                   min_score_threshold = "0.35")
-#' db_stringdb_graph #list of 17490
+#' db_stringdb_igraph_object <- build_graph_stringdb(
+#'   graph_data = db_stringdb_df,
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.35"
+#' )
+#' db_stringdb_graph # list of 17490
 #' }
-
-
-build_graph_stringdb <- function (graph_data,
-                                  output_format = "igraph",
-                                  min_score_threshold = NULL ){
-
-  #check on the columns in your ppi data file
+build_graph_stringdb <- function(graph_data,
+                                 output_format = "igraph",
+                                 min_score_threshold = NULL) {
+  # check on the columns in your ppi data file
   colnames(graph_data)
 
   graph_data$combined_score <- as.numeric(graph_data$combined_score)
@@ -395,25 +400,33 @@ build_graph_stringdb <- function (graph_data,
   # create hist with 50 breaks
   hist(graph_data$combined_score, breaks = 50)
 
-  #select ppi data >= minimal score
-  if (!is.null(min_score_threshold)){
+  # select ppi data >= minimal score
+  if (!is.null(min_score_threshold)) {
     graph_data_processed <- graph_data[graph_data$combined_score >= min_score_threshold, ]
   } else {
     graph_data_processed <- graph_data
   }
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data)
   dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
-                      to = graph_data_processed$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data_processed$GeneSymbol_A,
+    to = graph_data_processed$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
-                                    graph_data_processed$GeneSymbol_B)),
-                      label = unique(c(graph_data_processed$GeneSymbol_A,
-                                       graph_data_processed$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {

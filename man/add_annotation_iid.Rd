@@ -21,20 +21,22 @@ add_annotation_iid ()
 }
 \examples{
 \dontrun{
-db_iid_df <- get_networkdata_iid(species = "human",
-                                 version = "2021-05",
-                                 get_annotation = FALSE,
-                                 add_annotation = FALSE
-                                )
+db_iid_df <- get_networkdata_iid(
+  species = "human",
+  version = "2021-05",
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_iid_anno_df <- get_annotation_iid( ppi_iid = db_iid_df,
-                                      species = "human"
-                                      )
+db_iid_anno_df <- get_annotation_iid(
+  ppi_iid = db_iid_df,
+  species = "human"
+)
 
-db_iid_ppi_anno_df <- add_annotation_iid(ppi_iid = db_iid_df,
-                                         anno_df = db_iid_anno_df,
-                                         species = "human"
-                                         )
-
+db_iid_ppi_anno_df <- add_annotation_iid(
+  ppi_iid = db_iid_df,
+  anno_df = db_iid_anno_df,
+  species = "human"
+)
 }
 }

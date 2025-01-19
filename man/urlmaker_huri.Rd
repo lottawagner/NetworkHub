@@ -19,7 +19,9 @@ urlmaker_huri()
 }
 \examples{
 
-url_huri <- urlmaker_huri(species = "human",
-                          type = "HI-union")
+url_huri <- urlmaker_huri(
+  species = "human",
+  type = "HI-union"
+)
 url_huri
 }

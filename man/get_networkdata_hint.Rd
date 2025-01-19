@@ -41,12 +41,13 @@ get_networkdata_hint()
 }
 \examples{
 \dontrun{
-db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-                                   version = "2024-06",
-                                   type = "binary",
-                                   cache = TRUE,
-                                   get_annotation = FALSE,
-                                   add_annotation = FALSE
-                                   )
+db_hint_df <- get_networkdata_hint(
+  species = "HomoSapiens",
+  version = "2024-06",
+  type = "binary",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 }
 }

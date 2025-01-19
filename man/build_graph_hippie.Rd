@@ -23,16 +23,17 @@ build_graph_hippie()
 \examples{
 \dontrun{
 
-db_hippie_df <- get_networkdata_hippie(species = "Homo_Sapiens",
-                                       version = "current"
-                                      )
+db_hippie_df <- get_networkdata_hippie(
+  species = "Homo_Sapiens",
+  version = "current"
+)
 
-db_hippie_graph <- build_graph_hippie(graph_data = db_hippie_df,
-                                      output_format = "igraph",
-                                      min_score_threshold = "0.35"
-                                      )
+db_hippie_graph <- build_graph_hippie(
+  graph_data = db_hippie_df,
+  output_format = "igraph",
+  min_score_threshold = "0.35"
+)
 db_hippie_graph
 }
-
 
 }

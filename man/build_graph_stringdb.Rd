@@ -26,16 +26,19 @@ build_graph_stringdb()
 \examples{
 \dontrun{
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0",
-                                           cache = TRUE,
-                                           get_annotation = TRUE,
-                                           add_annotation = TRUE
-                                          )
+db_stringdb_df <- get_networkdata_stringdb(
+  species = "Homo sapiens",
+  version = "12.0",
+  cache = TRUE,
+  get_annotation = TRUE,
+  add_annotation = TRUE
+)
 
-db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_df,
-                                                  output_format = "igraph",
-                                                  min_score_threshold = "0.35")
-db_stringdb_graph #list of 17490
+db_stringdb_igraph_object <- build_graph_stringdb(
+  graph_data = db_stringdb_df,
+  output_format = "igraph",
+  min_score_threshold = "0.35"
+)
+db_stringdb_graph # list of 17490
 }
 }

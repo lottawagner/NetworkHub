@@ -21,15 +21,17 @@ get_annotation_huri ()
 }
 \examples{
 \dontrun{
-db_huri_df <- get_networkdata_huri(species = "human",
-                                   type = "HI-union",
-                                   cache = TRUE,
-                                   get_annotation = FALSE,
-                                   add_annotation = FALSE
-                                  )
+db_huri_df <- get_networkdata_huri(
+  species = "human",
+  type = "HI-union",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_huri_anno_df <- get_annotation_huri(ppi_huri = db_huri_df,
-                                       species = "human"
-                                       )
+db_huri_anno_df <- get_annotation_huri(
+  ppi_huri = db_huri_df,
+  species = "human"
+)
 }
 }

@@ -7,7 +7,7 @@
 get_annotation_funcoup(ppi_funcoup, species)
 }
 \arguments{
-\item{ppi_funcoup}{variable defined by ppis_funcoup in get_networkdata_funcoup()}
+\item{ppi_funcoup}{variable defined by ppi_funcoup in get_networkdata_funcoup()}
 
 \item{species}{from which species does the data come from c( "A.thaliana", "B.subtilis", "B.taurus", "C.elegans","C.familiaris", "C.intestinalis", "D.melanogatser", "D.rerio", "E.coli", "G.gallus", "H.sapiens", "M.jannaschii", "M.musculus", "O.sativa", "P.falciparum", "R.norvegicus", "S.cerevisiae", "S.pombe", "S.scrofa", "S.solfataricus")}
 }
@@ -21,7 +21,8 @@ get_annotation_funcoup ()
 }
 \examples{
 \dontrun{
- db_funcoup_df  <- get_annotation_funcoup( ppi_funcoup,
-                                           species = "H.sapiens")
+db_funcoup_df <- get_annotation_funcoup(ppi_funcoup,
+  species = "H.sapiens"
+)
 }
 }

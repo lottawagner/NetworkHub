@@ -30,7 +30,6 @@
 #' # bfcremove(bfc_nh, c("BFC10", "BFC11", "BFC12", "BFC13"))
 #'
 initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
-
   # define the cache directory, with tools::R_user_dir you can create a path to the cache, which = cache, return the path for caching purposes
 
   cache_dir <- tools::R_user_dir(nh_cachedir, which = "cache")
@@ -61,14 +60,15 @@ initialize_NetworkHub <- function(nh_cachedir = "NetworkHub") {
 #' @examples
 #' # for example, retrieve something from stringDB
 #'
-#' url_stringdb <- urlmaker_stringdb(type = "PPI",
-#'                                   species = "Homo sapiens",
-#'                                   version = "12.0")
+#' url_stringdb <- urlmaker_stringdb(
+#'   type = "PPI",
+#'   species = "Homo sapiens",
+#'   version = "12.0"
+#' )
 #' cache_NetworkHub(
 #'   rname = "STRINGDB_Homo sapiens_v12.0",
 #'   fpath = url_stringdb
 #' )
-
 cache_NetworkHub <- function(rname, # ressource name
                              fpath, # filepath
                              nh_cachedir = "NetworkHub", # name of cache
@@ -82,7 +82,7 @@ cache_NetworkHub <- function(rname, # ressource name
   if (BiocFileCache::bfccount(nh_query) == 0) {
     rpath <- BiocFileCache::bfcadd(bfc_nh, rname, fpath, ...) # add it to the cache by identifing the ressource with rname & fpath and ... (additional arguments that are passed to cache)
   }
-  if (BiocFileCache::bfccount(nh_query) == 1){ # == 1 -> fpath once in cache?
+  if (BiocFileCache::bfccount(nh_query) == 1) { # == 1 -> fpath once in cache?
     rpath <- nh_query$rpath # use the already existing ressource path
   }
   if (BiocFileCache::bfccount(nh_query) > 1) {
@@ -111,9 +111,9 @@ cache_NetworkHub <- function(rname, # ressource name
 #' fetch_NetworkHub(rname = "STRINGDB_Homo sapiens_v12.0")
 #'
 fetch_NetworkHub <- function(rname, # resourcename
-                           update = TRUE, # up to date version of the resource
-                           nh_cachedir = "NetworkHub", # name of cache
-                           ...) { # additional arguments transferred to bfcadd
+                             update = TRUE, # up to date version of the resource
+                             nh_cachedir = "NetworkHub", # name of cache
+                             ...) { # additional arguments transferred to bfcadd
 
   cache_dir <- tools::R_user_dir(nh_cachedir, which = "cache") # tells the function to use the previously defined directory nh_cachedir
   bfc_nh <- BiocFileCache::BiocFileCache(cache_dir) # creates/uploads objects to cache
@@ -127,11 +127,11 @@ fetch_NetworkHub <- function(rname, # resourcename
     rid <- nh_query$rid # takes the ressource ID (rid) from the entry
 
     nu <- FALSE # is there a new update necessary?
-    if (update) { #TRUE?
+    if (update) { # TRUE?
       nu <- BiocFileCache::bfcneedsupdate(bfc_nh, rid) # nu (newest update) is defined to the rid in the cache
     }
     if (!isFALSE(nu)) {
-      BiocFileCache::bfcdownload(bfc_nh, rid, ask = FALSE, ...) #download of the newest version of the entry
+      BiocFileCache::bfcdownload(bfc_nh, rid, ask = FALSE, ...) # download of the newest version of the entry
     }
 
     message("Using cached version from ", nh_query$create_time) # tells you from which date this version is
@@ -160,46 +160,50 @@ fetch_NetworkHub <- function(rname, # resourcename
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = FALSE,
-#'                                            add_annotation = FALSE
-#'                                           )
+#' db_stringdb_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-#'                                                version = "12.0",
-#'                                                cache = TRUE
-#'                                                )
+#' db_stringdb_anno_df <- get_annotation_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE
+#' )
 #'
-#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                    anno_df = db_stringdb_anno_df,
-#'                                                    species = "Homo sapiens")
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+#'   ppi_stringdb = db_stringdb_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   species = "Homo sapiens"
+#' )
 #'
 #'
-#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
-#'                                          anno_df = db_stringdb_anno_df,
-#'                                          idtype_anno = "gene_symbol",
-#'                                          data_source = "stringdb",
-#'                                          output_format = "igraph",
-#'                                          min_score_threshold = "0.35",
-#'                                          add_info_nodes = TRUE
-#'                                          )
+#' db_stringdb_igraph_object <- build_graph(
+#'   graph_data = db_stringdb_ppi_anno_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   idtype_anno = "gene_symbol",
+#'   data_source = "stringdb",
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.35",
+#'   add_info_nodes = TRUE
+#' )
 #' }
-
 build_graph <- function(graph_data,
                         anno_df,
                         idtype_anno,
-                        data_source = c("stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
-                                        "genemania", "huri", "stringdb",
-                                        "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"),
+                        data_source = c(
+                          "stringdb", "hint", "funcoup", "iid", "irefindex", "mint",
+                          "genemania", "huri", "stringdb",
+                          "pathwaycommons", "reactome", "innatedb", "biogrid", "intact"
+                        ),
                         output_format = "igraph",
                         min_score_threshold = NULL,
                         add_info_nodes = TRUE) {
-
   # Match the provided data_source to the available options
   data_source <- match.arg(data_source)
 
@@ -210,9 +214,11 @@ build_graph <- function(graph_data,
   build_function <- get(function_name, envir = environment())
 
   # Call the specific function using the arguments
-  my_graph <- build_function(graph_data = graph_data,
-                             output_format = output_format,
-                             min_score_threshold = min_score_threshold)
+  my_graph <- build_function(
+    graph_data = graph_data,
+    output_format = output_format,
+    min_score_threshold = min_score_threshold
+  )
 
   if (add_info_nodes) {
     my_graph <- add_info_from_dataframe_to_graph(anno_df = anno_df, g = my_graph, idtype_anno = "gene_symbol")
@@ -237,35 +243,41 @@ build_graph <- function(graph_data,
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = FALSE,
-#'                                            add_annotation = FALSE
-#'                                           )
+#' db_stringdb_df <- get_networkdata_stringdb(
+#'   species = "Mus musculus",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Mus musculus",
-#'                                                version = "12.0",
-#'                                                cache = TRUE
-#'                                                )
+#' db_stringdb_anno_df <- get_annotation_stringdb(
+#'   species = "Mus musculus",
+#'   version = "12.0",
+#'   cache = TRUE
+#' )
 #'
-#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                    anno_df = db_stringdb_anno_df,
-#'                                                    species = "Mus musculus")
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+#'   ppi_stringdb = db_stringdb_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   species = "Mus musculus"
+#' )
 #'
 #'
-#' db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_ppi_anno_df,
-#'                                                   output_format = "igraph",
-#'                                                   min_score_threshold = "0.35"
-#'                                                   )
+#' db_stringdb_igraph_object <- build_graph_stringdb(
+#'   graph_data = db_stringdb_ppi_anno_df,
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.35"
+#' )
 #'
 #' db_stringdb_igraph_object_info_added <-
-#'   add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
-#'                                    g = db_stringdb_igraph_object,
-#'                                    idtype_anno = "gene_symbol")
+#'   add_info_from_dataframe_to_graph(
+#'     anno_df = db_stringdb_anno_df,
+#'     g = db_stringdb_igraph_object,
+#'     idtype_anno = "gene_symbol"
+#'   )
 #'
 #'
 #' db_stringdb_igraph_object_info_added
@@ -279,17 +291,16 @@ build_graph <- function(graph_data,
 add_info_from_dataframe_to_graph <- function(anno_df,
                                              g,
                                              idtype_anno = "gene_symbol") {
-  #loop through annotation column names
+  # loop through annotation column names
   for (col_name in c("entrez_id", "gene_symbol", "uniprot_id", "ensembl_id")) {
     # if column name is in dataframe
     if (col_name %in% colnames(anno_df)) {
-
-      #define attributin column names for igraph object
+      # define attributin column names for igraph object
       attr_name <- paste0("attr_", col_name)
-      #match values from graph and annotation dataframe
+      # match values from graph and annotation dataframe
       matched_values <- anno_df[match(igraph::V(g)$name, anno_df[[idtype_anno]]), col_name, drop = TRUE]
 
-      #add values to graph
+      # add values to graph
       g <- igraph::set_vertex_attr(g, name = attr_name, value = matched_values)
     }
   }
@@ -322,39 +333,44 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #' \dontrun{
 #'
 #'
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = FALSE,
-#'                                            add_annotation = FALSE
-#'                                           )
+#' db_stringdb_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-#'                                                version = "12.0",
-#'                                                cache = TRUE
-#'                                                )
+#' db_stringdb_anno_df <- get_annotation_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE
+#' )
 #'
-#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                    anno_df = db_stringdb_anno_df,
-#'                                                    species = "Homo sapiens")
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+#'   ppi_stringdb = db_stringdb_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   species = "Homo sapiens"
+#' )
 #'
 #'
-#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
-#'                                          anno_df = db_stringdb_anno_df,
-#'                                          idtype_anno = "gene_symbol",
-#'                                          data_source = "stringdb",
-#'                                          output_format = "igraph",
-#'                                          min_score_threshold = "0.35",
-#'                                          add_info_nodes = TRUE
-#'                                         )
+#' db_stringdb_igraph_object <- build_graph(
+#'   graph_data = db_stringdb_ppi_anno_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   idtype_anno = "gene_symbol",
+#'   data_source = "stringdb",
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.35",
+#'   add_info_nodes = TRUE
+#' )
 #' g <- db_stringdb_igraph_object
 #'
 #' library("igraph")
-#' library("macrophage") #demo dataset
-#' library("DESeq2") #package to perform differential expression analysis
+#' library("macrophage") # demo dataset
+#' library("DESeq2") # package to perform differential expression analysis
 #' library("org.Hs.eg.db")
 #'
-#' library("AnnotationDbi") #Annotation package
+#' library("AnnotationDbi") # Annotation package
 #'
 #' data(gse, package = "macrophage")
 #' dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
@@ -365,9 +381,10 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #' dds_macrophage <- DESeq(dds_macrophage)
 #'
 #' res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
-#'                                        contrast = c("condition", "IFNg", "naive"),
-#'                                        lfcThreshold = 1,
-#'                                        alpha = 0.05)
+#'   contrast = c("condition", "IFNg", "naive"),
+#'   lfcThreshold = 1,
+#'   alpha = 0.05
+#' )
 #'
 #' res_de <- res_macrophage_IFNg_vs_naive
 #' de_df <- mosdef::deresult_to_df(res_de)
@@ -378,22 +395,22 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #' top_ones_in_graph <- intersect(top_ones_narm, V(g)$name)
 #'
 #'
-#' #SE object
+#' # SE object
 #' dds <- dds_macrophage
 #' de_res <- res_de
 #' de_name <- "ifngVSnaive"
 #'
-#' #function to combine dds dataframe (SE) with the results de dataframe (df)
+#' # function to combine dds dataframe (SE) with the results de dataframe (df)
 #' combine_dds_deres <- function(dds, de_res, de_name) {
-#'    matched_ids <- match(rownames(res_de), rownames(dds))
-#'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
-#'    rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
-#'    rowData(dds)[[paste0(de_name, "_padj")]] <- NA
-#'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
-#'    rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
-#'    rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
-#'  return(dds)
-#'  }
+#'   matched_ids <- match(rownames(res_de), rownames(dds))
+#'   rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
+#'   rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
+#'   rowData(dds)[[paste0(de_name, "_padj")]] <- NA
+#'   rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
+#'   rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
+#'   rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
+#'   return(dds)
+#' }
 #' se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
 #'
 #' # what is this for? #TODO
@@ -402,99 +419,103 @@ add_info_from_dataframe_to_graph <- function(anno_df,
 #'
 #' se_macrophage
 #'
-#' graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
-#'                                               de_name = "ifng_vs_naive",
-#'                                               value_to_map = "log2FoldChange",
-#'                                               id_in_graph = "attr_ensembl_id",
-#'                                               g = db_stringdb_igraph_object
-#'                                               )
+#' graph_se_macrophage_string <- map_SE_on_graph(
+#'   se = se_macrophage,
+#'   de_name = "ifng_vs_naive",
+#'   value_to_map = "log2FoldChange",
+#'   id_in_graph = "attr_ensembl_id",
+#'   g = db_stringdb_igraph_object
+#' )
 #'
-#' #Extra: Creation of a visNetwork :)
+#' # Extra: Creation of a visNetwork :)
 #'
 #' subg <- induced_subgraph(
-#'    graph_se_macrophage_string,
-#'    top_ones_in_graph
+#'   graph_se_macrophage_string,
+#'   top_ones_in_graph
 #' )
 #'
 #' visNetwork::visIgraph(subg) |>
-#'   visNetwork::visEdges(color = list(color = "#88888888"))|>
-#'     visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-#'                                                    degree = 1,
-#'                                                    hover = TRUE),
-#'                            nodesIdSelection = TRUE)
-#'
+#'   visNetwork::visEdges(color = list(color = "#88888888")) |>
+#'   visNetwork::visOptions(
+#'     highlightNearest = list(
+#'       enabled = TRUE,
+#'       degree = 1,
+#'       hover = TRUE
+#'     ),
+#'     nodesIdSelection = TRUE
+#'   )
 #' }
-
 map_SE_on_graph <- function(se,
                             de_name = "ifng_vs_naive",
                             value_to_map = c("log2FoldChange", "pvalue"),
                             id_in_graph = "attr_ensembl_id",
-                            g
-                            ) {
+                            g) {
+  # Initialize a vector with `NA` for all nodes
+  values <- rep(NA, igraph::vcount(g))
 
-    # Initialize a vector with `NA` for all nodes
-    values <- rep(NA, igraph::vcount(g))
+  # take the names of the nodes from the graph
+  node_names <- vertex_attr(g, id_in_graph)
 
-    #take the names of the nodes from the graph
-    node_names <- vertex_attr(g, id_in_graph)
+  # match
+  matched_names <- match(node_names, rownames(se))
 
-    #match
-    matched_names <- match(node_names, rownames(se))
+  # extract value (e.g. log2foldchange) and save in vector
+  column_name <- paste0(de_name, "_", value_to_map)
+  values[!is.na(matched_names)] <- rowData(se)[[column_name]][matched_names[!is.na(matched_names)]]
 
-    # extract value (e.g. log2foldchange) and save in vector
-    column_name <- paste0(de_name, "_", value_to_map)
-    values[!is.na(matched_names)] <- rowData(se)[[column_name]][matched_names[!is.na(matched_names)]]
-
-    # colors <- ifelse(is.na(values), "grey",
-    #                  ifelse(values > 0, "red", "blue"))
-    #
-    # # add the color as an attribute
-    g <- igraph::set_vertex_attr(g, value_to_map, value = values)
+  # colors <- ifelse(is.na(values), "grey",
+  #                  ifelse(values > 0, "red", "blue"))
+  #
+  # # add the color as an attribute
+  g <- igraph::set_vertex_attr(g, value_to_map, value = values)
 
 
-    mypal <- rev(scales::alpha(
-      colorRampPalette(RColorBrewer::brewer.pal(name = "RdBu", 11))(50), 0.4
-    ))
+  mypal <- rev(scales::alpha(
+    colorRampPalette(RColorBrewer::brewer.pal(name = "RdBu", 11))(50), 0.4
+  ))
 
-    max_de <- max(abs(range(
-      vertex_attr(g, value_to_map), na.rm = TRUE
-    )))
+  max_de <- max(abs(range(
+    vertex_attr(g, value_to_map),
+    na.rm = TRUE
+  )))
 
-    V(g)$color <- mosdef::map_to_color(vertex_attr(g, value_to_map), mypal, limits = c(-max_de, max_de))
+  V(g)$color <- mosdef::map_to_color(vertex_attr(g, value_to_map), mypal, limits = c(-max_de, max_de))
 
-    rank_gs <- rank(V(g)$name)
-    g <- permute(g, rank_gs)
+  rank_gs <- rank(V(g)$name)
+  g <- permute(g, rank_gs)
 
-    # title for tooltips
-    g <- set_vertex_attr(g, name = "title", value = NA)
+  # title for tooltips
+  g <- set_vertex_attr(g, name = "title", value = NA)
 
 
-    # vertex_titles <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"),
-    #                         "Entrez ID:", vertex_attr(g, "attr_entrez_id"),
-    #                         "Uniprot ID:", vertex_attr(g, "attr_uniprot_id"),
-    #                         "log2FC:", vertex_attr(g, "log2FoldChange")
-    #                       )
-    #
-    #
-    # g <- set_vertex_attr(g, name = "title", value = vertex_titles)
+  # vertex_titles <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"),
+  #                         "Entrez ID:", vertex_attr(g, "attr_entrez_id"),
+  #                         "Uniprot ID:", vertex_attr(g, "attr_uniprot_id"),
+  #                         "log2FC:", vertex_attr(g, "log2FoldChange")
+  #                       )
+  #
+  #
+  # g <- set_vertex_attr(g, name = "title", value = vertex_titles)
 
-    vertex_title_genesymbol <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"))
-    vertex_title_entrez     <- paste("Entrez ID:", vertex_attr(g, "attr_entrez_id"))
-    vertex_title_uniprot    <- paste("Uniprot ID:", vertex_attr(g, "attr_uniprot_id"))
-    vertex_title_log2fc <- paste("log2FC:", round(vertex_attr(g, "log2FoldChange"), 4))
+  vertex_title_genesymbol <- paste("Gene Symbol:", vertex_attr(g, "attr_gene_symbol"))
+  vertex_title_entrez <- paste("Entrez ID:", vertex_attr(g, "attr_entrez_id"))
+  vertex_title_uniprot <- paste("Uniprot ID:", vertex_attr(g, "attr_uniprot_id"))
+  vertex_title_log2fc <- paste("log2FC:", round(vertex_attr(g, "log2FoldChange"), 4))
 
-    vertex_titles <- paste0(vertex_title_genesymbol, "<br>",
-                           vertex_title_entrez, "<br>",
-                           vertex_title_uniprot, "<br>",
-                           vertex_title_log2fc)
+  vertex_titles <- paste0(
+    vertex_title_genesymbol, "<br>",
+    vertex_title_entrez, "<br>",
+    vertex_title_uniprot, "<br>",
+    vertex_title_log2fc
+  )
 
-    #TODO title with line break
-    g <- set_vertex_attr(g, name = "title", value = vertex_titles)
+  # TODO title with line break
+  g <- set_vertex_attr(g, name = "title", value = vertex_titles)
 
-    rank_gs <- rank(V(g)$name)
-    g <- permute.vertices(g, rank_gs)
+  rank_gs <- rank(V(g)$name)
+  g <- permute.vertices(g, rank_gs)
 
-    return(g)
+  return(g)
 }
 
 # expolre_network() ---------------------
@@ -509,39 +530,44 @@ map_SE_on_graph <- function(se,
 #' @export
 #'
 #' @examples
-#' db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-#'                                            version = "12.0",
-#'                                            cache = TRUE,
-#'                                            get_annotation = FALSE,
-#'                                            add_annotation = FALSE
-#'                                           )
+#' db_stringdb_df <- get_networkdata_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-#'                                                version = "12.0",
-#'                                                cache = TRUE
-#'                                                )
+#' db_stringdb_anno_df <- get_annotation_stringdb(
+#'   species = "Homo sapiens",
+#'   version = "12.0",
+#'   cache = TRUE
+#' )
 #'
-#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-#'                                                    anno_df = db_stringdb_anno_df,
-#'                                                    species = "Homo sapiens")
+#' db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+#'   ppi_stringdb = db_stringdb_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   species = "Homo sapiens"
+#' )
 #'
 #'
-#' db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
-#'                                          anno_df = db_stringdb_anno_df,
-#'                                          idtype_anno = "gene_symbol",
-#'                                          data_source = "stringdb",
-#'                                          output_format = "igraph",
-#'                                          min_score_threshold = "0.35",
-#'                                          add_info_nodes = TRUE
-#'                                         )
+#' db_stringdb_igraph_object <- build_graph(
+#'   graph_data = db_stringdb_ppi_anno_df,
+#'   anno_df = db_stringdb_anno_df,
+#'   idtype_anno = "gene_symbol",
+#'   data_source = "stringdb",
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.35",
+#'   add_info_nodes = TRUE
+#' )
 #' g <- db_stringdb_igraph_object
 #'
 #' library("igraph")
-#' library("macrophage") #demo dataset
-#' library("DESeq2") #package to perform differential expression analysis
+#' library("macrophage") # demo dataset
+#' library("DESeq2") # package to perform differential expression analysis
 #' library("org.Hs.eg.db")
 #'
-#' library("AnnotationDbi") #Annotation package
+#' library("AnnotationDbi") # Annotation package
 #'
 #' data(gse, package = "macrophage")
 #' dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
@@ -552,9 +578,10 @@ map_SE_on_graph <- function(se,
 #' dds_macrophage <- DESeq(dds_macrophage)
 #'
 #' res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
-#'                                        contrast = c("condition", "IFNg", "naive"),
-#'                                        lfcThreshold = 1,
-#'                                        alpha = 0.05)
+#'   contrast = c("condition", "IFNg", "naive"),
+#'   lfcThreshold = 1,
+#'   alpha = 0.05
+#' )
 #'
 #' res_de <- res_macrophage_IFNg_vs_naive
 #' de_df <- mosdef::deresult_to_df(res_de)
@@ -565,45 +592,46 @@ map_SE_on_graph <- function(se,
 #' top_ones_in_graph <- intersect(top_ones_narm, V(g)$name)
 #'
 #'
-#' #SE object
+#' # SE object
 #' dds <- dds_macrophage
 #' de_res <- res_de
 #' de_name <- "ifngVSnaive"
 #'
-#' #function to combine dds dataframe (SE) with the results de dataframe (df)
+#' # function to combine dds dataframe (SE) with the results de dataframe (df)
 #' combine_dds_deres <- function(dds, de_res, de_name) {
-#'    matched_ids <- match(rownames(res_de), rownames(dds))
-#'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
-#'    rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
-#'    rowData(dds)[[paste0(de_name, "_padj")]] <- NA
-#'    rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
-#'    rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
-#'    rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
-#'  return(dds)
-#'  }
+#'   matched_ids <- match(rownames(res_de), rownames(dds))
+#'   rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
+#'   rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
+#'   rowData(dds)[[paste0(de_name, "_padj")]] <- NA
+#'   rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
+#'   rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
+#'   rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
+#'   return(dds)
+#' }
 #' se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
 #'
 #'
 #' se_macrophage
 #'
-#' graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
-#'                                               de_name = "ifng_vs_naive",
-#'                                               value_to_map = "log2FoldChange",
-#'                                               id_in_graph = "attr_ensembl_id",
-#'                                               g = db_stringdb_igraph_object
-#'                                               )
+#' graph_se_macrophage_string <- map_SE_on_graph(
+#'   se = se_macrophage,
+#'   de_name = "ifng_vs_naive",
+#'   value_to_map = "log2FoldChange",
+#'   id_in_graph = "attr_ensembl_id",
+#'   g = db_stringdb_igraph_object
+#' )
 #'
-#' explore_network(graph = graph_se_macrophage_string,
-#'                subgraph = TRUE,
-#'                subdata = top_ones_in_graph,
-#'                edge_color = "#88888888")
-#'
+#' explore_network(
+#'   graph = graph_se_macrophage_string,
+#'   subgraph = TRUE,
+#'   subdata = top_ones_in_graph,
+#'   edge_color = "#88888888"
+#' )
 #'
 explore_network <- function(graph,
                             subgraph = TRUE,
                             subdata = NULL,
                             edge_color = "#88888888") {
-
   # option for subgraph
   if (subgraph && !is.null(subdata)) {
     graph <- igraph::induced_subgraph(graph, subdata)
@@ -612,6 +640,8 @@ explore_network <- function(graph,
   # plot newtork with visNetwork
   visNetwork::visIgraph(graph) |>
     visNetwork::visEdges(color = list(color = edge_color)) |>
-    visNetwork::visOptions(highlightNearest = TRUE,
-                           nodesIdSelection = TRUE)
+    visNetwork::visOptions(
+      highlightNearest = TRUE,
+      nodesIdSelection = TRUE
+    )
 }

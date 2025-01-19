@@ -34,12 +34,13 @@ get_networkdata_hippie()
 }
 \examples{
 \dontrun{
-db_hippie_df <- get_networkdata_hippie(species = "Homo_sapiens",
-                                       version = "current",
-                                       cache = TRUE,
-                                       get_annotation = FALSE,
-                                       add_annotation = FALSE
-                                       )
+db_hippie_df <- get_networkdata_hippie(
+  species = "Homo_sapiens",
+  version = "current",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 db_hippie_df
 }
 

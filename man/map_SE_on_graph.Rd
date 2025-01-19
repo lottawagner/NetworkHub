@@ -13,7 +13,7 @@ map_SE_on_graph(
 )
 }
 \arguments{
-\item{se}{A \link[SummarizedExperiment:RangedSummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment} object (e.g. DE analysis results)}
+\item{se}{A \link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment} object (e.g. DE analysis results)}
 
 \item{de_name}{name of experiment results/ what to compare (e.g. "ifng_vs_naive")}
 
@@ -33,39 +33,44 @@ map_SE_on_graph
 \dontrun{
 
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0",
-                                           cache = TRUE,
-                                           get_annotation = FALSE,
-                                           add_annotation = FALSE
-                                          )
+db_stringdb_df <- get_networkdata_stringdb(
+  species = "Homo sapiens",
+  version = "12.0",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-                                               version = "12.0",
-                                               cache = TRUE
-                                               )
+db_stringdb_anno_df <- get_annotation_stringdb(
+  species = "Homo sapiens",
+  version = "12.0",
+  cache = TRUE
+)
 
-db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                                   anno_df = db_stringdb_anno_df,
-                                                   species = "Homo sapiens")
+db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+  ppi_stringdb = db_stringdb_df,
+  anno_df = db_stringdb_anno_df,
+  species = "Homo sapiens"
+)
 
 
-db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
-                                         anno_df = db_stringdb_anno_df,
-                                         idtype_anno = "gene_symbol",
-                                         data_source = "stringdb",
-                                         output_format = "igraph",
-                                         min_score_threshold = "0.35",
-                                         add_info_nodes = TRUE
-                                        )
+db_stringdb_igraph_object <- build_graph(
+  graph_data = db_stringdb_ppi_anno_df,
+  anno_df = db_stringdb_anno_df,
+  idtype_anno = "gene_symbol",
+  data_source = "stringdb",
+  output_format = "igraph",
+  min_score_threshold = "0.35",
+  add_info_nodes = TRUE
+)
 g <- db_stringdb_igraph_object
 
 library("igraph")
-library("macrophage") #demo dataset
-library("DESeq2") #package to perform differential expression analysis
+library("macrophage") # demo dataset
+library("DESeq2") # package to perform differential expression analysis
 library("org.Hs.eg.db")
 
-library("AnnotationDbi") #Annotation package
+library("AnnotationDbi") # Annotation package
 
 data(gse, package = "macrophage")
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
@@ -76,9 +81,10 @@ dds_macrophage <- dds_macrophage[keep, ]
 dds_macrophage <- DESeq(dds_macrophage)
 
 res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
-                                       contrast = c("condition", "IFNg", "naive"),
-                                       lfcThreshold = 1,
-                                       alpha = 0.05)
+  contrast = c("condition", "IFNg", "naive"),
+  lfcThreshold = 1,
+  alpha = 0.05
+)
 
 res_de <- res_macrophage_IFNg_vs_naive
 de_df <- mosdef::deresult_to_df(res_de)
@@ -89,22 +95,22 @@ top_ones_narm <- top_ones[!is.na(top_ones)]
 top_ones_in_graph <- intersect(top_ones_narm, V(g)$name)
 
 
-#SE object
+# SE object
 dds <- dds_macrophage
 de_res <- res_de
 de_name <- "ifngVSnaive"
 
-#function to combine dds dataframe (SE) with the results de dataframe (df)
+# function to combine dds dataframe (SE) with the results de dataframe (df)
 combine_dds_deres <- function(dds, de_res, de_name) {
-   matched_ids <- match(rownames(res_de), rownames(dds))
-   rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
-   rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
-   rowData(dds)[[paste0(de_name, "_padj")]] <- NA
-   rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
-   rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
-   rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
- return(dds)
- }
+  matched_ids <- match(rownames(res_de), rownames(dds))
+  rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
+  rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(dds)[[paste0(de_name, "_padj")]] <- NA
+  rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
+  rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
+  rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
+  return(dds)
+}
 se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
 
 # what is this for? #TODO
@@ -113,26 +119,30 @@ de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 
 se_macrophage
 
-graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
-                                              de_name = "ifng_vs_naive",
-                                              value_to_map = "log2FoldChange",
-                                              id_in_graph = "attr_ensembl_id",
-                                              g = db_stringdb_igraph_object
-                                              )
+graph_se_macrophage_string <- map_SE_on_graph(
+  se = se_macrophage,
+  de_name = "ifng_vs_naive",
+  value_to_map = "log2FoldChange",
+  id_in_graph = "attr_ensembl_id",
+  g = db_stringdb_igraph_object
+)
 
-#Extra: Creation of a visNetwork :)
+# Extra: Creation of a visNetwork :)
 
 subg <- induced_subgraph(
-   graph_se_macrophage_string,
-   top_ones_in_graph
+  graph_se_macrophage_string,
+  top_ones_in_graph
 )
 
 visNetwork::visIgraph(subg) |>
-  visNetwork::visEdges(color = list(color = "#88888888"))|>
-    visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                   degree = 1,
-                                                   hover = TRUE),
-                           nodesIdSelection = TRUE)
-
+  visNetwork::visEdges(color = list(color = "#88888888")) |>
+  visNetwork::visOptions(
+    highlightNearest = list(
+      enabled = TRUE,
+      degree = 1,
+      hover = TRUE
+    ),
+    nodesIdSelection = TRUE
+  )
 }
 }

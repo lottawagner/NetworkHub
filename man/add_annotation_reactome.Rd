@@ -21,21 +21,23 @@ add_annotation_reactome ()
 }
 \examples{
 \dontrun{
-db_reactome_df <- get_networkdata_reactome( species = "taxid:9606(Homo sapiens)",
-                                            version = "current",
-                                            cache = TRUE,
-                                            get_annotation = FALSE,
-                                            add_annotation = FALSE
-                                           )
+db_reactome_df <- get_networkdata_reactome(
+  species = "taxid:9606(Homo sapiens)",
+  version = "current",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_reactome_anno_df <- get_annotation_reactome( ppi_reactome = db_reactome_df,
-                                                species = "taxid:9606(Homo sapiens)"
-                                                )
+db_reactome_anno_df <- get_annotation_reactome(
+  ppi_reactome = db_reactome_df,
+  species = "taxid:9606(Homo sapiens)"
+)
 
-db_reactome_ppi_anno_df <- add_annotation_reactome( ppi_reactome = db_reactome_df,
-                                                    anno_df = db_reactome_anno_df,
-                                                    species = "taxid:9606(Homo sapiens)"
-                                                    )
-
+db_reactome_ppi_anno_df <- add_annotation_reactome(
+  ppi_reactome = db_reactome_df,
+  anno_df = db_reactome_anno_df,
+  species = "taxid:9606(Homo sapiens)"
+)
 }
 }

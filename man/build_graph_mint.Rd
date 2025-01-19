@@ -31,11 +31,12 @@ db_mint_df <- get_networkdata_mint(
   version = "current"
 )
 
-db_mint_graph <- build_graph_mint(graph_data = db_mint_df,
-                                        output_format = "igraph",
-                                        min_score_threshold = "0.35")
-db_mint_graph #list of 12010
+db_mint_graph <- build_graph_mint(
+  graph_data = db_mint_df,
+  output_format = "igraph",
+  min_score_threshold = "0.35"
+)
+db_mint_graph # list of 12010
 }
-
 
 }

@@ -18,28 +18,29 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
-#'                                              version = "current",
-#'                                              get_annotation = FALSE,
-#'                                              add_annotation = FALSE
-#'                                              )
+#' db_genemania_df <- get_networkdata_genemania(
+#'   species = "Homo_sapiens",
+#'   version = "current",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #' }
-
-get_networkdata_genemania <- function( species = "Homo_sapiens",
-                                       version = "current",
-                                       cache = TRUE,
-                                       get_annotation = TRUE,
-                                       add_annotation = TRUE,
-                                       ...) {
-
+get_networkdata_genemania <- function(species = "Homo_sapiens",
+                                      version = "current",
+                                      cache = TRUE,
+                                      get_annotation = TRUE,
+                                      add_annotation = TRUE,
+                                      ...) {
   # list species is actualized for version genemania "2021-05"
   # UPDATEVERSION
 
   # check that the value for species is listed in genemania
 
   if (!(species %in% list_species_genemania)) { # if species is not in the list
-    stop("Species not found as specified by genemania,",
-         "please check some valid entries by running `list_species_genemania`") # stop function and print
+    stop(
+      "Species not found as specified by genemania,",
+      "please check some valid entries by running `list_species_genemania`"
+    ) # stop function and print
   }
 
   # buildup of the resource location for the version and all
@@ -77,11 +78,11 @@ get_networkdata_genemania <- function( species = "Homo_sapiens",
 
   # read in the resource, whether cached or freshly downloaded
   ppis_genemania <- vroom::vroom(network_file)
-  #ppis_genemania <- head(read.delim(network_file, sep = " "))
+  # ppis_genemania <- head(read.delim(network_file, sep = " "))
   #
   message(dim(ppis_genemania))
 
-  #Uniprot
+  # Uniprot
   colnames(ppis_genemania)[colnames(ppis_genemania) == "Gene_A"] <- "Uniprot_A"
   colnames(ppis_genemania)[colnames(ppis_genemania) == "Gene_B"] <- "Uniprot_B"
 
@@ -89,38 +90,40 @@ get_networkdata_genemania <- function( species = "Homo_sapiens",
     genemania_db_annotations$anno_db_genemania[match(species, genemania_db_annotations$species)]
 
   if (get_annotation && is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n"
-            )
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n"
+    )
     return(ppis_genemania)
   }
 
-  if (get_annotation && !is.na(annotation_db)){
-
-    db_genemania_anno_df <- get_annotation_genemania(ppi_genemania = ppis_genemania,
-                                                     species = species)
+  if (get_annotation && !is.na(annotation_db)) {
+    db_genemania_anno_df <- get_annotation_genemania(
+      ppi_genemania = ppis_genemania,
+      species = species
+    )
 
     message("...created annotation dataframe")
 
     if (add_annotation) {
-
-      db_genemania_ppi_anno_df <- add_annotation_genemania(anno_df = db_genemania_anno_df,
-                                                           ppi_genemania = ppis_genemania,
-                                                           species = species
-                                                          )
+      db_genemania_ppi_anno_df <- add_annotation_genemania(
+        anno_df = db_genemania_anno_df,
+        ppi_genemania = ppis_genemania,
+        species = species
+      )
 
       message("...added annotation from *db_genemania_anno_df* to *db_genemania_ppi_anno_df*")
 
       return(db_genemania_ppi_anno_df)
     }
 
-    if (!add_annotation){
+    if (!add_annotation) {
       return(db_genemania_anno_df)
     }
   }
 
   if (!get_annotation) {
-    if (add_annotation){
+    if (add_annotation) {
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
@@ -131,30 +134,35 @@ get_networkdata_genemania <- function( species = "Homo_sapiens",
 
 # outside of function ----------
 
-list_species_genemania <- c("Arabidopsis_thaliana",
-                            "Caenorhabditis_elegans",
-                            "Danio_rerio",
-                            "Drosophila_melanogaster",
-                            "Escherichia_coli",
-                            "Homo_sapiens",
-                            "Mus_musculus",
-                            "Rattus_norvegicus",
-                            "Saccharomyces_cerevisiae")
+list_species_genemania <- c(
+  "Arabidopsis_thaliana",
+  "Caenorhabditis_elegans",
+  "Danio_rerio",
+  "Drosophila_melanogaster",
+  "Escherichia_coli",
+  "Homo_sapiens",
+  "Mus_musculus",
+  "Rattus_norvegicus",
+  "Saccharomyces_cerevisiae"
+)
 
-list_db_annotationdbi_genemania <- c("org.At.tair.db",
-                                     "org.Ce.eg.db",
-                                     "org.Cf.eg.db",
-                                     "org.Dm.eg.db",
-                                     "org.EcK12.eg.db",
-                                     "org.Hs.eg.db",
-                                     "org.Mm.eg.db",
-                                     "org.Rn.eg.db",
-                                     "org.Sc.sgd.db")
+list_db_annotationdbi_genemania <- c(
+  "org.At.tair.db",
+  "org.Ce.eg.db",
+  "org.Cf.eg.db",
+  "org.Dm.eg.db",
+  "org.EcK12.eg.db",
+  "org.Hs.eg.db",
+  "org.Mm.eg.db",
+  "org.Rn.eg.db",
+  "org.Sc.sgd.db"
+)
 
 
-genemania_db_annotations <- data.frame(species = list_species_genemania,
-                                 anno_db_genemania = list_db_annotationdbi_genemania,
-                                 row.names = list_species_genemania
+genemania_db_annotations <- data.frame(
+  species = list_species_genemania,
+  anno_db_genemania = list_db_annotationdbi_genemania,
+  row.names = list_species_genemania
 )
 
 
@@ -183,26 +191,27 @@ genemania_db_annotations <- data.frame(species = list_species_genemania,
 #'
 #' @examples
 #' \dontrun{
-#' db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
-#'                                              version = "current",
-#'                                              get_annotation = FALSE,
-#'                                              add_annotation = FALSE
-#'                                              )
+#' db_genemania_df <- get_networkdata_genemania(
+#'   species = "Homo_sapiens",
+#'   version = "current",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_genemania_anno_df <- get_annotation_genemania( ppi_genemania = db_genemania_df,
-#'                                                   species = "Homo_sapiens"
-#'                                                 )
+#' db_genemania_anno_df <- get_annotation_genemania(
+#'   ppi_genemania = db_genemania_df,
+#'   species = "Homo_sapiens"
+#' )
 #' }
-
-
-
 get_annotation_genemania <- function(ppi_genemania,
                                      species) {
   # find database on corresponding species
 
   if (!(species %in% list_species_genemania)) { # if species is not in the list
-    stop("Species not found as specified by genemania,",
-         "please check some valid entries by running `list_species_genemania`") # stop function and print
+    stop(
+      "Species not found as specified by genemania,",
+      "please check some valid entries by running `list_species_genemania`"
+    ) # stop function and print
   }
 
   annotation_db <-
@@ -213,19 +222,27 @@ get_annotation_genemania <- function(ppi_genemania,
     anno_df <- data.frame(
       uniprot_id = all_prot_ids,
       gene_symbol = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "SYMBOL"
+      ),
       ensembl_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"
+      ),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"
+      ),
       row.names = all_prot_ids
     )
   }
 
   if (is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_genemania containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_genemania(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_genemania containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppi_genemania)
   }
 }
@@ -246,49 +263,49 @@ get_annotation_genemania <- function(ppi_genemania,
 #'
 #' @examples
 #' \dontrun{
-#' db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
-#'                                              version = "current",
-#'                                              get_annotation = FALSE,
-#'                                              add_annotation = FALSE
-#'                                              )
+#' db_genemania_df <- get_networkdata_genemania(
+#'   species = "Homo_sapiens",
+#'   version = "current",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_genemania_anno_df <- get_annotation_genemania( ppi_genemania = db_genemania_df,
-#'                                                   species = "Homo_sapiens"
-#'                                                 )
+#' db_genemania_anno_df <- get_annotation_genemania(
+#'   ppi_genemania = db_genemania_df,
+#'   species = "Homo_sapiens"
+#' )
 #'
-#' db_genemania_ppi_anno_df <- add_annotation_genemania( ppi_genemania = db_genemania_df,
-#'                                                       anno_df = db_genemania_anno_df,
-#'                                                       species = "Homo_sapiens"
-#'                                                     )
-#'
-#'}
-
+#' db_genemania_ppi_anno_df <- add_annotation_genemania(
+#'   ppi_genemania = db_genemania_df,
+#'   anno_df = db_genemania_anno_df,
+#'   species = "Homo_sapiens"
+#' )
+#' }
 add_annotation_genemania <- function(ppi_genemania,
                                      anno_df,
                                      species) {
+  # adding GeneSymbol
+  ppi_genemania$GeneSymbol_A <-
+    anno_df$gene_symbol[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
+  ppi_genemania$GeneSymbol_B <-
+    anno_df$gene_symbol[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
 
-    #adding GeneSymbol
-    ppi_genemania$GeneSymbol_A <-
-      anno_df$gene_symbol[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
-    ppi_genemania$GeneSymbol_B <-
-      anno_df$gene_symbol[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
+  # adding Ensembl
+  ppi_genemania$Ensembl_A <-
+    anno_df$ensembl_id[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
+  ppi_genemania$Ensembl_B <-
+    anno_df$ensembl_id[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
 
-    #adding Ensembl
-    ppi_genemania$Ensembl_A <-
-      anno_df$ensembl_id[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
-    ppi_genemania$Ensembl_B <-
-      anno_df$ensembl_id[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
+  # adding Entrez
+  ppi_genemania$Entrez_A <-
+    anno_df$entrez_id[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
+  ppi_genemania$Entrez_B <-
+    anno_df$entrez_id[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
 
-    #adding Entrez
-    ppi_genemania$Entrez_A <-
-      anno_df$entrez_id[match(ppi_genemania$Uniprot_A, anno_df$uniprot_id)]
-    ppi_genemania$Entrez_B <-
-      anno_df$entrez_id[match(ppi_genemania$Uniprot_B, anno_df$uniprot_id)]
-
-    return(ppi_genemania)
+  return(ppi_genemania)
 }
 
-#output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
+# output: dataframe containing 4 columns:  Uniprot_A  Uniprot_B Gene_A Gene_B
 
 
 # build_graph_genemania() -----
@@ -312,20 +329,18 @@ add_annotation_genemania <- function(ppi_genemania,
 #'   version = "current"
 #' )
 #'
-#' db_genemania_graph <- build_graph_genemania(graph_data = db_genemania_df,
-#'                                         output_format = "igraph",
-#'                                         min_score_threshold = "0.00005")
-#' db_genemania_graph #list of 18644
+#' db_genemania_graph <- build_graph_genemania(
+#'   graph_data = db_genemania_df,
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.00005"
+#' )
+#' db_genemania_graph # list of 18644
 #' }
 #'
-#'
-
-
-build_graph_genemania <- function (graph_data,
-                              output_format = "igraph",
-                              min_score_threshold = NULL ){
-
-  #check on the clumns in your ppi data file
+build_graph_genemania <- function(graph_data,
+                                  output_format = "igraph",
+                                  min_score_threshold = NULL) {
+  # check on the clumns in your ppi data file
   colnames(graph_data)
 
   graph_data$Weight <- as.numeric(graph_data$Weight)
@@ -334,25 +349,33 @@ build_graph_genemania <- function (graph_data,
 
   hist(graph_data$Weight, breaks = 5000, xlim = c(0, 0.0003))
 
-  #select ppi data >= minimal score
-  if (!is.null(min_score_threshold)){
+  # select ppi data >= minimal score
+  if (!is.null(min_score_threshold)) {
     graph_data_processed <- graph_data[graph_data$Weight >= min_score_threshold, ]
   } else {
     graph_data_processed <- graph_data
   }
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data)
   dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
-                      to = graph_data_processed$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data_processed$GeneSymbol_A,
+    to = graph_data_processed$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
-                                    graph_data_processed$GeneSymbol_B)),
-                      label = unique(c(graph_data_processed$GeneSymbol_A,
-                                       graph_data_processed$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {
@@ -362,7 +385,4 @@ build_graph_genemania <- function (graph_data,
   }
   # simplify by avoiding multiple entries?
   ## could make it smaller and easier to handle, without losing too much/at all in info
-
 }
-
-

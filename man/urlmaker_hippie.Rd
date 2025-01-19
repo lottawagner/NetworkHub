@@ -19,8 +19,10 @@ urlmaker_hippie()
 }
 \examples{
 
-url_hippie <- urlmaker_hippie(species = "Homo_sapiens",
-                            version = "current")
+url_hippie <- urlmaker_hippie(
+  species = "Homo_sapiens",
+  version = "current"
+)
 url_hippie
 
 }

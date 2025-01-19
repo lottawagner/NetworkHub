@@ -21,21 +21,23 @@ add_annotation_hint ()
 }
 \examples{
 \dontrun{
-db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-                                   version = "2024-06",
-                                   type = "binary",
-                                   get_annotation = FALSE,
-                                   add_annotation = FALSE
+db_hint_df <- get_networkdata_hint(
+  species = "HomoSapiens",
+  version = "2024-06",
+  type = "binary",
+  get_annotation = FALSE,
+  add_annotation = FALSE
 )
 
-db_hint_anno_df <- get_annotation_hint(ppi_hint = db_hint_df,
-                                       species = "HomoSapiens"
-                                       )
+db_hint_anno_df <- get_annotation_hint(
+  ppi_hint = db_hint_df,
+  species = "HomoSapiens"
+)
 
-db_hint_ppi_anno_df <- add_annotation_hint(ppi_hint = db_hint_df,
-                                           anno_df = db_hint_anno_df,
-                                           species = "HomoSapiens"
-                                           )
-
+db_hint_ppi_anno_df <- add_annotation_hint(
+  ppi_hint = db_hint_df,
+  anno_df = db_hint_anno_df,
+  species = "HomoSapiens"
+)
 }
 }
