@@ -23,14 +23,16 @@ build_graph_biogrid()
 \examples{
 \dontrun{
 
-db_biogrid_df <- get_networkdata_biogrid(species = "9606",
-                                           version = "4.4.238"
-                                           )
+db_biogrid_df <- get_networkdata_biogrid(
+  species = "9606",
+  version = "4.4.238"
+)
 
-db_biogrid_graph <- build_graph_biogrid(graph_data = db_biogrid_df,
-                                        output_format = "igraph")
-db_biogrid_graph #list of 20124
+db_biogrid_graph <- build_graph_biogrid(
+  graph_data = db_biogrid_df,
+  output_format = "igraph"
+)
+db_biogrid_graph # list of 20124
 }
-
 
 }

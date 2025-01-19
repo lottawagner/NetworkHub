@@ -41,13 +41,14 @@ get_networkdata_matrixdb()
 }
 \examples{
 \dontrun{
-db_matrixdb_df <- get_networkdata_matrixdb( species = "human",
-                                            type = "CORE",
-                                            version = "4_0",
-                                            cache = TRUE,
-                                            get_annotation = FALSE,
-                                            add_annotation = FALSE
-                                          )
+db_matrixdb_df <- get_networkdata_matrixdb(
+  species = "human",
+  type = "CORE",
+  version = "4_0",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
 db_matrixdb_df
 }

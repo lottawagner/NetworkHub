@@ -31,11 +31,12 @@ get_networkdata_biogrid()
 }
 \examples{
 \dontrun{
-db_biogrid_df <- get_networkdata_biogrid(species = "9606",
-                                         version = "4.4.238",
-                                         cache = TRUE,
-                                         add_annotation = FALSE
-                                          )
+db_biogrid_df <- get_networkdata_biogrid(
+  species = "9606",
+  version = "4.4.238",
+  cache = TRUE,
+  add_annotation = FALSE
+)
 db_biogrid_df
 }
 }

@@ -26,15 +26,17 @@ build_graph_reactome()
 \examples{
 \dontrun{
 
-db_reactome_df <- get_networkdata_reactome(species = "taxid:9606(Homo sapiens)",
-                                           version = "current"
-                                           )
+db_reactome_df <- get_networkdata_reactome(
+  species = "taxid:9606(Homo sapiens)",
+  version = "current"
+)
 
-db_reactome_graph <- build_graph_reactome(graph_data = db_reactome_df,
-                                        output_format = "igraph",
-                                        min_score_threshold = "0.5")
-db_reactome_graph #list of 5416
+db_reactome_graph <- build_graph_reactome(
+  graph_data = db_reactome_df,
+  output_format = "igraph",
+  min_score_threshold = "0.5"
+)
+db_reactome_graph # list of 5416
 }
-
 
 }

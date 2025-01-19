@@ -38,10 +38,11 @@ get_networkdata_genemania()
 }
 \examples{
 \dontrun{
-db_genemania_df <- get_networkdata_genemania(species = "Homo_sapiens",
-                                             version = "current",
-                                             get_annotation = FALSE,
-                                             add_annotation = FALSE
-                                             )
+db_genemania_df <- get_networkdata_genemania(
+  species = "Homo_sapiens",
+  version = "current",
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 }
 }

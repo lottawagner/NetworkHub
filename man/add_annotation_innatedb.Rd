@@ -21,21 +21,23 @@ add_annotation_innatedb ()
 }
 \examples{
 \dontrun{
-db_innatedb_df <- get_networkdata_innatedb( species = "taxid:9606(Human)",
-                                            version = "5.4",
-                                            cache = TRUE,
-                                            get_annotation = FALSE,
-                                            add_annotation = FALSE
-                                            )
+db_innatedb_df <- get_networkdata_innatedb(
+  species = "taxid:9606(Human)",
+  version = "5.4",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_innatedb_anno_df <- get_annotation_innatedb( ppi_innatedb = db_innatedb_df,
-                                                species = "taxid:9606(Human)"
-                                                )
+db_innatedb_anno_df <- get_annotation_innatedb(
+  ppi_innatedb = db_innatedb_df,
+  species = "taxid:9606(Human)"
+)
 
-db_innatedb_ppi_anno_df <- add_annotation_innatedb( ppi_innatedb = db_innatedb_df,
-                                                    anno_df = db_innatedb_anno_df,
-                                                    species = "taxid:9606(Human)"
-                                                  )
-
+db_innatedb_ppi_anno_df <- add_annotation_innatedb(
+  ppi_innatedb = db_innatedb_df,
+  anno_df = db_innatedb_anno_df,
+  species = "taxid:9606(Human)"
+)
 }
 }

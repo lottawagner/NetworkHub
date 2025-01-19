@@ -25,19 +25,21 @@ build_graph_hint()
 }
 \examples{
 \dontrun{
-db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-                                   version = "2024-06",
-                                   type = "binary",
-                                   cache = TRUE,
-                                   get_annotation = TRUE,
-                                   add_annotation = TRUE
-                                   )
+db_hint_df <- get_networkdata_hint(
+  species = "HomoSapiens",
+  version = "2024-06",
+  type = "binary",
+  cache = TRUE,
+  get_annotation = TRUE,
+  add_annotation = TRUE
+)
 
-db_hint_graph <- build_graph_hint(graph_data = db_hint_df,
-                                  output_format = "igraph",
-                                  min_score_threshold = NULL)
-db_hint_graph #list of ...TODO
+db_hint_graph <- build_graph_hint(
+  graph_data = db_hint_df,
+  output_format = "igraph",
+  min_score_threshold = NULL
+)
+db_hint_graph # list of ...TODO
 }
-
 
 }

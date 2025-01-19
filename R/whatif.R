@@ -97,7 +97,7 @@
 
 # species NCBI listed in ncbi_taxid_host_organism --------------
 
-#just a list that connects names with numbers , we only get mouse and human ppi data from innatedb
+# just a list that connects names with numbers , we only get mouse and human ppi data from innatedb
 
 # #info_species_innatedb <- list("Mus musculus" = "10090",
 #                               "Homo sapiens" = "9606",
@@ -130,7 +130,7 @@
 #                               "Lepidoptera" = "7088")
 
 # CPDB -----------------
-#get_networkdata_cpdb()
+# get_networkdata_cpdb()
 
 #' #' get_networkdata_cpdb()
 #' #'

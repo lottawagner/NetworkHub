@@ -29,7 +29,7 @@
 #                        "org.Ss.eg.db")
 # BiocManager::install(required_pkgs_nwh)
 
-#TODO force = TRUE ?
+# TODO force = TRUE ?
 
 # working ON NetworkHub:
 # rm(list = ls())

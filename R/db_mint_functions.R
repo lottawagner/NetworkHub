@@ -26,23 +26,21 @@
 #'
 #' db_mint_df
 #' }
-
 get_networkdata_mint <- function(species,
                                  version = "current",
                                  cache = TRUE,
                                  add_annotation = TRUE,
                                  ...) {
-
-
-
   # list species is actualized for version mint "current"
   # UPDATEVERSION
 
   # check that the value for species is listed in mint
 
   if (!(species %in% list_species_mint)) { # if species is not in the list
-    stop("Species not found as specified by mint,",
-         "please check some valid entries by running `list_species_mint`") # stop function and print
+    stop(
+      "Species not found as specified by mint,",
+      "please check some valid entries by running `list_species_mint`"
+    ) # stop function and print
   }
 
   # buildup of the resource location for the version and all
@@ -80,17 +78,16 @@ get_networkdata_mint <- function(species,
 
   # read in the resource, whether cached or freshly downloaded
   ppis_mint <- vroom::vroom(network_file, col_names = FALSE)
-  #ppis_mint <- head(read.delim(network_file, sep = " "))
+  # ppis_mint <- head(read.delim(network_file, sep = " "))
   #
   message(dim(ppis_mint))
 
-  colnames(ppis_mint) <- c("Identifier_A", "Identifier_B", "Alternative identifier for interactor A", "Alternative identifier for interactor B", "Aliases for A", "Aliases for B", "method", "First author", "pubmed", "NCBI Taxonomy identifier for interactor A","NCBI Taxonomy identifier for interactor B", "interaction_type", "Source databases and identifiers", "Interaction identifier(s) in the corresponding source database", "Confidence score")
+  colnames(ppis_mint) <- c("Identifier_A", "Identifier_B", "Alternative identifier for interactor A", "Alternative identifier for interactor B", "Aliases for A", "Aliases for B", "method", "First author", "pubmed", "NCBI Taxonomy identifier for interactor A", "NCBI Taxonomy identifier for interactor B", "interaction_type", "Source databases and identifiers", "Interaction identifier(s) in the corresponding source database", "Confidence score")
 
   if (add_annotation) {
-
     ppi_mint_df_annotated <- ppis_mint
 
-    #UniProt
+    # UniProt
     ppi_mint_df_annotated$Uniprot_A <- str_extract(ppi_mint_df_annotated$Identifier_A, "uniprotkb:([A-Z0-9]+)")
     ppi_mint_df_annotated$Uniprot_A <- gsub("uniprotkb:", "", ppi_mint_df_annotated$Identifier_A)
 
@@ -98,7 +95,7 @@ get_networkdata_mint <- function(species,
     ppi_mint_df_annotated$Uniprot_B <- gsub("uniprotkb:", "", ppi_mint_df_annotated$Identifier_B)
 
 
-    #GeneSymbol
+    # GeneSymbol
     ppi_mint_df_annotated$GeneSymbol_A <- str_extract(ppi_mint_df_annotated$`Aliases for A`, "uniprotkb:([^\\(]+)\\(gene name\\)")
     ppi_mint_df_annotated$GeneSymbol_A <- gsub("uniprotkb:", "", ppi_mint_df_annotated$GeneSymbol_A)
     ppi_mint_df_annotated$GeneSymbol_A <- gsub("\\(gene name\\)", "", ppi_mint_df_annotated$GeneSymbol_A)
@@ -107,26 +104,26 @@ get_networkdata_mint <- function(species,
     ppi_mint_df_annotated$GeneSymbol_B <- gsub("uniprotkb:", "", ppi_mint_df_annotated$GeneSymbol_B)
     ppi_mint_df_annotated$GeneSymbol_B <- gsub("\\(gene name\\)", "", ppi_mint_df_annotated$GeneSymbol_B)
 
-    #Ensembl
+    # Ensembl
     ppi_mint_df_annotated$Ensembl_A <- strsplit(ppi_mint_df_annotated$`Alternative identifier for interactor A`, "\\|") # split entry by "|" -> you get a list for each row
     ppi_mint_df_annotated$Ensembl_A <- lapply(ppi_mint_df_annotated$Ensembl_A, function(x) { # with lapply you can iterate through every entry in a list by using an anonymous function(x), x is each element of a list
-      ensembl_entry <- grep("^ensembl:", x, value = TRUE) #search for the entry (x) in every list that starts (^) with "ensembl"
-      ensembl_entry <- gsub("ensembl:", "", ensembl_entry) #remove prefix "ensembl" by using gsub()
+      ensembl_entry <- grep("^ensembl:", x, value = TRUE) # search for the entry (x) in every list that starts (^) with "ensembl"
+      ensembl_entry <- gsub("ensembl:", "", ensembl_entry) # remove prefix "ensembl" by using gsub()
       return(ensembl_entry)
     })
 
     ppi_mint_df_annotated$Ensembl_B <- strsplit(ppi_mint_df_annotated$`Alternative identifier for interactor B`, "\\|") # split entry by "|" -> you get a list for each row
     ppi_mint_df_annotated$Ensembl_B <- lapply(ppi_mint_df_annotated$Ensembl_B, function(x) { # with lapply you can iterate through every entry in a list by using an anonymous function(x), x is each element of a list
-      ensembl_entry <- grep("^ensembl:", x, value = TRUE) #search for the entry (x) in every list that starts (^) with "ensembl"
-      ensembl_entry <- gsub("ensembl:", "", ensembl_entry) #remove prefix "ensembl" by using gsub()
+      ensembl_entry <- grep("^ensembl:", x, value = TRUE) # search for the entry (x) in every list that starts (^) with "ensembl"
+      ensembl_entry <- gsub("ensembl:", "", ensembl_entry) # remove prefix "ensembl" by using gsub()
       return(ensembl_entry)
     })
 
-    #Confidence score
+    # Confidence score
     ppi_mint_df_annotated$`Confidence score` <- str_extract(ppi_mint_df_annotated$`Confidence score`, "intact-miscore:([0-9\\.]+)")
-    ppi_mint_df_annotated$`Confidence score`<- gsub("intact-miscore:", "", ppi_mint_df_annotated$`Confidence score`)
+    ppi_mint_df_annotated$`Confidence score` <- gsub("intact-miscore:", "", ppi_mint_df_annotated$`Confidence score`)
 
-    #Entrez - MINT doesn't provide info about entrez number
+    # Entrez - MINT doesn't provide info about entrez number
 
     return(ppi_mint_df_annotated)
   }
@@ -138,10 +135,12 @@ get_networkdata_mint <- function(species,
 
 # outside of function ----------
 
-list_species_mint <- c ("Homo Sapiens",
-                        "Mus Musculus",
-                        "Drosophila Melanogaster",
-                        "Saccharomyces Cerevisiae")
+list_species_mint <- c(
+  "Homo Sapiens",
+  "Mus Musculus",
+  "Drosophila Melanogaster",
+  "Saccharomyces Cerevisiae"
+)
 
 # build_graph_mint() -----
 
@@ -164,20 +163,18 @@ list_species_mint <- c ("Homo Sapiens",
 #'   version = "current"
 #' )
 #'
-#' db_mint_graph <- build_graph_mint(graph_data = db_mint_df,
-#'                                         output_format = "igraph",
-#'                                         min_score_threshold = "0.35")
-#' db_mint_graph #list of 12010
+#' db_mint_graph <- build_graph_mint(
+#'   graph_data = db_mint_df,
+#'   output_format = "igraph",
+#'   min_score_threshold = "0.35"
+#' )
+#' db_mint_graph # list of 12010
 #' }
 #'
-#'
-
-
-build_graph_mint <- function (graph_data,
-                                 output_format = "igraph",
-                                 min_score_threshold = NULL ){
-
-  #check on the clumns in your ppi data file
+build_graph_mint <- function(graph_data,
+                             output_format = "igraph",
+                             min_score_threshold = NULL) {
+  # check on the clumns in your ppi data file
   colnames(graph_data)
 
   graph_data$`Confidence score` <- as.numeric(graph_data$`Confidence score`)
@@ -185,25 +182,33 @@ build_graph_mint <- function (graph_data,
   # Erstelle das Histogramm mit 50 bins (breaks)
   hist(graph_data$`Confidence score`, breaks = 50)
 
-  #select ppi data >= minimal score
-  if (!is.null(min_score_threshold)){
+  # select ppi data >= minimal score
+  if (!is.null(min_score_threshold)) {
     graph_data_processed <- graph_data[graph_data$`Confidence score` >= min_score_threshold, ]
   } else {
     graph_data_processed <- graph_data
   }
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data)
   dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
-                      to = graph_data_processed$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data_processed$GeneSymbol_A,
+    to = graph_data_processed$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
-                                    graph_data_processed$GeneSymbol_B)),
-                      label = unique(c(graph_data_processed$GeneSymbol_A,
-                                       graph_data_processed$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {
@@ -213,9 +218,4 @@ build_graph_mint <- function (graph_data,
   }
   # simplify by avoiding multiple entries?
   ## could make it smaller and easier to handle, without losing too much/at all in info
-
 }
-
-
-
-

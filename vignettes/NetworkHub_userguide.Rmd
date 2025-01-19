@@ -52,7 +52,7 @@ knitr::opts_chunk$set(
 If you want to install the development version from GitHub, you can alternatively run this command:
 
 ```{r}
-#BiocManager::install("imbeimainz/NetworkHub")
+# BiocManager::install("imbeimainz/NetworkHub")
 ```
 
 
@@ -61,7 +61,7 @@ setup
 After installation you can load and attach the NetworkHub package as follows:
 
 ```{r}
-#library("NetworkHub")
+# library("NetworkHub")
 ```
 
 
@@ -71,7 +71,7 @@ explain cache
 Initialization of the cache of "NetworkHub"
 
 ```{r init}
-#initialize_NetworkHub(nh_cachedir = "NetworkHub")
+# initialize_NetworkHub(nh_cachedir = "NetworkHub")
 ```
 
 # Using NetworHub
@@ -84,24 +84,23 @@ To demonstrate the benefits of NetworkHub, we will use the Macrophage dataset to
 Before we can start, we have to take a few more steps. This includes loading all the required packages:
 
 ```{r stringdb requiered packages for DE, eval = FALSE}
-
-if(!requireNamespace("GeneTonic", quietly = TRUE))
-    install.packages("GeneTonic")
+if (!requireNamespace("GeneTonic", quietly = TRUE)) {
+  install.packages("GeneTonic")
+}
 BiocManager::install("GeneTonic")
 ```
 
 Now we can load the SE experiment data object ("gse") from the Macrophage(<https://www.bioconductor.org/packages/release/data/experiment/html/macrophage.html>) dataset: 
 
 ```{r load from macrophage}
-
 # dds object
-library("macrophage") #demo dataset
-library("DESeq2") #package to perform differential expression analysis
-library("org.Hs.eg.db") #Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...  
-library("AnnotationDbi") #Annotation package 
+library("macrophage") # demo dataset
+library("DESeq2") # package to perform differential expression analysis
+library("org.Hs.eg.db") # Annotation package for human genes with info about gene identifier, chromosome location, Entrez-Gene, GO-terms, ...
+library("AnnotationDbi") # Annotation package
 
-data("gse", package = "macrophage") #gse dataset in macrophage = summarized experiment object 
-dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition) #creation of the DESeq data object out of gse by taking corresponding design into account ( effect in condition by looking at one cell line)
+data("gse", package = "macrophage") # gse dataset in macrophage = summarized experiment object
+dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition) # creation of the DESeq data object out of gse by taking corresponding design into account ( effect in condition by looking at one cell line)
 
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15) # make sure to only take the first 15 digits of the identifier (e.g "ENSG00000066322" and not "ENSG00000066322.14")
 dds_macrophage <- estimateSizeFactors(dds_macrophage) # normalizes data
@@ -114,10 +113,9 @@ Using GeneTonic we can retrieve a DE object from the macrophage dataset, which w
 To compare the condition: IFNg vs naive you can use "res_macrophage_IFNg_vs_naive" DE object from GeneTonic containing rows with the ENSEMBL gene symbols and columns with the DE results ( baseMean, log2FoldChange, pvalue, ...).
 
 ```{r loadde from GeneTonic}
-
 # res object
-data(res_de_macrophage, package = "GeneTonic") #get/take a differential expressed datafile
-res_de <- res_macrophage_IFNg_vs_naive #use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
+data(res_de_macrophage, package = "GeneTonic") # get/take a differential expressed datafile
+res_de <- res_macrophage_IFNg_vs_naive # use for example an DE datafile to look into the differential expressed genes in IFNg exposed vs naive macrophages
 ```
 )
 
@@ -135,9 +133,10 @@ dds_macrophage <- dds_macrophage[keep, ]
 
 dds_macrophage <- DESeq(dds_macrophage)
 res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
-                                        contrast = c("condition", "IFNg", "naive"),
-                                        lfcThreshold = 1, 
-                                        alpha = 0.05)
+  contrast = c("condition", "IFNg", "naive"),
+  lfcThreshold = 1,
+  alpha = 0.05
+)
 res_de <- res_macrophage_IFNg_vs_naive
 de_df <- mosdef::deresult_to_df(res_de)
 ```
@@ -145,22 +144,22 @@ de_df <- mosdef::deresult_to_df(res_de)
 With these two objects ( dds_macrophage & res_de) we can create a SE object that contains all the dds info AND the results of a DEA and can be further used in NetworkHub :) 
 
 ```{r SE}
-#SE object
+# SE object
 
 dds <- dds_macrophage
 de_res <- res_de
 de_name <- "ifngVSnaive"
 
 combine_dds_deres <- function(dds, de_res, de_name) {
-    matched_ids <- match(rownames(res_de), rownames(dds))
-    rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
-    rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
-    rowData(dds)[[paste0(de_name, "_padj")]] <- NA
-    rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
-    rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
-    rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
+  matched_ids <- match(rownames(res_de), rownames(dds))
+  rowData(dds)[[paste0(de_name, "_log2FoldChange")]] <- NA
+  rowData(dds)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(dds)[[paste0(de_name, "_padj")]] <- NA
+  rowData(dds)[[paste0(de_name, "_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
+  rowData(dds)[[paste0(de_name, "_pvalue")]][matched_ids] <- res_de$pvalue
+  rowData(dds)[[paste0(de_name, "_padj")]][matched_ids] <- res_de$padj
   return(dds)
-  }
+}
 se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_name = "ifng_vs_naive")
 
 # What is this for #TODO ?
@@ -168,7 +167,6 @@ se_macrophage <- combine_dds_deres(dds = dds_macrophage, de_res = res_de, de_nam
 # de_res_scrambles$log2FoldChange <- rnorm(17806, sd = 2)
 
 se_macrophage
-
 ```
 
 
@@ -177,31 +175,33 @@ se_macrophage
 Going from the DE genes to the proteins...
 
 ```{r get networkdata string}
-
 # PPI df: create a dataframe containing PPIs from "Homo sapiens", version = "12.0" without annotation of the identifiers
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Homo sapiens",
-                                           version = "12.0",
-                                           cache = TRUE,
-                                           get_annotation = FALSE,
-                                           add_annotation = FALSE
-                                           )
+db_stringdb_df <- get_networkdata_stringdb(
+  species = "Homo sapiens",
+  version = "12.0",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
 
 
 # anno df: get the annotation for "Homo sapiens"
 
-db_stringdb_anno_df <- get_annotation_stringdb(species = "Homo sapiens",
-                                               version = "12.0",
-                                               cache = TRUE
-                                               )
+db_stringdb_anno_df <- get_annotation_stringdb(
+  species = "Homo sapiens",
+  version = "12.0",
+  cache = TRUE
+)
 
 # PPI anno df: add the annotation for "Homo sapiens" from "db_stringdb_anno_df" to "db_stringdb_df" to get "db_stringdb_ppi_anno_df"
 
-db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                                   anno_df = db_stringdb_anno_df,
-                                                   species = "Homo sapiens")
- 
+db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+  ppi_stringdb = db_stringdb_df,
+  anno_df = db_stringdb_anno_df,
+  species = "Homo sapiens"
+)
 ```
 
 ## Creation of graph 
@@ -211,18 +211,18 @@ Therefore the creation of a graph like object of the PPI anno df (db_stringdb_pp
 
 
 ```{r build_graph_stringdb}
-
 library("igraph")
 
-db_stringdb_igraph_object <- build_graph(graph_data = db_stringdb_ppi_anno_df,
-                                         anno_df = db_stringdb_anno_df,
-                                         idtype_anno = "gene_symbol",
-                                         data_source = "stringdb",
-                                         output_format = "igraph",
-                                         min_score_threshold = "0.35",
-                                         add_info_nodes = TRUE
-                                         )
-# returns a matrix of something around 6 x 5434 
+db_stringdb_igraph_object <- build_graph(
+  graph_data = db_stringdb_ppi_anno_df,
+  anno_df = db_stringdb_anno_df,
+  idtype_anno = "gene_symbol",
+  data_source = "stringdb",
+  output_format = "igraph",
+  min_score_threshold = "0.35",
+  add_info_nodes = TRUE
+)
+# returns a matrix of something around 6 x 5434
 
 g <- db_stringdb_igraph_object
 ```
@@ -230,31 +230,36 @@ g <- db_stringdb_igraph_object
 Now we can fun with interactive networks...  
 
 ```{r map_SE_to_graph}
-
 library("visNetwork")
 
-# select an amount of genes from your de_df 
+# select an amount of genes from your de_df
 top_ones <- mapIds(org.Hs.eg.db, de_df$id[1:100], column = "SYMBOL", keytype = "ENSEMBL")
 top_ones_narm <- top_ones[!is.na(top_ones)]
 top_ones_in_graph <- intersect(top_ones_narm, V(g)$name)
 
-graph_se_macrophage_string <- map_SE_on_graph(se = se_macrophage,
-                                              de_name = "ifng_vs_naive",
-                                              value_to_map = "log2FoldChange",
-                                              id_in_graph = "attr_ensembl_id",
-                                              g = db_stringdb_igraph_object
-                                             )
+graph_se_macrophage_string <- map_SE_on_graph(
+  se = se_macrophage,
+  de_name = "ifng_vs_naive",
+  value_to_map = "log2FoldChange",
+  id_in_graph = "attr_ensembl_id",
+  g = db_stringdb_igraph_object
+)
 
-subg <- induced_subgraph(graph_se_macrophage_string,
-                         top_ones_in_graph)
+subg <- induced_subgraph(
+  graph_se_macrophage_string,
+  top_ones_in_graph
+)
 
 visNetwork::visIgraph(subg) |>
-  visNetwork::visEdges(color = list(color = "#88888888"))|>
-    visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
-                                                   degree = 1,
-                                                   hover = TRUE),
-                           nodesIdSelection = TRUE)
-
+  visNetwork::visEdges(color = list(color = "#88888888")) |>
+  visNetwork::visOptions(
+    highlightNearest = list(
+      enabled = TRUE,
+      degree = 1,
+      hover = TRUE
+    ),
+    nodesIdSelection = TRUE
+  )
 ```
 
 Well done ! :) 

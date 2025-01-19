@@ -38,11 +38,12 @@ get_networkdata_pathwaycommons()
 }
 \examples{
 \dontrun{
-db_pathwaycommons_df <- get_networkdata_pathwaycommons( species = "human",
-                                                        version = "v12",
-                                                        cache = TRUE,
-                                                        get_annotation = FALSE,
-                                                        add_annotation = FALSE
-                                                        )
+db_pathwaycommons_df <- get_networkdata_pathwaycommons(
+  species = "human",
+  version = "v12",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 }
 }

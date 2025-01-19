@@ -19,31 +19,32 @@
 #'
 #' @examples
 #' \dontrun{
-#' db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-#'                                    version = "2024-06",
-#'                                    type = "binary",
-#'                                    cache = TRUE,
-#'                                    get_annotation = FALSE,
-#'                                    add_annotation = FALSE
-#'                                    )
+#' db_hint_df <- get_networkdata_hint(
+#'   species = "HomoSapiens",
+#'   version = "2024-06",
+#'   type = "binary",
+#'   cache = TRUE,
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #' }
-
 get_networkdata_hint <- function(species,
                                  version,
-                                 type = "binary", #c("binary", "cocomp", "lcb", "lcc")
+                                 type = "binary", # c("binary", "cocomp", "lcb", "lcc")
                                  cache = TRUE,
                                  get_annotation = TRUE,
                                  add_annotation = TRUE,
                                  ...) {
-
   # list species is actualized for version HINT "2024-06"
   # UPDATEVERSION
 
   # check that the value for species is listed in HINT
 
   if (!(species %in% list_species_hint)) { # if species is not in the list
-    stop("Species not found as specified by HINT,",
-         "please check some valid entries by running `list_species_hint`") # stop function and print
+    stop(
+      "Species not found as specified by HINT,",
+      "please check some valid entries by running `list_species_hint`"
+    ) # stop function and print
   }
 
   # type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
@@ -86,7 +87,7 @@ get_networkdata_hint <- function(species,
 
   # read in the resource, whether cached or freshly downloaded
   ppis_hint <- vroom::vroom(network_file)
-  #ppis_hint <- head(read.delim(network_file, sep = " "))
+  # ppis_hint <- head(read.delim(network_file, sep = " "))
 
   message(dim(ppis_hint))
 
@@ -94,37 +95,40 @@ get_networkdata_hint <- function(species,
   colnames(ppis_hint)[colnames(ppis_hint) == "Gene_B"] <- "GeneSymbol_B"
 
   if (get_annotation && is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_hint(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_hint containing annotation for Uniprot_ and GeneSymbol_.")
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_hint(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_hint containing annotation for Uniprot_ and GeneSymbol_."
+    )
     return(ppis_hint)
   }
 
-  if (get_annotation && !is.na(annotation_db)){
-
-    db_hint_anno_df <- get_annotation_hint(ppi_hint = ppis_hint,
-                                           species = species)
+  if (get_annotation && !is.na(annotation_db)) {
+    db_hint_anno_df <- get_annotation_hint(
+      ppi_hint = ppis_hint,
+      species = species
+    )
 
     message("...created annotation dataframe")
 
     if (add_annotation) {
-
-      db_hint_ppi_anno_df <- add_annotation_hint(anno_df = db_hint_anno_df,
-                                                 ppi_hint = ppis_hint,
-                                                 species = species
+      db_hint_ppi_anno_df <- add_annotation_hint(
+        anno_df = db_hint_anno_df,
+        ppi_hint = ppis_hint,
+        species = species
       )
       message("...added annotation from *db_hint_anno_df* to *db_hint_ppi_anno_df*")
 
-    return(db_hint_ppi_anno_df)
+      return(db_hint_ppi_anno_df)
     }
 
-    if (!add_annotation){
+    if (!add_annotation) {
       return(db_hint_anno_df)
     }
   }
 
   if (!get_annotation) {
-    if (add_annotation){
+    if (add_annotation) {
       stop("get_annotation must be = TRUE in order to add_annotation")
     }
   }
@@ -133,33 +137,38 @@ get_networkdata_hint <- function(species,
 
 # outside of function ----------
 
-list_species_hint <- c("HomoSapiens",
-                       "SaccharomycesCerevisiae",
-                       "SchizosaccharomycesPombe",
-                       "MusMusculus",
-                       "DrosophilaMelanogaster",
-                       "CaenorhabditisElegans",
-                       "ArabidopsisThaliana",
-                       "EscherichiaColi",
-                       "RattusNorvegicus",
-                       "OryzaSativa")
+list_species_hint <- c(
+  "HomoSapiens",
+  "SaccharomycesCerevisiae",
+  "SchizosaccharomycesPombe",
+  "MusMusculus",
+  "DrosophilaMelanogaster",
+  "CaenorhabditisElegans",
+  "ArabidopsisThaliana",
+  "EscherichiaColi",
+  "RattusNorvegicus",
+  "OryzaSativa"
+)
 
-list_db_annotationdbi_hint <- c("org.Hs.eg.db",
-                               "org.Sc.sgd.db",
-                               NA,
-                               "org.Mm.eg.db",
-                               "org.Dm.eg.db",
-                               "org.Ce.eg.db",
-                               "org.At.tair.db",
-                               NA,
-                               "org.Rn.eg.db",
-                               NA)
+list_db_annotationdbi_hint <- c(
+  "org.Hs.eg.db",
+  "org.Sc.sgd.db",
+  NA,
+  "org.Mm.eg.db",
+  "org.Dm.eg.db",
+  "org.Ce.eg.db",
+  "org.At.tair.db",
+  NA,
+  "org.Rn.eg.db",
+  NA
+)
 
 
-hint_db_annotations <- data.frame(species = list_species_hint,
-                                  anno_db_hint = list_db_annotationdbi_hint,
-                                  row.names = list_species_hint
-                                  )
+hint_db_annotations <- data.frame(
+  species = list_species_hint,
+  anno_db_hint = list_db_annotationdbi_hint,
+  row.names = list_species_hint
+)
 
 
 # get_annotation_hint() --------
@@ -187,26 +196,29 @@ hint_db_annotations <- data.frame(species = list_species_hint,
 #'
 #' @examples
 #' \dontrun{
-#' db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-#'                                    version = "2024-06",
-#'                                    type = "binary",
-#'                                    get_annotation = FALSE,
-#'                                    add_annotation = FALSE
-#'                                    )
+#' db_hint_df <- get_networkdata_hint(
+#'   species = "HomoSapiens",
+#'   version = "2024-06",
+#'   type = "binary",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
+#' )
 #'
-#' db_hint_anno_df <- get_annotation_hint(ppi_hint = db_hint_df,
-#'                                        species = "HomoSapiens")
+#' db_hint_anno_df <- get_annotation_hint(
+#'   ppi_hint = db_hint_df,
+#'   species = "HomoSapiens"
+#' )
 #' }
 #'
-get_annotation_hint <- function( ppi_hint,
-                                 species
-                                 ){
-
-# find database on corresponding species
+get_annotation_hint <- function(ppi_hint,
+                                species) {
+  # find database on corresponding species
 
   if (!(species %in% list_species_hint)) { # if species is not in the list
-    stop("Species not found as specified by HINT,",
-         "please check some valid entries by running `list_species_hint`") # stop function and print
+    stop(
+      "Species not found as specified by HINT,",
+      "please check some valid entries by running `list_species_hint`"
+    ) # stop function and print
   }
 
   annotation_db <-
@@ -214,15 +226,19 @@ get_annotation_hint <- function( ppi_hint,
 
   if (!is.na(annotation_db)) {
     all_prot_ids <- unique(c(ppi_hint$Uniprot_A, ppi_hint$Uniprot_B))
-    #all_gene_ids <- unique(c(ppi_hint$GeneSymbol_A, ppi_hint$GeneSymbol_B))
+    # all_gene_ids <- unique(c(ppi_hint$GeneSymbol_A, ppi_hint$GeneSymbol_B))
 
     anno_df <- data.frame(
       uniprot_id = all_prot_ids,
-      #gene_symbol = all_gene_ids,
+      # gene_symbol = all_gene_ids,
       ensembl_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENSEMBL"
+      ),
       entrez_id = mapIds(
-        get(annotation_db), keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"),
+        get(annotation_db),
+        keys = all_prot_ids, keytype = "UNIPROT", column = "ENTREZID"
+      ),
       row.names = all_prot_ids
     )
 
@@ -230,10 +246,12 @@ get_annotation_hint <- function( ppi_hint,
   }
 
   if (is.na(annotation_db)) {
-    message("Annotation database for the species is not implemented yet.\n",
-            "Next time define add_annotation in get_networkdata_hint(..., add_annotation = FALSE, ...)\n",
-            "You will get ppis_hint containing annotation for Uniprot_ and GeneSymbol_.")
-  return(ppi_hint)
+    message(
+      "Annotation database for the species is not implemented yet.\n",
+      "Next time define add_annotation in get_networkdata_hint(..., add_annotation = FALSE, ...)\n",
+      "You will get ppis_hint containing annotation for Uniprot_ and GeneSymbol_."
+    )
+    return(ppi_hint)
   }
 }
 
@@ -252,41 +270,41 @@ get_annotation_hint <- function( ppi_hint,
 #'
 #' @examples
 #' \dontrun{
-#' db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-#'                                    version = "2024-06",
-#'                                    type = "binary",
-#'                                    get_annotation = FALSE,
-#'                                    add_annotation = FALSE
+#' db_hint_df <- get_networkdata_hint(
+#'   species = "HomoSapiens",
+#'   version = "2024-06",
+#'   type = "binary",
+#'   get_annotation = FALSE,
+#'   add_annotation = FALSE
 #' )
 #'
-#' db_hint_anno_df <- get_annotation_hint(ppi_hint = db_hint_df,
-#'                                        species = "HomoSapiens"
-#'                                        )
+#' db_hint_anno_df <- get_annotation_hint(
+#'   ppi_hint = db_hint_df,
+#'   species = "HomoSapiens"
+#' )
 #'
-#' db_hint_ppi_anno_df <- add_annotation_hint(ppi_hint = db_hint_df,
-#'                                            anno_df = db_hint_anno_df,
-#'                                            species = "HomoSapiens"
-#'                                            )
-#'
-#'}
-
+#' db_hint_ppi_anno_df <- add_annotation_hint(
+#'   ppi_hint = db_hint_df,
+#'   anno_df = db_hint_anno_df,
+#'   species = "HomoSapiens"
+#' )
+#' }
 add_annotation_hint <- function(ppi_hint,
                                 anno_df,
                                 species) {
-  #adding Ensembl
+  # adding Ensembl
   ppi_hint$Ensembl_A <-
     anno_df$ensembl_id[match(ppi_hint$Uniprot_A, anno_df$uniprot_id)]
   ppi_hint$Ensembl_B <-
     anno_df$ensembl_id[match(ppi_hint$Uniprot_B, anno_df$uniprot_id)]
 
-  #adding Entrez
+  # adding Entrez
   ppi_hint$Entrez_A <-
     anno_df$entrez_id[match(ppi_hint$Uniprot_A, anno_df$uniprot_id)]
   ppi_hint$Entrez_B <-
     anno_df$entrez_id[match(ppi_hint$Uniprot_B, anno_df$uniprot_id)]
 
   return(ppi_hint)
-
 }
 
 
@@ -305,54 +323,60 @@ add_annotation_hint <- function(ppi_hint,
 #'
 #' @examples
 #' \dontrun{
-#' db_hint_df <- get_networkdata_hint(species = "HomoSapiens",
-#'                                    version = "2024-06",
-#'                                    type = "binary",
-#'                                    cache = TRUE,
-#'                                    get_annotation = TRUE,
-#'                                    add_annotation = TRUE
-#'                                    )
+#' db_hint_df <- get_networkdata_hint(
+#'   species = "HomoSapiens",
+#'   version = "2024-06",
+#'   type = "binary",
+#'   cache = TRUE,
+#'   get_annotation = TRUE,
+#'   add_annotation = TRUE
+#' )
 #'
-#' db_hint_graph <- build_graph_hint(graph_data = db_hint_df,
-#'                                   output_format = "igraph",
-#'                                   min_score_threshold = NULL)
-#' db_hint_graph #list of ...TODO
+#' db_hint_graph <- build_graph_hint(
+#'   graph_data = db_hint_df,
+#'   output_format = "igraph",
+#'   min_score_threshold = NULL
+#' )
+#' db_hint_graph # list of ...TODO
 #' }
 #'
-#'
-
-
-build_graph_hint <- function (graph_data,
-                              output_format = "igraph",
-                              min_score_threshold = NULL
-                              ){
-
-  #check on the clumns in your ppi data file
+build_graph_hint <- function(graph_data,
+                             output_format = "igraph",
+                             min_score_threshold = NULL) {
+  # check on the clumns in your ppi data file
   colnames(graph_data)
 
 
-  #select ppi data >= minimal score
-  if (!is.null(min_score_threshold)){
+  # select ppi data >= minimal score
+  if (!is.null(min_score_threshold)) {
     graph_data_processed <- graph_data[graph_data$high_quality, ]
   }
 
-  #select all ppi data
+  # select all ppi data
   else {
     graph_data_processed <- graph_data
   }
 
-  #check on dimension (amount of rows)
+  # check on dimension (amount of rows)
   dim(graph_data)
   dim(graph_data_processed)
 
-  edges <- data.frame(from = graph_data_processed$GeneSymbol_A,
-                      to = graph_data_processed$GeneSymbol_B)
+  edges <- data.frame(
+    from = graph_data_processed$GeneSymbol_A,
+    to = graph_data_processed$GeneSymbol_B
+  )
 
   # Create unique nodes (combine both GeneSymbol columns)
-  nodes <- data.frame(id = unique(c(graph_data_processed$GeneSymbol_A,
-                                    graph_data_processed$GeneSymbol_B)),
-                      label = unique(c(graph_data_processed$GeneSymbol_A,
-                                       graph_data_processed$GeneSymbol_B)))
+  nodes <- data.frame(
+    id = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    )),
+    label = unique(c(
+      graph_data_processed$GeneSymbol_A,
+      graph_data_processed$GeneSymbol_B
+    ))
+  )
 
   # If output format is igraph, return the igraph object
   if (output_format == "igraph") {
@@ -362,7 +386,4 @@ build_graph_hint <- function (graph_data,
   }
   # simplify by avoiding multiple entries?
   ## could make it smaller and easier to handle, without losing too much/at all in info
-
 }
-
-

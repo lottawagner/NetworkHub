@@ -31,10 +31,11 @@ db_matrixdb_df <- get_networkdata_matrixdb(
   type = "CORE"
 )
 
-db_matrixdb_graph <- build_graph_matrixdb(graph_data = db_matrixdb_df,
-                                        output_format = "igraph")
-db_matrixdb_graph #list of 235
+db_matrixdb_graph <- build_graph_matrixdb(
+  graph_data = db_matrixdb_df,
+  output_format = "igraph"
+)
+db_matrixdb_graph # list of 235
 }
-
 
 }

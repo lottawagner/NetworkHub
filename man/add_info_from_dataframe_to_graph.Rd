@@ -21,35 +21,41 @@ An igraph object
 add_info_from_dataframe_to_graph()
 }
 \examples{
-
 \dontrun{
 
-db_stringdb_df <- get_networkdata_stringdb(species = "Mus musculus",
-                                           version = "12.0",
-                                           cache = TRUE,
-                                           get_annotation = FALSE,
-                                           add_annotation = FALSE
-                                          )
+db_stringdb_df <- get_networkdata_stringdb(
+  species = "Mus musculus",
+  version = "12.0",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 
-db_stringdb_anno_df <- get_annotation_stringdb(species = "Mus musculus",
-                                               version = "12.0",
-                                               cache = TRUE
-                                               )
+db_stringdb_anno_df <- get_annotation_stringdb(
+  species = "Mus musculus",
+  version = "12.0",
+  cache = TRUE
+)
 
-db_stringdb_ppi_anno_df <- add_annotation_stringdb(ppi_stringdb = db_stringdb_df,
-                                                   anno_df = db_stringdb_anno_df,
-                                                   species = "Mus musculus")
+db_stringdb_ppi_anno_df <- add_annotation_stringdb(
+  ppi_stringdb = db_stringdb_df,
+  anno_df = db_stringdb_anno_df,
+  species = "Mus musculus"
+)
 
 
-db_stringdb_igraph_object <- build_graph_stringdb(graph_data = db_stringdb_ppi_anno_df,
-                                                  output_format = "igraph",
-                                                  min_score_threshold = "0.35"
-                                                  )
+db_stringdb_igraph_object <- build_graph_stringdb(
+  graph_data = db_stringdb_ppi_anno_df,
+  output_format = "igraph",
+  min_score_threshold = "0.35"
+)
 
 db_stringdb_igraph_object_info_added <-
-  add_info_from_dataframe_to_graph(anno_df = db_stringdb_anno_df,
-                                   g = db_stringdb_igraph_object,
-                                   idtype_anno = "gene_symbol")
+  add_info_from_dataframe_to_graph(
+    anno_df = db_stringdb_anno_df,
+    g = db_stringdb_igraph_object,
+    idtype_anno = "gene_symbol"
+  )
 
 
 db_stringdb_igraph_object_info_added

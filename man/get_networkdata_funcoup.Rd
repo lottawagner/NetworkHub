@@ -30,24 +30,21 @@ get_networkdata_funcoup(
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
-ppis_funcoup
-
-db_funcoup_ppi_anno_df
-
-db_funcoup_anno_df
+A data frame containing the PPI information in tabular format
 }
 \description{
 get_networkdata_funcoup()
 }
 \examples{
 \dontrun{
-db_funcoup_df <- get_networkdata_funcoup(species = "H.sapiens",
-                                         version = "6.0",
-                                         type = "compact",
-                                         cache = TRUE,
-                                         get_annotation = FALSE,
-                                         add_annotation = FALSE
-                                         )
+db_funcoup_df <- get_networkdata_funcoup(
+  species = "H.sapiens",
+  version = "6.0",
+  type = "compact",
+  cache = TRUE,
+  get_annotation = FALSE,
+  add_annotation = FALSE
+)
 db_funcoup_df
 }
 

@@ -31,11 +31,12 @@ db_genemania_df <- get_networkdata_genemania(
   version = "current"
 )
 
-db_genemania_graph <- build_graph_genemania(graph_data = db_genemania_df,
-                                        output_format = "igraph",
-                                        min_score_threshold = "0.00005")
-db_genemania_graph #list of 18644
+db_genemania_graph <- build_graph_genemania(
+  graph_data = db_genemania_df,
+  output_format = "igraph",
+  min_score_threshold = "0.00005"
+)
+db_genemania_graph # list of 18644
 }
-
 
 }
