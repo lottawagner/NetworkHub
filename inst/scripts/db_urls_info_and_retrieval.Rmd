@@ -1,0 +1,14 @@
+# Retrieving the PPI files from the databases
+
+This notebook serves the purpose of documenting the process of
+
+* identification
+* finding relevant information
+* retrieving (via construction of URL) 
+
+for the different PPI files that are provided by the databases.
+
+While at it, we will also report some information on the features of interest, with some notes on the latest update provided by each. 
+This should assist in the process of spotting out what is changed - in case a bugfix needs to be delivered within NetworkHub.
+
+
