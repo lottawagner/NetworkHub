@@ -19,3 +19,22 @@ urlmaker_cpdb()
 url_cpdb <- urlmaker_cpdb(species = "human")
 url_cpdb
 }
+\seealso{
+Other urlmakers: 
+\code{\link{urlmaker_biogrid}()},
+\code{\link{urlmaker_funcoup}()},
+\code{\link{urlmaker_genemania}()},
+\code{\link{urlmaker_hint}()},
+\code{\link{urlmaker_hippie}()},
+\code{\link{urlmaker_huri}()},
+\code{\link{urlmaker_iid}()},
+\code{\link{urlmaker_innatedb}()},
+\code{\link{urlmaker_intact}()},
+\code{\link{urlmaker_irefindex}()},
+\code{\link{urlmaker_matrixdb}()},
+\code{\link{urlmaker_mint}()},
+\code{\link{urlmaker_pathwaycommons}()},
+\code{\link{urlmaker_reactome}()},
+\code{\link{urlmaker_stringdb}()}
+}
+\concept{urlmakers}
