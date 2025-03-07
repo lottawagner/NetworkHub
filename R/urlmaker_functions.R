@@ -1,7 +1,4 @@
-# What's inside ?
-# 1. For each database one/more functions that help to identify the variables in the corresponding url_maker function
-# 2. For each database one function to create an url to download/cache the data from the db
-# -> Why? because using an url where you have to define the version, species and some other variables, the user can easily access the data without the need of google search
+
 
 # Comment on comments
 # UPDATEVERSION - for databases where version is not defined in url
@@ -9,18 +6,28 @@
 # CURRENTVERSION - for databases only providing data for current version (no archive)
 
 
-# For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by choosing a name
-
-#' urlmaker_stringdb()
+#' URL maker for STRINGDB
+#' 
+#' Creating the URL to access the resources on [STRINGDB](https://string-db.org/) 
+#' 
+#' @details
+#' The urlmaker function will automatically handle the conversion between human
+#' readable identifiers and the identifier used internally by the selected resource
 #'
-#' @param species from which species does the data come from
-#' @param version version of the data files in stringdb
-#' @param type which data file do you want to download ? ("PPI", "protein_info")
+#' @param type Character string, which data file do you want to download? 
+#' Can be one of "PPI" or "protein_info"
+#' @param species Character string, from which species does the data come from.
+#' Defaults to "Homo sapiens" for human
+#' @param version Character string, specifying the version of the data files in 
+#' stringdb - defaults to "12.0" for the latest release (as of Feb 2025)
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
 #'
 #' @importFrom utils read.delim
+#' 
+#' @references https://string-db.org/
 #' 
 #' @family urlmakers
 #'
@@ -84,27 +91,27 @@ urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
 }
 
 
-# links:
-# binary: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_binary_hq.txt
-# cocomplex: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_cocomp_hq.txt
-# https://hint.yulab.org/download-raw/2024-06/SaccharomycesCerevisiae_binary_hq.txt
-
-
-
-#' urlmaker_hint()
-#'
-#' @param type  interaction types in HINT, default value = "binary"
-
+#' URL maker for HINT
+#' 
+#' Creating the URL to access the resources on [HINT](https://hint.yulab.org/) 
+#' (High-quality Interactomes)
+#' 
+#' @param type Character string, specifying which interaction types to retrieve
+#' from HINT, default value = "binary"
 # "binary" = binary
 # "cocomp" = co-complex
 # "lcb" = literature curated binary
 # "lcc" = literature curated co-complex
-
-#' @param species types listed in list_species_hint depending on current version, default value = "HomoSapiens" #UPDATEVERSION
-#' @param version version of HINT, always written as year - month ( 2024-06, 2020-08, ...)
+#' @param species Character string, types listed in list_species_hint depending 
+#' on current version, default value = "HomoSapiens" 
+#' @param version Character string, version of HINT, always specified as 
+#' `year-month` (2024-06, 2020-08, ...)
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://hint.yulab.org/
 #' 
 #' @family urlmakers
 #'
@@ -114,6 +121,7 @@ urlmaker_stringdb <- function(type = c("PPI", "protein_info"),
 #'   species = "HomoSapiens",
 #'   version = "2024-06"
 #' )
+#' 
 #' url_hint
 urlmaker_hint <- function(type = "binary", # default value for type = "binary"
                           species = "HomoSapiens", # default value for species #UPDATEVERSION
@@ -161,8 +169,6 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 
   type <- match.arg(type, c("binary", "cocomp", "lcb", "lcc"))
 
-
-
   # create the url depending on the type, version and species
 
   url <- sprintf(
@@ -172,20 +178,26 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
     type
   )
 
-
-  # return value is "url"
   return(url)
 }
 
 
-#' urlmaker_funcoup()
+#' URL maker for FunCoup
+#' 
+#' Creating the URL to access the resources on [FunCoup](https://funcoup.org/)
+#' 
+#' @param version Character string, specifying the version of FunCoup to 
+#' retrieve, default value = "6.0"
+#' @param species Character string, types listed in `list_species_funcoup` 
+#' depending on current version. Defaults to "H.sapiens"
+#' @param type Character string, specifying the interaction types in FunCoup 
+#' (for current version compact recommended, for older versions only full possible)
 #'
-#' @param version version of FunCoup , default value = "5.0", value as type "5.0" #UPDATEVERSION
-#' @param species types listed in list_species_funcoup depending on current version, default value = "H.sapiens" #UPDATEVERSION
-#' @param type interaction types in FunCoup (for current version compact recommended, for older versions only full possible)
-#'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://funcoup.org/
 #' 
 #' @family urlmakers
 #'
@@ -195,8 +207,9 @@ urlmaker_hint <- function(type = "binary", # default value for type = "binary"
 #'   species = "B.taurus",
 #'   type = "full"
 #' )
+#' 
 #' url_funcoup
-urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as type "5.0"
+urlmaker_funcoup <- function(version = "6.0", # default value = "6.0"
                              species = "H.sapiens", # default value = "H.sapiens", value as type first letter (capital) of first name, full second name with small letters
                              type = c("compact", "full")) { # for current version compact recommended, for older versions only full possible
 
@@ -333,7 +346,6 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
     }
   }
 
-
   if (version == "3.0") {
     list_species_funcoup_3.0 <- c(
       "A.thaliana",
@@ -351,7 +363,6 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
       "S.cerevisiae"
     )
 
-
     if (!species %in% list_species_funcoup_3.0) {
       stop(
         "Species not found as specified by Funcoup version 3.0,",
@@ -368,7 +379,6 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
     )
   }
 
-
   if (version == "2.0") {
     list_species_funcoup_2.0 <- c(
       "athaliana",
@@ -383,7 +393,6 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
       "rnorvegicus",
       "scerevisiae"
     )
-
 
     if (!species %in% list_species_funcoup_2.0) {
       stop(
@@ -404,26 +413,32 @@ urlmaker_funcoup <- function(version = "6.0", # default value = "6.0", value as 
     stop("No url provided by NetworkHub for version 1.0")
   }
 
-  # return value is "url
   return(url)
 }
 
 
 
-# ONLY HUMAN
 
-#' urlmaker_iid()
+#' URL maker for IID
+#' 
+#' Creating the URL to access the resources on [IID](https://iid.ophid.utoronto.ca/)
+#' (Integrated Interactions Database)
+#' 
+#' @param species Character string, with species listed in `list_species_iid` 
+#' depending on current version, default value = "human"
+#' @param version Character string, version of IID , default value = "2021-05"
 #'
-#' @param species types listed in list_species_iid depending on current version, default value = "human" #UPDATEVERSION
-#' @param version version of IID , default value = "2021-05", value as type "2021-05" #UPDATEVERSION
-#'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://iid.ophid.utoronto.ca/
 #'
 #' @family urlmakers
 #' 
 #' @examples
 #' url_iid <- urlmaker_iid(species = "mouse")
+#' 
 #' url_iid
 urlmaker_iid <- function(species = "human", #
                          version = "2021-05") { # version of IID not updated since
@@ -472,18 +487,25 @@ urlmaker_iid <- function(species = "human", #
     species
   )
 
-  # return the url for IID and the corresponding species
   return(url)
 }
 
 
-#' #' urlmaker_irefindex()
+#' URL maker for iRefIndex
+#' 
+#' Creating the URL to access the resources on [iRefIndex](https://irefindex.vib.be/)
+#' (Integrated Interactions Database)
+#' 
+#' @param species Character string, from which species does the data come from, 
+#' default value = "Homo sapiens"
+#' @param version Character string, version of data files in iRefIndex, 
+#' default value = "08-28-2023" #UPDATEVERSION
 #'
-#' @param species from which species does the data come from, default value = "Homo sapiens"
-#' @param version version of data files in iRefIndex, default value = "2023-08-29" #UPDATEVERSION
-#'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://irefindex.vib.be/
 #'
 #' @family urlmakers
 #' 
@@ -494,7 +516,7 @@ urlmaker_iid <- function(species = "human", #
 #' )
 #' url_irefindex
 urlmaker_irefindex <- function(species,
-                               version = "08-28-2023") { # default value for version = "08-28-2023" #UPDATEVERSION
+                               version = "08-28-2023") {
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(version)) # make sure to type in a version as character
@@ -549,18 +571,26 @@ urlmaker_irefindex <- function(species,
     species_id,
     version
   )
-  # return the url
+
   return(url)
 }
 
 
-#' #' urlmaker_mint()
+#' URL maker for MINT
+#' 
+#' Creating the URL to access the resources on [MINT](https://mint.bio.uniroma2.it/)
+#' (The Molecular INTeraction Database)
 #'
-#' @param species from which species does the data come from, default value = "Homo sapiens"
-#' @param version version of data files in MINT, default value = "current" #CURRENTVERSION
+#' @param species Character string, from which species does the data come from, 
+#' default value = "Homo Sapiens"
+#' @param version Character string, version of data files in MINT, defaults to 
+#' "current" (as it is specified by the MINT curators)
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://mint.bio.uniroma2.it/
 #'
 #' @family urlmakers
 #'
@@ -593,7 +623,6 @@ urlmaker_mint <- function(species = "Homo Sapiens", # default value = "Homo Sapi
     )
   }
 
-
   # fetch the species_name from info_species_mint
   species_name <- info_species_mint[[species]]
 
@@ -604,17 +633,23 @@ urlmaker_mint <- function(species = "Homo Sapiens", # default value = "Homo Sapi
     species_name
   )
 
-  # return the url
   return(url)
 }
 
-#' urlmaker_genemania()
+
+#' URL maker for GeneMania
+#' 
+#' Creating the URL to access the resources on [GeneMania](https://genemania.org/)
 #'
-#' @param species types listed in list_species_genemania depending on current version, default value = "Homo_sapiens"
-#' @param version version of GeneMania , default value = "current" #UPDATEVERSION
+#' @param species Character string, types listed in `list_species_genemania` 
+#' depending on current version, default value = "Homo_sapiens"
+#' @param version Character string, version of GeneMania , defaults to "current"
 #'
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
+#' @references https://genemania.org/
+#' 
 #' @export
 #'
 #' @family urlmakers
@@ -624,6 +659,7 @@ urlmaker_mint <- function(species = "Homo Sapiens", # default value = "Homo Sapi
 #'   species = "Homo_sapiens",
 #'   version = "current"
 #' )
+#' 
 #' url_genemania
 urlmaker_genemania <- function(species = "Homo_sapiens",
                                version = "current") { # default value = "current"
@@ -632,9 +668,7 @@ urlmaker_genemania <- function(species = "Homo_sapiens",
   stopifnot(is.character(version)) # make sure to type in a version as character
   stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
-
   # create a list of all species in GeneMania
-
   info_species_genemania <- c(
     "Arabidopsis_thaliana",
     "Caenorhabditis_elegans",
@@ -671,19 +705,27 @@ urlmaker_genemania <- function(species = "Homo_sapiens",
     species
   )
 
-  # return the url
   return(url)
 }
 
 
 
-#' urlmaker_huri()
+#' URL maker for HuRI
+#' 
+#' Creating the URL to access the resources on 
+#' [HuRI](http://www.interactome-atlas.org/) (The Human Reference Protein 
+#' Interactome)
 #'
-#' @param species default value = "human", because this database only provides human data
-#' @param type different datasets , more information on "http://www.interactome-atlas.org/about/"
+#' @param species Character string, default value = "human", because this 
+#' database only provides human data
+#' @param type Character string, different datasets , more information on 
+#' "http://www.interactome-atlas.org/about/" - defaults to "HI-union"
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references http://www.interactome-atlas.org/
 #' 
 #' @family urlmakers
 #'
@@ -694,10 +736,9 @@ urlmaker_genemania <- function(species = "Homo_sapiens",
 #'   type = "HI-union"
 #' )
 #' url_huri
-urlmaker_huri <- function(species = "human", # default value human, because this database only provides human data
-                          type = c("HI-union", "Lit-BM")) { # recommended value = "HI-union", because it contains nearly all data from HuRi
-
-
+urlmaker_huri <- function(species = "human", 
+                          type = c("HI-union", "Lit-BM") # recommended value = "HI-union", because it contains nearly all data from HuRI
+                          ) { 
 
   stopifnot(is.character(species)) # make sure to type in a species name as character
   stopifnot(is.character(type))
@@ -723,20 +764,28 @@ urlmaker_huri <- function(species = "human", # default value human, because this
     type
   )
 
-
   return(url)
 }
 
 
 
-#' urlmaker_matrixdb()
+#' URL maker for MatrixDB
+#' 
+#' Creating the URL to access the resources on 
+#' [MatrixDB](https://matrixdb.univ-lyon1.fr/)
 #'
-#' @param species default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION
-#' @param type datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset
-#' @param version TODO, 4.0 was recently added to the URL
+#' @param species Character string, default value = "human", because only one 
+#' version and one species at MatrixDB #UPDATEVERSION
+#' @param type Character string, datasets provided by MatrixDB: "CORE" 
+#' = MatrixDB manually curated interaction dataset. Defaults to "all"
+#' @param version Character string, specifying the version number. Defaults to 
+#' the recently updated "4.0" (as this was recently added to the URL)
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://matrixdb.univ-lyon1.fr/
 #' 
 #' @family urlmakers
 #'
@@ -744,9 +793,6 @@ urlmaker_huri <- function(species = "human", # default value human, because this
 #' url_matrixdb <- urlmaker_matrixdb(type = "CORE")
 #'
 #' url_matrixdb
-#'
-#' # https://matrixdb.univ-lyon1.fr/downloads/matrixdb_CORE_4_0.tab.zip
-#' # https://matrixdb.univ-lyon1.fr/downloads/matrixdb_all_4_0.tab.zip
 urlmaker_matrixdb <- function(species = "human",
                               type = c("all", "CORE"),
                               version = "4_0") { # UPDATEVERSION
@@ -769,20 +815,28 @@ urlmaker_matrixdb <- function(species = "human",
 }
 
 
-
-#' urlmaker_pathwaycommons()
+#' URL maker for PathwayCommons
+#' 
+#' Creating the URL to access the resources on 
+#' [PathwayCommons](https://www.pathwaycommons.org/)
 #'
-#' @param species default value = "Homo sapiens", because only one species
-#' @param version default value = "v12" because v14 doesn't contain all datafiles #UPDATEVERSION
+#' @param species Character string, default value = "Homo sapiens", because 
+#' only one species is available
+#' @param version Character string, default value = "v12" (v14 doesn't contain 
+#' all datafiles as of Feb 2025)
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://www.pathwaycommons.org/
 #' 
 #' @family urlmakers
 #'
 #' @examples
 #'
 #' url_pc <- urlmaker_pathwaycommons()
+#' 
 #' url_pc
 urlmaker_pathwaycommons <- function(species = "human", # default value = "human", because PC mostly provides data for human  #check in: c14:<unique_id> (bio processes and participants). BioPAX URIs are not to guess; instead, they should be discovered with /search or /top_pathways
                                     version = "v12") { # default value = "v12", because in "v14" not all datafiles are updated already #UPDATEVERSION
@@ -805,21 +859,25 @@ urlmaker_pathwaycommons <- function(species = "human", # default value = "human"
     version
   )
 
-  # return the url
   return(url)
 }
 
 
-
-
-
-#' urlmaker_hippie()
+#' URL maker for HIPPIE
+#' 
+#' Creating the URL to access the resources on 
+#' [HIPPIE](https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/)
 #'
-#' @param species default value = "Homo_sapiens", because this database only provides human data
-#' @param version default value = "current", version of the database ... #UPDATEVERSION
+#' @param species Character string, default value = "Homo_sapiens", because 
+#' this database only provides human data
+#' @param version Character string, default value = "current", 
+#' version of the database ... #UPDATEVERSION
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/
 #' 
 #' @family urlmakers
 #'
@@ -850,22 +908,27 @@ urlmaker_hippie <- function(species = "Homo_sapiens", # default value human, bec
     version
   )
 
-
   return(url)
 }
 
 
-#' urlmaker_reactome()
+#' URL maker for Reactome
+#' 
+#' Creating the URL to access the resources on [Reactome](https://reactome.org/)
 #'
-#' @param version default value = "current" #UPDATEVERSION
+#' @param version Character string, default value = "current" #UPDATEVERSION
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://reactome.org/
 #' 
 #' @family urlmakers
 #'
 #' @examples
 #' url_reactome <- urlmaker_reactome()
+#' 
 #' url_reactome
 urlmaker_reactome <- function(version = "current") { # SPECIESDEFINITION
 
@@ -873,23 +936,30 @@ urlmaker_reactome <- function(version = "current") { # SPECIESDEFINITION
   stopifnot(length(version) == 1) # make sure to type in a version with the length == 1
 
   url <- "https://reactome.org/download/current/interactors/reactome.all_species.interactions.psi-mitab.txt"
+  
   return(url)
 }
 
 
-
-#' urlmaker_innatedb()
+#' URL maker for InnateDB
+#' 
+#' Creating the URL to access the resources on 
+#' [InnateDB](https://www.innatedb.com/)
 #'
-#' @param url innatedb doesn't provide information about the version or the species in their url, that why the default value of url is url
-#' @param version parameter set to current version 5.4 #UPDATEVERSION
+#' @param url Character string, innatedb doesn't provide information about the version or the species in their url, that why the default value of url is url
+#' @param version Character string, parameter set to current version 5.4 #UPDATEVERSION
 #'
-#' @return url
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://www.innatedb.com/
 #'
 #' @family urlmakers
 #' 
 #' @examples
 #' url_innatedb <- urlmaker_innatedb()
+#' 
 #' url_innatedb
 urlmaker_innatedb <- function(url = url,
                               version = "5.4") { # default value = "5.4" #UPDATEVERSION
@@ -897,20 +967,26 @@ urlmaker_innatedb <- function(url = url,
   url <- "https://www.innatedb.com/download/interactions/innatedb_ppi.mitab.gz"
 
   return(url)
-} # SPECIESDEFINITION
+}
 
 
-#' urlmaker_biogrid()
+#' URL maker for BioGRID
+#' 
+#' Creating the URL to access the resources on [BioGRID](https://thebiogrid.org/)
 #'
 #' @param version version of the data files in BioGRID
 #'
-#' @return url returns the corresponding url set by params #SPECIESDEFINITION
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://thebiogrid.org/
 #' 
 #' @family urlmakers
 #'
 #' @examples
 #' url_biogrid <- urlmaker_biogrid()
+#' 
 #' url_biogrid
 urlmaker_biogrid <- function(version = "4.4.238") { # default value = "4.4.238" (October 2024) #SPECIESDEFINITION
 
@@ -924,23 +1000,29 @@ urlmaker_biogrid <- function(version = "4.4.238") { # default value = "4.4.238" 
     version
   )
 
-  # return the url
   return(url)
 }
 
 
-
-#' urlmaker_intact()
+#' URL maker for IntAct
+#' 
+#' Creating the URL to access the resources on 
+#' [IntAct](https://www.ebi.ac.uk/intact/)
 #'
-#' @param version version of the data files in IntAct, default value = "current" (August 2024  = 2024-05-23 18:09	6.6G)
+#' @param version Character string, version of the data files in IntAct, 
+#' default value = "current" (August 2024  = 2024-05-23 18:09	6.6G)
 #'
-#' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references https://www.ebi.ac.uk/intact/
 #' 
 #' @family urlmakers
 #'
 #' @examples
 #' url_intact <- urlmaker_intact(version = "current")
+#' 
 #' url_intact
 urlmaker_intact <- function(version = "current") { # default value for version, because Intact provides this file only for current (August 2024 = 2024-05-23 18:09	6.6G)
 
@@ -958,24 +1040,29 @@ urlmaker_intact <- function(version = "current") { # default value for version, 
     version
   )
 
-  # return the url
   return(url)
 }
 
 
-# CPDB - ONLY HUMAN
-
-#' urlmaker_cpdb()
+#' URL maker for ConsensusPathDB
+#' 
+#' Creating the URL to access the resources on 
+#' [ConsensusPathDB](http://cpdb.molgen.mpg.de/)
 #'
-#' @param species currently only human (default value)
+#' @param species Character string, specifying the species of interesting,
+#' defaulting to  "human". 
 #'
-#' @return url returns the corresponding url set by params
+#' @return A character string with the URL as requested
+#' 
 #' @export
+#' 
+#' @references http://cpdb.molgen.mpg.de/
 #' 
 #' @family urlmakers
 #'
 #' @examples
 #' url_cpdb <- urlmaker_cpdb(species = "human")
+#' 
 #' url_cpdb
 urlmaker_cpdb <- function(species = "human") { # default value = human because at the moment (05.08.2024) only human
   
@@ -990,38 +1077,10 @@ urlmaker_cpdb <- function(species = "human") { # default value = human because a
     ) # stop function and print
   }
   
-  
   url <- sprintf(
     "http://cpdb.molgen.mpg.de/download/ConsensusPathDB_%s_PPI.gz",
     species
   )
+  
   return(url)
 }
-
-
-# EXCLUDED DATABASES ----------
-
-####  # CORUM - SPECIESDEFINITION
-####  #' urlmaker_corum()
-####  #'
-####  #' @param version version of the data files in CORUM, default value = "current" (August 2024 = 28.11.2022 Corum 4.1 release)
-####  #'
-####  #' @return url returns the corresponding url set by params #SPECIESDEFINITION later on
-####  #' @export
-####  #'
-####  #' @examples
-####  #' url_corum <- urlmaker_corum()
-####  #' url_corum
-####  #' urlmaker_corum <- function (version = "current"){ #default value set to current, but make sure to check whcih version currrent reflects (August 2024 = 28.11.2022 Corum 4.1 release) #UPDATEVERSION
-####  #'
-####  #'   stopifnot(is.character(version))                  # make sure to type in a version as character
-####  #'   stopifnot(length(version) == 1)                   # make sure to type in a version with the length == 1
-####  #'
-####  #'
-####  #'   url <- sprintf("https://mips.helmholtz-muenchen.de/corum/download/releases/%s/allComplexes.txt.zip",
-####  #'                  version)
-####  #'   return (url)
-####  #'
-####  #' }
-####  #'
-####  #' new corum :https://mips.helmholtz-muenchen.de/corum/download

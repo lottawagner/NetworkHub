@@ -114,7 +114,7 @@ get_networkdata_biogrid <- function(species = "9606",
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return An `igraph` graph object
 #' @export
 #'
 #' @examples

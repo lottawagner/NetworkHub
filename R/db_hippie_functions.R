@@ -271,7 +271,7 @@ add_annotation_hippie <- function(ppi_hippie,
 #'
 #' @importFrom igraph graph.data.frame simplify
 #'
-#' @return
+#' @return An `igraph` graph object
 #' @export
 #'
 #' @examples
