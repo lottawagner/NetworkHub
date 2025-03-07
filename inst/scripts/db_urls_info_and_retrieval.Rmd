@@ -11,4 +11,90 @@ for the different PPI files that are provided by the databases.
 While at it, we will also report some information on the features of interest, with some notes on the latest update provided by each. 
 This should assist in the process of spotting out what is changed - in case a bugfix needs to be delivered within NetworkHub.
 
+Normally, typical parameters that can bring in some changes are **the version** in use, **the species** selected (if more are provided), or some form of **resource type** (in case different forms of content are provided)
+
+## STRINGDB
+
+For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by choosing a name
+
+
+## HINT
+
+links:
+binary: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_binary_hq.txt
+cocomplex: https://hint.yulab.org/download-raw/2024-06/HomoSapiens_cocomp_hq.txt
+https://hint.yulab.org/download-raw/2024-06/SaccharomycesCerevisiae_binary_hq.txt
+
+## funcoup
+
+
+
+## iid
+
+
+
+## irefindex
+
+
+
+## mint
+
+
+
+## genemania
+
+
+
+## huri
+
+
+
+## matrixdb
+
+https://matrixdb.univ-lyon1.fr/downloads/matrixdb_CORE_4_0.tab.zip
+https://matrixdb.univ-lyon1.fr/downloads/matrixdb_all_4_0.tab.zip
+
+## pathwaycommons
+
+
+
+## hippie
+
+
+
+## reactome
+
+
+
+## innatedb
+
+
+
+## biogrid
+
+
+
+## intact
+
+
+
+## cpdb
+
+
+
+
+
+
+# What's inside ?
+# 1. For each database one/more functions that help to identify the variables in the corresponding url_maker function
+# 2. For each database one function to create an url to download/cache the data from the db
+# -> Why? because using an url where you have to define the version, species and some other variables, the user can easily access the data without the need of google search
+
+# Comment on comments
+# UPDATEVERSION - for databases where version is not defined in url
+# SPECIESDEFINITION - for databases where species is not defined in url
+# CURRENTVERSION - for databases only providing data for current version (no archive)
+
+
+# For stringdb we can use a file that defines the names of the organisms and correlating species_id to tell the url_maker function what to put inside the url by choosing a name
 
