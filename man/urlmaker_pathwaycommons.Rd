@@ -2,25 +2,32 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_pathwaycommons}
 \alias{urlmaker_pathwaycommons}
-\title{urlmaker_pathwaycommons()}
+\title{URL maker for PathwayCommons}
 \usage{
 urlmaker_pathwaycommons(species = "human", version = "v12")
 }
 \arguments{
-\item{species}{default value = "Homo sapiens", because only one species}
+\item{species}{Character string, default value = "Homo sapiens", because
+only one species is available}
 
-\item{version}{default value = "v12" because v14 doesn't contain all datafiles #UPDATEVERSION}
+\item{version}{Character string, default value = "v12" (v14 doesn't contain
+all datafiles as of Feb 2025)}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_pathwaycommons()
+Creating the URL to access the resources on
+\href{https://www.pathwaycommons.org/}{PathwayCommons}
 }
 \examples{
 
 url_pc <- urlmaker_pathwaycommons()
+
 url_pc
+}
+\references{
+https://www.pathwaycommons.org/
 }
 \seealso{
 Other urlmakers: 

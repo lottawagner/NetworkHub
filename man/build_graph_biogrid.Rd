@@ -17,6 +17,9 @@ build_graph_biogrid(
 
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
+\value{
+An \code{igraph} graph object
+}
 \description{
 build_graph_biogrid()
 }

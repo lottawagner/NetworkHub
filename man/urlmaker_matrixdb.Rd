@@ -2,30 +2,34 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_matrixdb}
 \alias{urlmaker_matrixdb}
-\title{urlmaker_matrixdb()}
+\title{URL maker for MatrixDB}
 \usage{
 urlmaker_matrixdb(species = "human", type = c("all", "CORE"), version = "4_0")
 }
 \arguments{
-\item{species}{default value = "human", because only one version and one species at MatrixDB #UPDATEVERSION}
+\item{species}{Character string, default value = "human", because only one
+version and one species at MatrixDB #UPDATEVERSION}
 
-\item{type}{datasets provided by MatrixDB: "CORE" = MatrixDB manually curated interaction dataset}
+\item{type}{Character string, datasets provided by MatrixDB: "CORE"
+= MatrixDB manually curated interaction dataset. Defaults to "all"}
 
-\item{version}{TODO, 4.0 was recently added to the URL}
+\item{version}{Character string, specifying the version number. Defaults to
+the recently updated "4.0" (as this was recently added to the URL)}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_matrixdb()
+Creating the URL to access the resources on
+\href{https://matrixdb.univ-lyon1.fr/}{MatrixDB}
 }
 \examples{
 url_matrixdb <- urlmaker_matrixdb(type = "CORE")
 
 url_matrixdb
-
-# https://matrixdb.univ-lyon1.fr/downloads/matrixdb_CORE_4_0.tab.zip
-# https://matrixdb.univ-lyon1.fr/downloads/matrixdb_all_4_0.tab.zip
+}
+\references{
+https://matrixdb.univ-lyon1.fr/
 }
 \seealso{
 Other urlmakers: 

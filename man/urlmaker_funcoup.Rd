@@ -2,7 +2,7 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_funcoup}
 \alias{urlmaker_funcoup}
-\title{urlmaker_funcoup()}
+\title{URL maker for FunCoup}
 \usage{
 urlmaker_funcoup(
   version = "6.0",
@@ -11,17 +11,20 @@ urlmaker_funcoup(
 )
 }
 \arguments{
-\item{version}{version of FunCoup , default value = "5.0", value as type "5.0" #UPDATEVERSION}
+\item{version}{Character string, specifying the version of FunCoup to
+retrieve, default value = "6.0"}
 
-\item{species}{types listed in list_species_funcoup depending on current version, default value = "H.sapiens" #UPDATEVERSION}
+\item{species}{Character string, types listed in \code{list_species_funcoup}
+depending on current version. Defaults to "H.sapiens"}
 
-\item{type}{interaction types in FunCoup (for current version compact recommended, for older versions only full possible)}
+\item{type}{Character string, specifying the interaction types in FunCoup
+(for current version compact recommended, for older versions only full possible)}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_funcoup()
+Creating the URL to access the resources on \href{https://funcoup.org/}{FunCoup}
 }
 \examples{
 url_funcoup <- urlmaker_funcoup(
@@ -29,7 +32,11 @@ url_funcoup <- urlmaker_funcoup(
   species = "B.taurus",
   type = "full"
 )
+
 url_funcoup
+}
+\references{
+https://funcoup.org/
 }
 \seealso{
 Other urlmakers: 

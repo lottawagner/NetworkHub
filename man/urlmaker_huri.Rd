@@ -2,20 +2,24 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_huri}
 \alias{urlmaker_huri}
-\title{urlmaker_huri()}
+\title{URL maker for HuRI}
 \usage{
 urlmaker_huri(species = "human", type = c("HI-union", "Lit-BM"))
 }
 \arguments{
-\item{species}{default value = "human", because this database only provides human data}
+\item{species}{Character string, default value = "human", because this
+database only provides human data}
 
-\item{type}{different datasets , more information on "http://www.interactome-atlas.org/about/"}
+\item{type}{Character string, different datasets , more information on
+"http://www.interactome-atlas.org/about/" - defaults to "HI-union"}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_huri()
+Creating the URL to access the resources on
+\href{http://www.interactome-atlas.org/}{HuRI} (The Human Reference Protein
+Interactome)
 }
 \examples{
 
@@ -24,6 +28,9 @@ url_huri <- urlmaker_huri(
   type = "HI-union"
 )
 url_huri
+}
+\references{
+http://www.interactome-atlas.org/
 }
 \seealso{
 Other urlmakers: 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_stringdb}
 \alias{urlmaker_stringdb}
-\title{urlmaker_stringdb()}
+\title{URL maker for STRINGDB}
 \usage{
 urlmaker_stringdb(
   type = c("PPI", "protein_info"),
@@ -11,17 +11,24 @@ urlmaker_stringdb(
 )
 }
 \arguments{
-\item{type}{which data file do you want to download ? ("PPI", "protein_info")}
+\item{type}{Character string, which data file do you want to download?
+Can be one of "PPI" or "protein_info"}
 
-\item{species}{from which species does the data come from}
+\item{species}{Character string, from which species does the data come from.
+Defaults to "Homo sapiens" for human}
 
-\item{version}{version of the data files in stringdb}
+\item{version}{Character string, specifying the version of the data files in
+stringdb - defaults to "12.0" for the latest release (as of Feb 2025)}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_stringdb()
+Creating the URL to access the resources on \href{https://string-db.org/}{STRINGDB}
+}
+\details{
+The urlmaker function will automatically handle the conversion between human
+readable identifiers and the identifier used internally by the selected resource
 }
 \examples{
 url_stringdb <- urlmaker_stringdb(
@@ -31,6 +38,9 @@ url_stringdb <- urlmaker_stringdb(
 )
 
 url_stringdb
+}
+\references{
+https://string-db.org/
 }
 \seealso{
 Other urlmakers: 

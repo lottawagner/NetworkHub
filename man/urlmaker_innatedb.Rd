@@ -2,24 +2,29 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_innatedb}
 \alias{urlmaker_innatedb}
-\title{urlmaker_innatedb()}
+\title{URL maker for InnateDB}
 \usage{
 urlmaker_innatedb(url = url, version = "5.4")
 }
 \arguments{
-\item{url}{innatedb doesn't provide information about the version or the species in their url, that why the default value of url is url}
+\item{url}{Character string, innatedb doesn't provide information about the version or the species in their url, that why the default value of url is url}
 
-\item{version}{parameter set to current version 5.4 #UPDATEVERSION}
+\item{version}{Character string, parameter set to current version 5.4 #UPDATEVERSION}
 }
 \value{
-url
+A character string with the URL as requested
 }
 \description{
-urlmaker_innatedb()
+Creating the URL to access the resources on
+\href{https://www.innatedb.com/}{InnateDB}
 }
 \examples{
 url_innatedb <- urlmaker_innatedb()
+
 url_innatedb
+}
+\references{
+https://www.innatedb.com/
 }
 \seealso{
 Other urlmakers: 

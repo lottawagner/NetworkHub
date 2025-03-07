@@ -2,24 +2,30 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_iid}
 \alias{urlmaker_iid}
-\title{urlmaker_iid()}
+\title{URL maker for IID}
 \usage{
 urlmaker_iid(species = "human", version = "2021-05")
 }
 \arguments{
-\item{species}{types listed in list_species_iid depending on current version, default value = "human" #UPDATEVERSION}
+\item{species}{Character string, with species listed in \code{list_species_iid}
+depending on current version, default value = "human"}
 
-\item{version}{version of IID , default value = "2021-05", value as type "2021-05" #UPDATEVERSION}
+\item{version}{Character string, version of IID , default value = "2021-05"}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_iid()
+Creating the URL to access the resources on \href{https://iid.ophid.utoronto.ca/}{IID}
+(Integrated Interactions Database)
 }
 \examples{
 url_iid <- urlmaker_iid(species = "mouse")
+
 url_iid
+}
+\references{
+https://iid.ophid.utoronto.ca/
 }
 \seealso{
 Other urlmakers: 

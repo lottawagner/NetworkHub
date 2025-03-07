@@ -2,20 +2,23 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_hippie}
 \alias{urlmaker_hippie}
-\title{urlmaker_hippie()}
+\title{URL maker for HIPPIE}
 \usage{
 urlmaker_hippie(species = "Homo_sapiens", version = "current")
 }
 \arguments{
-\item{species}{default value = "Homo_sapiens", because this database only provides human data}
+\item{species}{Character string, default value = "Homo_sapiens", because
+this database only provides human data}
 
-\item{version}{default value = "current", version of the database ... #UPDATEVERSION}
+\item{version}{Character string, default value = "current",
+version of the database ... #UPDATEVERSION}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_hippie()
+Creating the URL to access the resources on
+\href{https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/}{HIPPIE}
 }
 \examples{
 
@@ -25,6 +28,9 @@ url_hippie <- urlmaker_hippie(
 )
 url_hippie
 
+}
+\references{
+https://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/
 }
 \seealso{
 Other urlmakers: 

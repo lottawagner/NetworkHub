@@ -2,22 +2,28 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_intact}
 \alias{urlmaker_intact}
-\title{urlmaker_intact()}
+\title{URL maker for IntAct}
 \usage{
 urlmaker_intact(version = "current")
 }
 \arguments{
-\item{version}{version of the data files in IntAct, default value = "current" (August 2024  = 2024-05-23 18:09    6.6G)}
+\item{version}{Character string, version of the data files in IntAct,
+default value = "current" (August 2024  = 2024-05-23 18:09    6.6G)}
 }
 \value{
-url returns the corresponding url set by params #SPECIESDEFINITION later on
+A character string with the URL as requested
 }
 \description{
-urlmaker_intact()
+Creating the URL to access the resources on
+\href{https://www.ebi.ac.uk/intact/}{IntAct}
 }
 \examples{
 url_intact <- urlmaker_intact(version = "current")
+
 url_intact
+}
+\references{
+https://www.ebi.ac.uk/intact/
 }
 \seealso{
 Other urlmakers: 

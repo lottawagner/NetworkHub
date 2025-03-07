@@ -2,22 +2,28 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_cpdb}
 \alias{urlmaker_cpdb}
-\title{urlmaker_cpdb()}
+\title{URL maker for ConsensusPathDB}
 \usage{
 urlmaker_cpdb(species = "human")
 }
 \arguments{
-\item{species}{currently only human (default value)}
+\item{species}{Character string, specifying the species of interesting,
+defaulting to  "human".}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_cpdb()
+Creating the URL to access the resources on
+\href{http://cpdb.molgen.mpg.de/}{ConsensusPathDB}
 }
 \examples{
 url_cpdb <- urlmaker_cpdb(species = "human")
+
 url_cpdb
+}
+\references{
+http://cpdb.molgen.mpg.de/
 }
 \seealso{
 Other urlmakers: 

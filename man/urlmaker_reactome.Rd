@@ -2,22 +2,26 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_reactome}
 \alias{urlmaker_reactome}
-\title{urlmaker_reactome()}
+\title{URL maker for Reactome}
 \usage{
 urlmaker_reactome(version = "current")
 }
 \arguments{
-\item{version}{default value = "current" #UPDATEVERSION}
+\item{version}{Character string, default value = "current" #UPDATEVERSION}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_reactome()
+Creating the URL to access the resources on \href{https://reactome.org/}{Reactome}
 }
 \examples{
 url_reactome <- urlmaker_reactome()
+
 url_reactome
+}
+\references{
+https://reactome.org/
 }
 \seealso{
 Other urlmakers: 

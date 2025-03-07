@@ -2,20 +2,23 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_irefindex}
 \alias{urlmaker_irefindex}
-\title{#' urlmaker_irefindex()}
+\title{URL maker for iRefIndex}
 \usage{
 urlmaker_irefindex(species, version = "08-28-2023")
 }
 \arguments{
-\item{species}{from which species does the data come from, default value = "Homo sapiens"}
+\item{species}{Character string, from which species does the data come from,
+default value = "Homo sapiens"}
 
-\item{version}{version of data files in iRefIndex, default value = "2023-08-29" #UPDATEVERSION}
+\item{version}{Character string, version of data files in iRefIndex,
+default value = "08-28-2023" #UPDATEVERSION}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-#' urlmaker_irefindex()
+Creating the URL to access the resources on \href{https://irefindex.vib.be/}{iRefIndex}
+(Integrated Interactions Database)
 }
 \examples{
 url_irefindex <- urlmaker_irefindex(
@@ -23,6 +26,9 @@ url_irefindex <- urlmaker_irefindex(
   version = "08-28-2023"
 )
 url_irefindex
+}
+\references{
+https://irefindex.vib.be/
 }
 \seealso{
 Other urlmakers: 

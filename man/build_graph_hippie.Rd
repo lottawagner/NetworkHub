@@ -17,6 +17,9 @@ build_graph_hippie(
 
 \item{min_score_threshold}{select ppis that are "confident" depending on the scoretype/value}
 }
+\value{
+An \code{igraph} graph object
+}
 \description{
 build_graph_hippie()
 }

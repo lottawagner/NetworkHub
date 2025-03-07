@@ -2,24 +2,30 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_mint}
 \alias{urlmaker_mint}
-\title{#' urlmaker_mint()}
+\title{URL maker for MINT}
 \usage{
 urlmaker_mint(species = "Homo Sapiens", version = "current")
 }
 \arguments{
-\item{species}{from which species does the data come from, default value = "Homo sapiens"}
+\item{species}{Character string, from which species does the data come from,
+default value = "Homo Sapiens"}
 
-\item{version}{version of data files in MINT, default value = "current" #CURRENTVERSION}
+\item{version}{Character string, version of data files in MINT, defaults to
+"current" (as it is specified by the MINT curators)}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-#' urlmaker_mint()
+Creating the URL to access the resources on \href{https://mint.bio.uniroma2.it/}{MINT}
+(The Molecular INTeraction Database)
 }
 \examples{
 url_mint <- urlmaker_mint(species = "Homo Sapiens")
 url_mint
+}
+\references{
+https://mint.bio.uniroma2.it/
 }
 \seealso{
 Other urlmakers: 

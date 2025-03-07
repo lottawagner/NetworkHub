@@ -2,27 +2,32 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_genemania}
 \alias{urlmaker_genemania}
-\title{urlmaker_genemania()}
+\title{URL maker for GeneMania}
 \usage{
 urlmaker_genemania(species = "Homo_sapiens", version = "current")
 }
 \arguments{
-\item{species}{types listed in list_species_genemania depending on current version, default value = "Homo_sapiens"}
+\item{species}{Character string, types listed in \code{list_species_genemania}
+depending on current version, default value = "Homo_sapiens"}
 
-\item{version}{version of GeneMania , default value = "current" #UPDATEVERSION}
+\item{version}{Character string, version of GeneMania , defaults to "current"}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_genemania()
+Creating the URL to access the resources on \href{https://genemania.org/}{GeneMania}
 }
 \examples{
 url_genemania <- urlmaker_genemania(
   species = "Homo_sapiens",
   version = "current"
 )
+
 url_genemania
+}
+\references{
+https://genemania.org/
 }
 \seealso{
 Other urlmakers: 

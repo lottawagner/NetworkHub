@@ -2,22 +2,26 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_hint}
 \alias{urlmaker_hint}
-\title{urlmaker_hint()}
+\title{URL maker for HINT}
 \usage{
 urlmaker_hint(type = "binary", species = "HomoSapiens", version)
 }
 \arguments{
-\item{type}{interaction types in HINT, default value = "binary"}
+\item{type}{Character string, specifying which interaction types to retrieve
+from HINT, default value = "binary"}
 
-\item{species}{types listed in list_species_hint depending on current version, default value = "HomoSapiens" #UPDATEVERSION}
+\item{species}{Character string, types listed in list_species_hint depending
+on current version, default value = "HomoSapiens"}
 
-\item{version}{version of HINT, always written as year - month ( 2024-06, 2020-08, ...)}
+\item{version}{Character string, version of HINT, always specified as
+\code{year-month} (2024-06, 2020-08, ...)}
 }
 \value{
-url returns the corresponding url set by params
+A character string with the URL as requested
 }
 \description{
-urlmaker_hint()
+Creating the URL to access the resources on \href{https://hint.yulab.org/}{HINT}
+(High-quality Interactomes)
 }
 \examples{
 url_hint <- urlmaker_hint(
@@ -25,7 +29,11 @@ url_hint <- urlmaker_hint(
   species = "HomoSapiens",
   version = "2024-06"
 )
+
 url_hint
+}
+\references{
+https://hint.yulab.org/
 }
 \seealso{
 Other urlmakers: 

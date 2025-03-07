@@ -2,7 +2,7 @@
 % Please edit documentation in R/urlmaker_functions.R
 \name{urlmaker_biogrid}
 \alias{urlmaker_biogrid}
-\title{urlmaker_biogrid()}
+\title{URL maker for BioGRID}
 \usage{
 urlmaker_biogrid(version = "4.4.238")
 }
@@ -10,14 +10,18 @@ urlmaker_biogrid(version = "4.4.238")
 \item{version}{version of the data files in BioGRID}
 }
 \value{
-url returns the corresponding url set by params #SPECIESDEFINITION
+A character string with the URL as requested
 }
 \description{
-urlmaker_biogrid()
+Creating the URL to access the resources on \href{https://thebiogrid.org/}{BioGRID}
 }
 \examples{
 url_biogrid <- urlmaker_biogrid()
+
 url_biogrid
+}
+\references{
+https://thebiogrid.org/
 }
 \seealso{
 Other urlmakers: 
